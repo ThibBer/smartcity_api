@@ -4,11 +4,18 @@
   "description": "API for SmartCity project - IG3 Henallux",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
+    "createDB": "node scripts/JS/createDB.js",
+    "fillDB": "node scripts/JS/fillDB.js"
   },
   "author": "BERNARD Nicolas & BERG Thibaut",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^10.0.0",
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13"
   }
 }
