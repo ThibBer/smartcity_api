@@ -7,7 +7,7 @@ async function initDB(){
     //const client = await pool.connect();
 
     try{
-        const query = fs.readFileSync(path.join(__dirname, "../SQL/createDB.SQL"), "UTF-8");
+        const query = fs.readFileSync(path.join(__dirname, "../SQL/createDB.sql"), "UTF-8");
         //await client.query(query);
     } catch (e){
         console.error(e);
@@ -18,7 +18,9 @@ async function initDB(){
 }
 
 initDB()
-    .then(() => console.log("Database created!"))
+    .then(() => console.log("Database created !"))
     .catch(error => {
-    console.log(error)
-});
+        console.error("Database cration :");
+        console.error(error)
+    }
+);
