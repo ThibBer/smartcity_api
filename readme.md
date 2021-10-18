@@ -5,7 +5,7 @@ API for SmartCity project at Henallux IG3
 - BERNARD Nicolas (etu42888@henallux.be)
 - BERG Thibaut (etu43163@henallux.be)
 
-## Planning
+## Agenda
 
 ## .env file
 Add a .env file for database connection 
