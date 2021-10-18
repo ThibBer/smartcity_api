@@ -1,3 +1,41 @@
 @startuml
 
+entity User{
+    * id
+    email
+    login
+    password
+    firstName
+    lastName
+    birthDate
+}
+
+entity Report {
+    * id
+    context
+    state
+    pictures
+    emplacement
+}
+
+entity Event {
+    * id
+    place
+    date
+    hour
+    length
+}
+
+entity Commentary {
+    * id
+    text
+}
+
+User |o--o{ Report : reporter
+Report ||--o{ Event : organisation
+Event ||--o{ Commentary : settlement
+Commentary }o--|| User : writer
+User }o--o{ Event : participant
+User ||--o{ Event : creator
+
 @enduml
