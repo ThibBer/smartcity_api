@@ -1,4 +1,4 @@
-const ReportController = require("../controller/report");
+const ReportController = require("../../controller/report");
 const router = require("express").Router();
 
 router.get('/:id', ReportController.getReport);
