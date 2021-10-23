@@ -4,7 +4,6 @@ hide circle
 entity User{
     * id
     email
-    login
     password
     first_name
     last_name
