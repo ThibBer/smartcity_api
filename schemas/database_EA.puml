@@ -9,6 +9,7 @@ entity User{
     first_name
     last_name
     birth_date: date
+    role
 }
 
 entity Report {
@@ -39,12 +40,6 @@ entity Commentary {
     created_at: timestamp
 }
 
-entity Picture {
-    * id
-    url
-    alt
-}
-
 entity ReportType {
     * name
     label
@@ -56,7 +51,6 @@ Commentary }o--|| User : writer
 Event ||--o{ Commentary : settlement
 User }o--o{ Event : participant
 User ||-up-o{ Event : creator
-Report ||--o{ Picture : description
 Report }o--|| ReportType : type
 
 @enduml
