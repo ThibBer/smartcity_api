@@ -15,6 +15,10 @@ entity User{
     house_number
 }
 
+entity Participation {
+
+}
+
 entity Report {
     * id
     description
@@ -40,8 +44,9 @@ entity ReportType {
 
 User |o--o{ Report : reporter
 Report ||--o{ Event : organisation
-User }o--o{ Event : participant
-User ||-up-o{ Event : creator
+User ||--o{ Participation : participant
+Participation }o--|| Event : participant
+User ||--o{ Event : creator
 Report }o--|| ReportType : type
 
 @enduml

@@ -16,3 +16,9 @@ DATABASE_NAME=
 DATABASE_USER=
 DATABASE_PASSWORD=
 ```
+
+## A faire
+- Ajouter modification mot de passe -> profil
+- Retirer E de profilE
+- Ajouter date de naissance dans création profilE
+- Formulaire création d'événement
