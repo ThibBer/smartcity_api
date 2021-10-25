@@ -9,6 +9,10 @@ entity User{
     last_name
     birth_date: date
     role
+    city
+    street
+    zip_code
+    house_number
 }
 
 entity Report {
@@ -30,15 +34,6 @@ entity Event {
     length
 }
 
-entity Commentary {
-    * id
-    date
-    duration
-    report
-    user
-    created_at: timestamp
-}
-
 entity ReportType {
     * name
     label
@@ -46,8 +41,6 @@ entity ReportType {
 
 User |o--o{ Report : reporter
 Report ||--o{ Event : organisation
-Commentary }o--|| User : writer
-Event ||--o{ Commentary : settlement
 User }o--o{ Event : participant
 User ||-up-o{ Event : creator
 Report }o--|| ReportType : type
