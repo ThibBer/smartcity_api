@@ -21,17 +21,16 @@ entity Report {
     state
     city
     street
-    postal_code
+    zip_code
     house_number[0..1]
     created_at: timestamp
 }
 
 entity Event {
     * id
-    place
-    date
-    hour
-    length
+    date_hour
+    duration
+    created_at
 }
 
 entity ReportType {
