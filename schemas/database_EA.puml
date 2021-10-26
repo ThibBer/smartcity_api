@@ -34,6 +34,7 @@ entity Event {
     * id
     date_hour
     duration
+    description
     created_at
 }
 
