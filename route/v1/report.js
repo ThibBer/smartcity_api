@@ -1,9 +1,9 @@
-const ReportController = require("../../controller/report");
+const ReportController = require("../../controller/v1/report");
 const router = require("express").Router();
 
-router.get('/:id', ReportController.getReport);
-router.post('/', ReportController.postReport);
-router.patch('/', ReportController.patchReport);
-router.delete('/', ReportController.deleteReport);
+router.get('/:id', ReportController.get);
+router.post('/', ReportController.post);
+router.patch('/', ReportController.patch);
+router.delete('/', ReportController.delete);
 
 module.exports = router;

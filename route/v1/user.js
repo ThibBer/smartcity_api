@@ -1,9 +1,9 @@
-//const UserController = require("../controleur/user");
+const UserController = require("../../controller/v1/user");
 const router = require("express").Router();
 
-/*router.get('/:id', ProduitControleur.getProduit);
-router.post('/', ProduitControleur.postProduit);
-router.patch('/', ProduitControleur.updateProduit);
-router.delete('/', ProduitControleur.deleteProduit);*/
+router.get('/:id', UserController.get);
+router.post('/', UserController.post);
+router.patch('/', UserController.patch);
+router.delete('/', UserController.delete);
 
 module.exports = router;

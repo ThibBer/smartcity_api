@@ -7,5 +7,6 @@ app.use(express.json());
 app.use(Router);
 
 app.listen(port, () => {
-    console.log(`SmartCity API app listening at http://localhost:${port}`);
+    console.log("Authors : BERNARD Nicolas & BERG Thibaut");
+    console.log(`SmartCity API listening at http://localhost:${port}`);
 });
