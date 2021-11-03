@@ -1,0 +1,2 @@
+INSERT INTO BackOfficeUser (email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number)
+VALUES('thibaut.berg@hotmail.com', 'test', 'Thibaut', 'Berg', '2001-10-28', 'admin', 'Marche-en-Famenne', 'Rue des Champs', 6900, 53);
