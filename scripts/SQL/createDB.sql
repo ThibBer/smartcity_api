@@ -1,47 +1,59 @@
-DROP TABLE IF EXISTS user CASCADE;
-CREATE TABLE user (
-    id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    email varchar NOT NULL,
-    login varchar NOT NULL,
-    password varchar NOT NULL,
-    first_name varchar NOT NULL,
-    last_name varchar NOT NULL,
-    birth_date timestamp NOT NULL
-)
+DROP TABLE IF EXISTS BackOfficeUser CASCADE;
+CREATE TABLE BackOfficeUser
+(
+    id           integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    email        varchar NOT NULL UNIQUE,
+    password     varchar NOT NULL,
+    first_name   varchar NOT NULL,
+    last_name    varchar NOT NULL,
+    birth_date   date    NOT NULL,
+    role         varchar NOT NULL,
+    city         varchar NOT NULL,
+    street       varchar NOT NULL,
+    zip_code     numeric NOT NULL,
+    house_number numeric NOT NULL
+);
+
+DROP TABLE IF EXISTS ReportType CASCADE;
+CREATE TABLE ReportType
+(
+    name  varchar PRIMARY KEY,
+    label varchar NOT NULL
+);
+
 
 DROP TABLE IF EXISTS report CASCADE;
-CREATE TABLE report (
-    id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    description varchar,
-    state varchar NOT NULL,
-    city varchar NOT NULL,
-    street varchar NOT NULL,
-    create_at timestamp NOT NULL,
-    reporter integer REFERENCES user(id) NOT NULL
-)
+CREATE TABLE report
+(
+    id           integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    description  varchar,
+    state        varchar                              NOT NULL,
+    city         varchar                              NOT NULL,
+    street       varchar                              NOT NULL,
+    zip_code     numeric                              NOT NULL,
+    house_number numeric,
+    create_at    timestamp                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-DROP TABLE IF EXISTS event CASCADE;
-CREATE TABLE event (
-    id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    date date NOT NULL,
-    created_at timestamp NOT NULL,
-    length integer,
-    report integer REFERENCES report(id) NOT NULL,
-    user integer REFERENCES user(id) NOT NULL,
-)
+    reporter     integer REFERENCES BackOfficeUser (id)       NOT NULL,
+    report_type  varchar REFERENCES ReportType (name) NOT NULL
+);
 
-DROP TABLE IF EXISTS commentary CASCADE;
-CREATE TABLE commentary (
-    id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    text varchar NOT NULL,
-    created_at timestamp NOT NULL,
-    writer integer REFERENCES user(id) NOT NULL,
-    event integer REFERENCES event(id) NOT NULL,
-)
+DROP TABLE IF EXISTS Event CASCADE;
+CREATE TABLE Event
+(
+    id        integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    date      date                           NOT NULL,
+    length    integer,
+    create_at timestamp                      NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-DROP TABLE IF EXISTS participation CASCADE;
-CREATE TABLE participation (
-    participant integer REFERENCES user(id),
-    event integer REFERENCES event(id),
+    report    integer REFERENCES report (id) NOT NULL,
+    creator   integer REFERENCES BackOfficeUser(id) NOT NULL
+);
+DROP TABLE IF EXISTS Participation CASCADE;
+CREATE TABLE Participation
+(
+    participant integer REFERENCES BackOfficeUser(id),
+    event       integer REFERENCES Event (id),
+
     PRIMARY KEY (participant, event)
-)
+);
