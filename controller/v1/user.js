@@ -46,10 +46,10 @@ module.exports.all = async(req, res) => {
 
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
-    const {id, email, password, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber} = req.body;
+    const {email, password, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber} = req.body;
 
     try {
-        await User.post(client, id, email, password, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber);
+        await User.post(client, email, password, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber);
 
         res.sendStatus(204);
     } catch (error) {
