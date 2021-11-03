@@ -1,9 +1,9 @@
 module.exports.get = async (client, id) => {
-    return await client.query(`SELECT TO_CHAR(birth_date::DATE, 'dd/mm/yyyy') as foramtted_birth_date, * FROM BackOfficeUser WHERE id = $1`, [id]);
+    return await client.query(`SELECT TO_CHAR(birth_date::DATE, 'dd/mm/yyyy') as formatted_birth_date, * FROM BackOfficeUser WHERE id = $1`, [id]);
 }
 
 module.exports.all = async (client) => {
-    return await client.query(`SELECT TO_CHAR(birth_date::DATE, 'dd/mm/yyyy') as foramtted_birth_date, * FROM BackOfficeUser`, []);
+    return await client.query(`SELECT TO_CHAR(birth_date::DATE, 'dd/mm/yyyy') as formatted_birth_date, * FROM BackOfficeUser`, []);
 }
 
 module.exports.post = async (client, email, password, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber) => {
