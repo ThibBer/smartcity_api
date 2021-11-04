@@ -61,7 +61,20 @@ module.exports.post = async(req, res) => {
 }
 
 module.exports.patch = async(req, res) => {
-    throw new Error("Not implemented");
+    const client = await pool.connect();
+    console.log(req.body)
+    const {id, email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;
+
+    try {
+        await User.patch(client, id, email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number);
+
+        res.sendStatus(204);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
 }
 
 module.exports.delete = async(req, res) => {
