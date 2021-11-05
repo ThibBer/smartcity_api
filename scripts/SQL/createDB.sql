@@ -17,7 +17,7 @@ CREATE TABLE BackOfficeUser
 DROP TABLE IF EXISTS ReportType CASCADE;
 CREATE TABLE ReportType
 (
-    name  varchar PRIMARY KEY,
+    id    integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     label varchar NOT NULL
 );
 
@@ -27,32 +27,32 @@ CREATE TABLE report
 (
     id           integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     description  varchar,
-    state        varchar                              NOT NULL,
-    city         varchar                              NOT NULL,
-    street       varchar                              NOT NULL,
-    zip_code     numeric                              NOT NULL,
+    state        varchar                                NOT NULL,
+    city         varchar                                NOT NULL,
+    street       varchar                                NOT NULL,
+    zip_code     numeric                                NOT NULL,
     house_number numeric,
-    create_at    timestamp                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    create_at    timestamp                              NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    reporter     integer REFERENCES BackOfficeUser (id)       NOT NULL,
-    report_type  varchar REFERENCES ReportType (name) NOT NULL
+    reporter     integer REFERENCES BackOfficeUser (id) NOT NULL,
+    report_type  integer REFERENCES ReportType (id)   NOT NULL
 );
 
 DROP TABLE IF EXISTS Event CASCADE;
 CREATE TABLE Event
 (
     id        integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    date      date                           NOT NULL,
+    date      date                                   NOT NULL,
     length    integer,
-    create_at timestamp                      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    create_at timestamp                              NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    report    integer REFERENCES report (id) NOT NULL,
-    creator   integer REFERENCES BackOfficeUser(id) NOT NULL
+    report    integer REFERENCES report (id)         NOT NULL,
+    creator   integer REFERENCES BackOfficeUser (id) NOT NULL
 );
 DROP TABLE IF EXISTS Participation CASCADE;
 CREATE TABLE Participation
 (
-    participant integer REFERENCES BackOfficeUser(id),
+    participant integer REFERENCES BackOfficeUser (id),
     event       integer REFERENCES Event (id),
 
     PRIMARY KEY (participant, event)
