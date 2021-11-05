@@ -14,7 +14,7 @@ module.exports.get = async(req, res) => {
             if(user !== undefined){
                 res.status(200).json(user);
             }else{
-                res.sendStatus(404);
+                res.status(404).json({error: "Invalid user id"});
             }
         }
     } catch (error) {
