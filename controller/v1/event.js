@@ -1,5 +1,9 @@
 const pool = require('../../model/v1/database');
 const Event = require("../../model/v1/event");
+const Report = require("../../model/v1/report");
+const User = require("../../model/v1/user");
+const ReportType = require("../../model/v1/reportType");
+
 
 module.exports.get = async(req, res) => {
     const client = await pool.connect();
@@ -12,6 +16,34 @@ module.exports.get = async(req, res) => {
             const {rows: events} = await Event.get(client, id);
             const event = events[0];
             if(event !== undefined){
+                const {rows: reports} = await Report.get(client, event.report);
+
+                const report = reports[0];
+                if(report !== undefined) {
+                    const {rows: users} = await User.get(client, report.reporter);
+
+                    const user = users[0];
+                    if(user !== undefined){
+                        report.reporter = user;
+                    }
+
+                    const {rows: reportTypes} = await ReportType.get(client, report.report_type);
+
+                    const reportType = reportTypes[0];
+                    if(reportType !== undefined){
+                        report.report_type = reportType;
+                    }
+
+                    event.report = report;
+                }
+
+                const {rows: creators} = await User.get(client, event.creator);
+
+                const creator = creators[0];
+                if(creator !== undefined) {
+                    event.creator = creator;
+                }
+
                 res.status(200).json(event);
             }else{
                 res.sendStatus(404);
@@ -32,6 +64,36 @@ module.exports.all = async(req, res) => {
         const {rows: events} = await Event.all(client);
 
         if(events !== undefined){
+            for(const event of events){
+                const {rows: reports} = await Report.get(client, event.report);
+
+                const report = reports[0];
+                if(report !== undefined) {
+                    const {rows: users} = await User.get(client, report.reporter);
+
+                    const user = users[0];
+                    if(user !== undefined){
+                        report.reporter = user;
+                    }
+
+                    const {rows: reportTypes} = await ReportType.get(client, report.report_type);
+
+                    const reportType = reportTypes[0];
+                    if(reportType !== undefined){
+                        report.report_type = reportType;
+                    }
+
+                    event.report = report;
+                }
+
+                const {rows: creators} = await User.get(client, event.creator);
+
+                const creator = creators[0];
+                if(creator !== undefined) {
+                    event.creator = creator;
+                }
+            }
+
             res.status(200).json(events);
         }else{
             res.sendStatus(404);
