@@ -1,7 +1,5 @@
 const pool = require('../../model/v1/database');
 const Report = require("../../model/v1/report");
-const User = require("../../model/v1/user");
-const ReportType = require("../../model/v1/reportType");
 
 module.exports.get = async(req, res) => {
     const client = await pool.connect();
@@ -12,25 +10,14 @@ module.exports.get = async(req, res) => {
             res.sendStatus(400);
         } else {
             const {rows: reports} = await Report.get(client, id);
-            const report = reports[0];
-            if(report !== undefined){
-                const {rows: users} = await User.get(client, report.reporter);
+            const sqlReport = reports[0];
 
-                const user = users[0];
-                if(user !== undefined){
-                    report.reporter = user;
-                }
-
-                const {rows: reportTypes} = await ReportType.get(client, report.report_type);
-
-                const reportType = reportTypes[0];
-                if(reportType !== undefined){
-                    report.report_type = reportType;
-                }
+            if(sqlReport !== undefined){
+                const report = objectFormatted(sqlReport);
 
                 res.status(200).json(report);
             }else{
-                res.sendStatus(404);
+                res.status(404).json({error: "Invalid user ID"});
             }
         }
     } catch (error) {
@@ -48,25 +35,15 @@ module.exports.all = async(req, res) => {
         const {rows: reports} = await Report.all(client);
 
         if(reports !== undefined){
+            const reportObjects = [];
+
             for(const report of reports){
-                /*User*/
-                const {rows: users} = await User.get(client, report.reporter);
+                const reportObject = objectFormatted(report);
 
-                const user = users[0];
-                if(user !== undefined){
-                    report.reporter = user;
-                }
-
-                /*Report Type*/
-                const {rows: reportTypes} = await ReportType.get(client, report.report_type);
-
-                const reportType = reportTypes[0];
-                if(reportType !== undefined){
-                    report.report_type = reportType;
-                }
+                reportObjects.push(reportObject);
             }
 
-            res.status(200).json(reports);
+            res.status(200).json(reportObjects);
         }else{
             res.sendStatus(404);
         }
@@ -88,4 +65,12 @@ module.exports.patch = async(req, res) => {
 
 module.exports.delete = async(req, res) => {
     throw new Error("Not implemented");
+}
+
+function objectFormatted(sqlRow){
+    const report = sqlRow.report;
+    report.reporter = sqlRow.user;
+    report.report_type = sqlRow.report_type;
+
+    return report;
 }
