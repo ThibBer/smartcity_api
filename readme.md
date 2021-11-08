@@ -47,17 +47,9 @@ DATABASE_PORT=
   - DELETE ❌
 
 ## Questions
-- Différence entre http code 404 et 204 ?
+- Mettre const client = pool.connect dans un try catch ? (Si jamais bdd n'est pas dispo)
+- On doit retourner toutes les infos ? Ou juste ce qu'on a besoin ?
+Ex : Si on get /user:id, on doit retourner tous les événements auquels il participe ? 
 
 ## Remarques
 - Changer name par id -> ReportType
-
-## Générer les $ pour les requetes SQL
-```javascript
-const limit = 11;
-
-let data = "$1";
-for(let i = 2; i <= limit; i++){
-    data += (", $" + i);
-}
-```
