@@ -5,15 +5,15 @@ const options = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'Mon API Labo', // Title (required)
+            title: 'SmartCity API', // Title (required)
             version: '1.0.0', // Version (required)
         },
     },
     // Path to the API docs
     apis: [
-        './controller/*',
-        './model/*',
-        './route/*',
+        './controller/v1/*',
+        './.model/v1/*',
+        './route/v1/*',
     ],
 };
 
