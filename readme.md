@@ -47,10 +47,9 @@ DATABASE_PORT=
   - DELETE ❌
 
 ## Questions
-- Mettre const client = pool.connect dans un try catch ? (Si jamais bdd n'est pas dispo)
-- On doit retourner toutes les infos ? Ou juste ce qu'on a besoin ?
-Ex : Si on get /user:id, on doit retourner tous les événements auquels il participe ? 
-- Mettre une table pour les roles et une table pour les etats d'un report (En cours, terminé, à traiter)
-- 
+- Gestion des clefs étrangères dans les vues en back office ?
+- Charger seulement de X à X données (pour pas tout charger d'un coup)
+- Comment gérer les delete ? (clef étrangères)
+
 ## Remarques
 - Changer name par id -> ReportType

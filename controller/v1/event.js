@@ -64,36 +64,6 @@ module.exports.all = async(req, res) => {
         const {rows: events} = await Event.all(client);
 
         if(events !== undefined){
-            for(const event of events){
-                const {rows: reports} = await Report.get(client, event.report);
-
-                const report = reports[0];
-                if(report !== undefined) {
-                    const {rows: users} = await User.get(client, report.reporter);
-
-                    const user = users[0];
-                    if(user !== undefined){
-                        report.reporter = user;
-                    }
-
-                    const {rows: reportTypes} = await ReportType.get(client, report.report_type);
-
-                    const reportType = reportTypes[0];
-                    if(reportType !== undefined){
-                        report.report_type = reportType;
-                    }
-
-                    event.report = report;
-                }
-
-                const {rows: creators} = await User.get(client, event.creator);
-
-                const creator = creators[0];
-                if(creator !== undefined) {
-                    event.creator = creator;
-                }
-            }
-
             res.status(200).json(events);
         }else{
             res.sendStatus(404);

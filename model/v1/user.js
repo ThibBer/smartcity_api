@@ -6,7 +6,7 @@ module.exports.exist = async (client, id) => {
 }
 
 module.exports.all = async (client) => {
-    return await client.query(`SELECT * FROM BackOfficeUser`, []);
+    return await client.query(`SELECT * FROM BackOfficeUser ORDER BY id ASC`, []);
 }
 
 module.exports.post = async (client, email, password, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber) => {
