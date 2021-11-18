@@ -32,9 +32,9 @@ DATABASE_PORT=
 - **Report**
     - GET ✅
     - ALL ✅
-    - POST ❌
-    - PATCH ❌
-    - DELETE ❌
+    - POST ✅
+    - PATCH ✅
+    - DELETE ✅
 - **ReportType**
     - GET ✅
     - ALL ✅

@@ -50,7 +50,6 @@ module.exports.post = async(req, res) => {
 
     try {
         await ReportType.post(client, label);
-
         res.sendStatus(204);
     } catch (error) {
         console.error(error);

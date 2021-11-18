@@ -51,7 +51,7 @@ module.exports.post = async(req, res) => {
     try {
         await User.post(client, email, password, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber);
 
-        res.sendStatus(204);
+        res.sendStatus(201);
     } catch (error) {
         console.error(error);
         res.sendStatus(500);

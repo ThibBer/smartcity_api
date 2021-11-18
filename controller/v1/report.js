@@ -1,5 +1,7 @@
 const pool = require('../../model/v1/database');
 const Report = require("../../model/v1/report");
+const User = require("../../model/v1/user");
+const ReportType = require("../../model/v1/reportType");
 
 module.exports.get = async(req, res) => {
     const client = await pool.connect();
@@ -10,14 +12,12 @@ module.exports.get = async(req, res) => {
             res.sendStatus(400);
         } else {
             const {rows: reports} = await Report.get(client, id);
-            const sqlReport = reports[0];
+            const report = reports[0];
 
-            if(sqlReport !== undefined){
-                const report = objectFormatted(sqlReport);
-
+            if(report !== undefined){
                 res.status(200).json(report);
             }else{
-                res.status(404).json({error: "Invalid user ID"});
+                res.status(404).json({error: "Invalid report ID"});
             }
         }
     } catch (error) {
@@ -38,9 +38,7 @@ module.exports.all = async(req, res) => {
             const reportObjects = [];
 
             for(const report of reports){
-                const reportObject = objectFormatted(report);
-
-                reportObjects.push(reportObject);
+                reportObjects.push(report);
             }
 
             res.status(200).json(reportObjects);
@@ -56,21 +54,64 @@ module.exports.all = async(req, res) => {
 }
 
 module.exports.post = async(req, res) => {
-    throw new Error("Not implemented");
+    const client = await pool.connect();
+    const {description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
+
+    try {
+        const reporterExist = await User.exist(client, reporter);
+        const reportTypeExist = await ReportType.exist(client, report_type);
+        if(reporterExist && reportTypeExist) {
+            await Report.post(client, description, state, city, street, zip_code, house_number, reporter, report_type);
+            res.sendStatus(204);
+        } else {
+            res.sendStatus(404).json({error: "Retry with correct values"});
+        }
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
 }
 
 module.exports.patch = async(req, res) => {
-    throw new Error("Not implemented");
+    const client = await pool.connect();
+    const {id, description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
+
+    try{
+        const reportExist = await Report.exist(client, id);
+        const reporterExist = await User.exist(client, reporter);
+        const reportTypeExist = await ReportType.exist(client, report_type);
+        if(reportExist && reporterExist && reportTypeExist) {
+            await Report.patch(client, id, description, state, city, street, zip_code, house_number, reporter, report_type);
+            res.sendStatus(204);
+        } else {
+            res.sendStatus(404).json({error: "Retry with correct values"});
+        }
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
 }
 
 module.exports.delete = async(req, res) => {
-    throw new Error("Not implemented");
-}
+    const {id} = req.body;
+    const client = await pool.connect();
 
-function objectFormatted(sqlRow){
-    const report = sqlRow.report;
-    report.reporter = sqlRow.user;
-    report.report_type = sqlRow.report_type;
-
-    return report;
+    try{
+        const reportExist = await Report.exist(client, id);
+        if(reportExist) {
+            await Report.delete(client, id);
+            res.sendStatus(204);
+        } else {
+            res.sendStatus(404).json({error: "Incorrect id"});
+        }
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
 }
