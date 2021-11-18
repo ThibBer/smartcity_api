@@ -34,7 +34,7 @@ DATABASE_PORT=
     - ALL ✅
     - POST ✅
     - PATCH ✅
-    - DELETE ✅
+    - DELETE ❌
 - **ReportType**
     - GET ✅
     - ALL ✅
@@ -42,9 +42,12 @@ DATABASE_PORT=
     - PATCH ✅
     - DELETE ❌
 - **Participation**
-  - GET ❌
-  - POST ❌
-  - DELETE ❌
+  - GET ✅
+  - POST ✅
+  - DELETE ✅
+    - Delete a specific link ✅
+    - Delete Links To User ✅
+    - Delete Links To Event ✅
 
 ## Questions
 - Gestion des clefs étrangères dans les vues en back office ?

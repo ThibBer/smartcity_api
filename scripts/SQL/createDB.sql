@@ -22,8 +22,8 @@ CREATE TABLE ReportType
 );
 
 
-DROP TABLE IF EXISTS report CASCADE;
-CREATE TABLE report
+DROP TABLE IF EXISTS Report CASCADE;
+CREATE TABLE Report
 (
     id           integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     description  varchar,
