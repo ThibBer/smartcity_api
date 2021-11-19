@@ -35,13 +35,7 @@ module.exports.all = async(req, res) => {
         const {rows: reports} = await Report.all(client);
 
         if(reports !== undefined){
-            const reportObjects = [];
-
-            for(const report of reports){
-                reportObjects.push(report);
-            }
-
-            res.status(200).json(reportObjects);
+            res.status(200).json(reports);
         }else{
             res.sendStatus(404);
         }
