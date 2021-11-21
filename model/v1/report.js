@@ -1,6 +1,4 @@
-module.exports.get = async (client, id) => {
-    return await client.query(`SELECT R.*, row_to_json(rt) as report_type FROM report r JOIN reportType rt ON r.report_type = rt.id WHERE r.id = $1`, [id]);
-}
+module.exports.get = get;
 
 module.exports.exist = async (client, id) => {
     const {rows} = await get(client, id);
@@ -23,3 +21,6 @@ module.exports.delete = async (client, id) => {
     return await client.query('DELETE FROM report WHERE id = $1', [id]);
 }
 
+async function get(client, id) {
+    return await client.query(`SELECT R.*, row_to_json(rt) as report_type FROM report r JOIN reportType rt ON r.report_type = rt.id WHERE r.id = $1`, [id]);
+}

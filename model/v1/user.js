@@ -21,7 +21,7 @@ module.exports.patch = async (client, id, email, password, firstName, lastName, 
 }
 
 module.exports.delete = async (client, id) => {
-    throw new Error("Not implemented");
+    return await client.query('DELETE FROM user WHERE id = $1', [id]);
 }
 
 async function get(client, id) {
