@@ -10,7 +10,7 @@ module.exports.all = async (client) => {
 }
 
 module.exports.post = async (client, description, state, city, street, zip_code, house_number, reporter, report_type) => {
-    return await client.query('INSERT INTO report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [description, state, city, street, zip_code, house_number, reporter, report_type]);
+    return await client.query('INSERT INTO report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id', [description, state, city, street, zip_code, house_number, reporter, report_type]);
 }
 
 module.exports.patch = async (client, id, description, state, city, street, zip_code, house_number, reporter, report_type) => {

@@ -10,7 +10,7 @@ module.exports.all = async (client) => {
 }
 
 module.exports.post = async (client, date, length, create_at, report, creator) => {
-    return await client.query('INSERT INTO event (date, length, create_at, report, creator) VALUES ($1, $2, $3, $4, $5)', [date, length, create_at, report, creator]);
+    return await client.query('INSERT INTO event (date, length, create_at, report, creator) VALUES ($1, $2, $3, $4, $5) RETURNING id', [date, length, create_at, report, creator]);
 }
 
 module.exports.patch = async (client, id, date, length, create_at, report, creator) => {

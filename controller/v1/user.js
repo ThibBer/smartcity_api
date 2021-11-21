@@ -50,9 +50,9 @@ module.exports.post = async(req, res) => {
     const {email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;
 
     try {
-        await User.post(client, email, await getHash(password), first_name, last_name, birth_date, role, city, street, zip_code, house_number);
+        const result = await User.post(client, email, await getHash(password), first_name, last_name, birth_date, role, city, street, zip_code, house_number);
 
-        res.sendStatus(201);
+        res.status(200).json({id: result.rows[0].id});
     } catch (error) {
         console.error(error);
         res.sendStatus(500);

@@ -11,7 +11,7 @@ module.exports.all = async (client) => {
 
 module.exports.post = async (client, email, password, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber) => {
     return await client.query(`INSERT INTO BackOfficeUser (email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number) VALUES 
-($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
         [email, password, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber]);
 }
 

@@ -13,13 +13,15 @@ module.exports.login = async(req, res) => {
         if(email === undefined || password === undefined) {
             res.sendStatus(400);
         } else {
-            const {value} = await loginDB.get(client, email, password);
-            console.log(value);
-            if(value === null) {
+            const user = await loginDB.get(client, email, password);
+            if(user === null) {
                 res.sendStatus(404);
             } else {
-                const token = jwt.sign(value, process.env.SECRET_TOKEN, {expiresIn: '1d'});
-                res.json(token);
+                const payload = {id: user.id, email, first_name: user.first_name, last_name: user.last_name, role: user.role};
+                console.log(payload)
+                const token = jwt.sign(payload, process.env.SECRET_TOKEN, {expiresIn: '1d'});
+
+                res.status(200).json(token);
             }
         }
     } catch (error) {

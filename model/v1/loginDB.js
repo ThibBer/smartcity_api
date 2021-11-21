@@ -10,8 +10,8 @@ module.exports.get = async(client, email, password) => {
     const userRow = values[0].rows[0];
     console.log(userRow);
     if(userRow !== undefined && await compareHash(password, userRow.password)) {
-        return {value: userRow};
+        return userRow;
     } else {
-        return {value: null};
+        return null;
     }
 }

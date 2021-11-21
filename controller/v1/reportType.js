@@ -49,8 +49,9 @@ module.exports.post = async(req, res) => {
     const {label} = req.body;
 
     try {
-        await ReportType.post(client, label);
-        res.sendStatus(204);
+        const result = await ReportType.post(client, label);
+
+        res.status(200).json({id: result.rows[0].id});
     } catch (error) {
         console.error(error);
         res.sendStatus(500);
@@ -61,9 +62,7 @@ module.exports.post = async(req, res) => {
 
 module.exports.patch = async(req, res) => {
     const client = await pool.connect();
-    const body = req.body;
-    console.log(body)
-    const {id, label} = body;
+    const {id, label} = req.body;
 
     try {
         if (isNaN(id)) {
@@ -86,5 +85,14 @@ module.exports.patch = async(req, res) => {
 }
 
 module.exports.delete = async(req, res) => {
-    throw new Error("Not implemented");
+    const client = await pool.connect();
+
+    try {
+        res.sendStatus(501);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
 }

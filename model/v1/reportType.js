@@ -10,7 +10,7 @@ module.exports.all = async (client) => {
 }
 
 module.exports.post = async (client, label) => {
-    return await client.query(`INSERT INTO ReportType (label) VALUES ($1)`,
+    return await client.query(`INSERT INTO ReportType (label) VALUES ($1) RETURNING id`,
         [label]);
 }
 

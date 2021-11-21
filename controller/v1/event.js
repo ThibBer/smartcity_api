@@ -77,8 +77,8 @@ module.exports.post = async(req, res) => {
         const reportExist = await Report.exist(client, report);
         const creatorExist = await User.exist(client, creator);
         if(reportExist && creatorExist) {
-            await Event.post(client, date, length, create_at, report, creator);
-            res.sendStatus(204);
+            const result = await Event.post(client, date, length, create_at, report, creator);
+            res.status(200).json({id: result.rows[0].id});
         } else {
             res.sendStatus(404).json({error: "Retry with correct values"});
         }
