@@ -14,7 +14,13 @@ DATABASE_NAME=
 DATABASE_USER=
 DATABASE_PASSWORD=
 DATABASE_PORT=
+SECRET_TOKEN=
 ```
+
+## Passwords
+- For thibaut.berg@hotmail.com the password is test
+- For nicolas.bernard@gmail.com the password is test2
+
 ❌ ✅
 ### API
 - **User**

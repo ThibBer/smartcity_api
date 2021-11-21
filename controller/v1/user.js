@@ -1,5 +1,6 @@
 const pool = require('../../model/v1/database');
 const User = require("../../model/v1/user");
+const {getHash} = require("../../utils/jwtUtils");
 
 module.exports.get = async(req, res) => {
     const client = await pool.connect();
@@ -46,10 +47,10 @@ module.exports.all = async(req, res) => {
 
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
-    const {email, password, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber} = req.body;
+    const {email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;
 
     try {
-        await User.post(client, email, password, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber);
+        await User.post(client, email, await getHash(password), first_name, last_name, birth_date, role, city, street, zip_code, house_number);
 
         res.sendStatus(201);
     } catch (error) {

@@ -24,6 +24,10 @@ module.exports.delete = async (client, id) => {
     return await client.query('DELETE FROM user WHERE id = $1', [id]);
 }
 
+module.exports.getWithEmail = async (client, email) => {
+    return await client.query('SELECT * FROM BackOfficeUser WHERE email = $1', [email]);
+}
+
 async function get(client, id) {
     return await client.query(`SELECT * FROM BackOfficeUser WHERE id = $1`, [id]);
 }
