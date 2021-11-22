@@ -34,12 +34,7 @@ module.exports.all = async(req, res) => {
 
     try {
         const {rows: reports} = await Report.all(client);
-
-        if(reports !== undefined){
-            res.status(200).json(reports);
-        }else{
-            res.sendStatus(404);
-        }
+        res.status(200).json(reports);
     } catch (error) {
         console.error(error);
         res.sendStatus(500);
@@ -59,7 +54,7 @@ module.exports.post = async(req, res) => {
             const result = await Report.post(client, description, state, city, street, zip_code, house_number, reporter, report_type);
             res.status(200).json({id: result.rows[0].id});
         } else {
-            res.status(404).json({error: "Retry with correct values"});
+            res.status(404).json({error: "Incorrect id"});
         }
     } catch (error) {
         console.error(error);
@@ -81,7 +76,7 @@ module.exports.patch = async(req, res) => {
             await Report.patch(client, id, description, state, city, street, zip_code, house_number, reporter, report_type);
             res.sendStatus(204);
         } else {
-            res.sendStatus(404).json({error: "Retry with correct values"});
+            res.status(404).json({error: "Incorrect id"});
         }
     } catch (error) {
         console.error(error);
@@ -99,13 +94,7 @@ module.exports.delete = async(req, res) => {
         await client.query("BEGIN;");
         const reportExist = await Report.exist(client, id);
         if(reportExist) {
-            const {rows: events} = await Event.getLinkedToReport(client, id);
-
-            if(events !== undefined) {
-                for(let i = 0; i < events.length; i++) {
-                    await Event.delete(client, events[i].id);
-                }
-            }
+            await Event.deleteLinkedToReport(client, id);
             await Report.delete(client, id);
             await client.query("COMMIT;");
             res.sendStatus(204);

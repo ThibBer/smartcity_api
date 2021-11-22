@@ -2,7 +2,6 @@ const pool = require('../../model/v1/database');
 const Event = require("../../model/v1/event");
 const Report = require("../../model/v1/report");
 const User = require("../../model/v1/user");
-const ReportType = require("../../model/v1/reportType");
 const Participation = require("../../model/v1/participation");
 
 module.exports.get = async(req, res) => {
@@ -39,7 +38,7 @@ module.exports.get = async(req, res) => {
 
                 res.status(200).json(event);
             }else{
-                res.sendStatus(404);
+                res.status(404).json({error: "Incorrect id"});;
             }
         }
     } catch (error) {
@@ -55,12 +54,8 @@ module.exports.all = async(req, res) => {
 
     try {
         const {rows: events} = await Event.all(client);
+        res.status(200).json(events);
 
-        if(events !== undefined){
-            res.status(200).json(events);
-        }else{
-            res.sendStatus(404);
-        }
     } catch (error) {
         console.error(error);
         res.sendStatus(500);
@@ -80,7 +75,7 @@ module.exports.post = async(req, res) => {
             const result = await Event.post(client, date_hour, duration, created_at, description, report, creator);
             res.status(200).json({id: result.rows[0].id});
         } else {
-            res.status(404).json({error: "Retry with correct values"});
+            res.status(404).json({error: "Incorrect id"});
         }
     } catch(error) {
         console.error(error);
@@ -101,7 +96,7 @@ module.exports.patch = async(req, res) => {
             await Event.patch(client, id, date_hour, duration, created_at, description, report, creator);
             res.sendStatus(204);
         }else{
-            res.sendStatus(404).json({error: "Retry with correct values"});;
+            res.status(404).json({error: "Incorrect id"});
         }
 
     } catch (error) {
@@ -127,7 +122,7 @@ module.exports.delete = async(req, res) => {
             res.sendStatus(204);
         } else {
             await client.query("ROLLBACK;");
-            res.sendStatus(404).json({error: "Retry with correct values"});;
+            res.status(404).json({error: "Incorrect id"});
         }
     } catch (error) {
         await client.query("ROLLBACK;");

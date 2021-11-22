@@ -25,8 +25,8 @@ async function get(client, id) {
     return await client.query(`SELECT * FROM event WHERE id = $1`, [id]);
 }
 
-module.exports.getLinkedToReport = async (client, reportId) => {
-    return await client.query('SELECT * FROM event WHERE report = $1', [reportId]);
+module.exports.deleteLinkedToReport = async (client, reportId) => {
+    return await client.query('DELETE FROM event WHERE report = $1', [reportId]);
 }
 
 module.exports.patchEventsWhenUserDelete = async (client, userId) => {
