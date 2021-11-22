@@ -42,7 +42,7 @@ DROP TABLE IF EXISTS Event CASCADE;
 CREATE TABLE Event
 (
     id        integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    date      date                                   NOT NULL,
+    date_hour      timestamp                              NOT NULL,
     duration  integer,
     created_at timestamp                              NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

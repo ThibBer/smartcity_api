@@ -40,7 +40,7 @@ SECRET_TOKEN=
     - ALL ✅
     - POST ✅
     - PATCH ✅
-    - DELETE ❌
+    - DELETE ✅
 - **ReportType**
     - GET ✅
     - ALL ✅

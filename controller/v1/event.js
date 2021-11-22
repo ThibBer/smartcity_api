@@ -71,16 +71,16 @@ module.exports.all = async(req, res) => {
 
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
-    const {date, duration, create_at, report, creator} = req.body;
+    const {date_hour, duration, created_at, report, creator} = req.body;
 
     try {
         const reportExist = await Report.exist(client, report);
         const creatorExist = await User.exist(client, creator);
         if(reportExist && creatorExist) {
-            const result = await Event.post(client, date, duration, create_at, report, creator);
+            const result = await Event.post(client, date_hour, duration, created_at, report, creator);
             res.status(200).json({id: result.rows[0].id});
         } else {
-            res.sendStatus(404).json({error: "Retry with correct values"});
+            res.status(404).json({error: "Retry with correct values"});
         }
     } catch(error) {
         console.error(error);
@@ -92,13 +92,13 @@ module.exports.post = async(req, res) => {
 
 module.exports.patch = async(req, res) => {
     const client = await pool.connect();
-    const {id, date, duration, create_at, report, creator} = req.body;
+    const {id, date_hour, duration, created_at, report, creator} = req.body;
 
     try {
         const eventExist = await Event.exist(client, id);
 
         if(eventExist){
-            await Event.patch(client, id, date, duration, create_at, report, creator);
+            await Event.patch(client, id, date_hour, duration, created_at, report, creator);
             res.sendStatus(204);
         }else{
             res.sendStatus(404).json({error: "Retry with correct values"});;
@@ -120,14 +120,17 @@ module.exports.delete = async(req, res) => {
     try{
         const eventExist = Event.exist(client, id);
         if(eventExist) {
+            await client.query("BEGIN;");
             await Participation.deleteRelatedToEvent(client, id);
             await Event.delete(client, id);
-
+            await client.query("COMMIT;");
             res.sendStatus(204);
         } else {
+            await client.query("ROLLBACK;");
             res.sendStatus(404).json({error: "Retry with correct values"});;
         }
     } catch (error) {
+        await client.query("ROLLBACK;");
         console.error(error);
         res.sendStatus(500);
     } finally {

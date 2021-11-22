@@ -19,7 +19,7 @@ INSERT INTO Report (description, state, city, street, zip_code, house_number, re
 INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est un très beau report', 'en cours', 'Namur', 'Place d''ange', 5000, 53, 1, 2);
 INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est un très beau report', 'en cours', 'Marche-en-Famenne', 'Rue des peupliers', 6900, 53, 1, 1);
 
-INSERT INTO Event (date, duration, report, creator) VALUES ('2021-12-05', 1, 100, 1);
-INSERT INTO Event (date, duration, report, creator) VALUES ('2021-12-05', 1, 100, 1);
-INSERT INTO Event (date, duration, report, creator) VALUES ('2021-12-05', 1, 100, 1);
-INSERT INTO Event (date, duration, report, creator) VALUES ('2021-12-05', 1, 100, 1);
+INSERT INTO Event (date_hour, duration, report, creator) VALUES ('2021-12-05 09:50:03', 100, 1, 1);
+INSERT INTO Event (date_hour, duration, report, creator) VALUES ('2021-12-05 09:50:03', 100, 1, 1);
+INSERT INTO Event (date_hour, duration, report, creator) VALUES ('2021-12-05 09:50:03', 100, 1, 1);
+INSERT INTO Event (date_hour, duration, report, creator) VALUES ('2021-12-05 09:50:03', 100, 1, 1);
