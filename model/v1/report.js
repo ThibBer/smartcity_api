@@ -28,3 +28,7 @@ async function get(client, id) {
 module.exports.patchReportsWhenUserDelete = async (client, userId) => {
     return await client.query('UPDATE report SET reporter = null where reporter = $1', [userId]);
 }
+
+module.exports.patchReportsWhenTypeDelete = async (client, typeId) => {
+    return await client.query('UPDATE report SET report_type = null where report_type = $1', [typeId]);
+}

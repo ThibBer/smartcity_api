@@ -46,7 +46,7 @@ SECRET_TOKEN=
     - ALL ✅
     - POST ✅
     - PATCH ✅
-    - DELETE ❌
+    - DELETE ✅
 - **Participation**
   - GET ✅
   - POST ✅

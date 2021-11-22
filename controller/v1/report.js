@@ -111,7 +111,7 @@ module.exports.delete = async(req, res) => {
             res.sendStatus(204);
         } else {
             await client.query("ROLLBACK;");
-            res.sendStatus(404).json({error: "Incorrect id"});
+            res.status(404).json({error: "Incorrect id"});
         }
     } catch (error) {
         await client.query("ROLLBACK;");

@@ -35,7 +35,7 @@ CREATE TABLE Report
     created_at   timestamp                              NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     reporter     integer REFERENCES BackOfficeUser (id),
-    report_type  integer REFERENCES ReportType (id)   NOT NULL
+    report_type  integer REFERENCES ReportType (id)
 );
 
 DROP TABLE IF EXISTS Event CASCADE;

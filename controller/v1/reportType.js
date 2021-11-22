@@ -1,5 +1,6 @@
 const pool = require('../../model/v1/database');
 const ReportType = require("../../model/v1/reportType");
+const Report = require("../../model/v1/report");
 
 module.exports.get = async(req, res) => {
     const client = await pool.connect();
@@ -85,11 +86,23 @@ module.exports.patch = async(req, res) => {
 }
 
 module.exports.delete = async(req, res) => {
+    const {id} = req.body;
     const client = await pool.connect();
 
     try {
-        res.sendStatus(501);
+        await client.query("BEGIN;");
+        const typeExist = ReportType.exist(client, id);
+        if(typeExist) {
+            await Report.patchReportsWhenTypeDelete(client, id);
+            await ReportType.delete(client, id);
+            await client.query("COMMIT;");
+            res.sendStatus(204);
+        } else {
+            await client.query("ROLLBACK");
+            res.status(404).json({error: "Incorrect id"});
+        }
     } catch (error) {
+        await client.query("ROLLBACK");
         console.error(error);
         res.sendStatus(500);
     } finally {
