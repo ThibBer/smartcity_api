@@ -8,7 +8,7 @@ const Participation = require("../../model/v1/participation");
 module.exports.get = async(req, res) => {
     const client = await pool.connect();
     const id = parseInt(req.params.id);
-
+    // TODO : Passer via les jointures
     try {
         if (isNaN(id)) {
             res.sendStatus(400);
@@ -71,13 +71,13 @@ module.exports.all = async(req, res) => {
 
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
-    const {date, length, create_at, report, creator} = req.body;
+    const {date, duration, create_at, report, creator} = req.body;
 
     try {
         const reportExist = await Report.exist(client, report);
         const creatorExist = await User.exist(client, creator);
         if(reportExist && creatorExist) {
-            const result = await Event.post(client, date, length, create_at, report, creator);
+            const result = await Event.post(client, date, duration, create_at, report, creator);
             res.status(200).json({id: result.rows[0].id});
         } else {
             res.sendStatus(404).json({error: "Retry with correct values"});
@@ -92,13 +92,13 @@ module.exports.post = async(req, res) => {
 
 module.exports.patch = async(req, res) => {
     const client = await pool.connect();
-    const {id, date, length, create_at, report, creator} = req.body;
+    const {id, date, duration, create_at, report, creator} = req.body;
 
     try {
         const eventExist = await Event.exist(client, id);
 
         if(eventExist){
-            await Event.patch(client, id, date, length, create_at, report, creator);
+            await Event.patch(client, id, date, duration, create_at, report, creator);
             res.sendStatus(204);
         }else{
             res.sendStatus(404).json({error: "Retry with correct values"});;
