@@ -1,11 +1,13 @@
 const pool = require('../../model/v1/database');
 const User = require("../../model/v1/user");
+const Event = require("../../model/v1/event");
+const Report = require("../../model/v1/report");
+const Participation = require("../../model/v1/participation");
 const {getHash} = require("../../utils/jwtUtils");
 
 module.exports.get = async(req, res) => {
     const client = await pool.connect();
     const id = parseInt(req.params.id);
-
     try {
         if (isNaN(id)) {
             res.sendStatus(400);
@@ -69,7 +71,11 @@ module.exports.patch = async(req, res) => {
         const userExist = await User.exist(client, id);
 
         if(userExist){
-            await User.patch(client, id, email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number);
+            let formatedPassword = null;
+            if(password !== undefined && password !== null && password.trim() !== "") {
+                formatedPassword = getHash(password);
+            }
+            await User.patch(client, id, email, formatedPassword, first_name, last_name, birth_date, role, city, street, zip_code, house_number);
             res.sendStatus(204);
         }else{
             res.sendStatus(404);
@@ -84,5 +90,28 @@ module.exports.patch = async(req, res) => {
 }
 
 module.exports.delete = async(req, res) => {
-    throw new Error("Not implemented");
+    const client = await pool.connect();
+    const {id} = req.body;
+
+    try {
+        const userExist = await User.exist(client, id);
+        if(userExist){
+            await client.query("BEGIN;");
+            await Event.patchEventsWhenUserDelete(client, id);
+            await Report.patchReportsWhenUserDelete(client, id);
+            await Participation.deleteRelatedToUser(client, id);
+            await User.delete(client, id);
+            await client.query("COMMIT;");
+            res.sendStatus(204);
+        }else{
+            await client.query("ROLLBACK;");
+            res.sendStatus(404);
+        }
+    } catch (error) {
+        await client.query("ROLLBACK;");
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
 }

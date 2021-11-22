@@ -24,3 +24,7 @@ module.exports.delete = async (client, id) => {
 async function get(client, id) {
     return await client.query(`SELECT R.*, row_to_json(rt) as report_type FROM report r JOIN reportType rt ON r.report_type = rt.id WHERE r.id = $1`, [id]);
 }
+
+module.exports.patchReportsWhenUserDelete = async (client, userId) => {
+    return await client.query('UPDATE report SET reporter = null where reporter = $1', [userId]);
+}

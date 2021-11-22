@@ -59,7 +59,7 @@ module.exports.post = async(req, res) => {
             const result = await Report.post(client, description, state, city, street, zip_code, house_number, reporter, report_type);
             res.status(200).json({id: result.rows[0].id});
         } else {
-            res.sendStatus(404).json({error: "Retry with correct values"});
+            res.status(404).json({error: "Retry with correct values"});
         }
     } catch (error) {
         console.error(error);

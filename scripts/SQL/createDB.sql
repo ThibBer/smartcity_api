@@ -34,7 +34,7 @@ CREATE TABLE Report
     house_number numeric,
     created_at   timestamp                              NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    reporter     integer REFERENCES BackOfficeUser (id) NOT NULL,
+    reporter     integer REFERENCES BackOfficeUser (id),
     report_type  integer REFERENCES ReportType (id)   NOT NULL
 );
 
@@ -42,12 +42,13 @@ DROP TABLE IF EXISTS Event CASCADE;
 CREATE TABLE Event
 (
     id        integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    date_hour      timestamp                              NOT NULL,
-    duration  integer,
+    date_hour  timestamp                              NOT NULL,
+    duration   integer,
+    description varchar,
     created_at timestamp                              NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    report    integer REFERENCES report (id)         NOT NULL,
-    creator   integer REFERENCES BackOfficeUser (id) NOT NULL
+    report    integer REFERENCES report (id)          NOT NULL,
+    creator   integer REFERENCES BackOfficeUser (id)
 );
 DROP TABLE IF EXISTS Participation CASCADE;
 CREATE TABLE Participation

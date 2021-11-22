@@ -27,8 +27,8 @@ SECRET_TOKEN=
     - GET ✅
     - ALL ✅
     - POST ✅
-    - PATCH ❌
-    - DELETE ❌
+    - PATCH ✅
+    - DELETE ✅
 - **Event**
     - GET ✅
     - ALL ✅

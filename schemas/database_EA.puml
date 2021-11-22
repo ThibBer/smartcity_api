@@ -34,12 +34,12 @@ entity Event {
     * id
     date_hour
     duration
-    description
+    description[0..1]
     created_at
 }
 
 entity ReportType {
-    * name
+    * id
     label
 }
 
@@ -47,7 +47,7 @@ User |o--o{ Report : reporter
 Report ||--o{ Event : organisation
 User ||--o{ Participation : participant
 Participation }o--|| Event : participant
-User ||--o{ Event : creator
-Report }o--|| ReportType : type
+User |o--o{ Event : creator
+Report }o--o| ReportType : type
 
 @enduml
