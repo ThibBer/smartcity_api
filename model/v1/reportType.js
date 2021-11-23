@@ -15,7 +15,7 @@ module.exports.post = async (client, label) => {
 }
 
 module.exports.patch = async (client, id, label) => {
-    return await client.query(`UPDATE ReportType SET label = $2 WHERE id = $3`,
+    return await client.query(`UPDATE ReportType SET label = $1 WHERE id = $2`,
         [label, id]);
 }
 
