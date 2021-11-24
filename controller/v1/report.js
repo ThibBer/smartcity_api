@@ -3,6 +3,7 @@ const Report = require("../../model/v1/report");
 const User = require("../../model/v1/user");
 const ReportType = require("../../model/v1/reportType");
 const Event = require("../../model/v1/event");
+const Console = require("console");
 
 module.exports.get = async(req, res) => {
     const client = await pool.connect();
@@ -45,9 +46,11 @@ module.exports.all = async(req, res) => {
 
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
-    const {description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
-
+    let {description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
     try {
+        if(typeof(report_type) === "object") {
+            report_type = report_type.id;
+        }
         const reporterExist = await User.exist(client, reporter);
         const reportTypeExist = await ReportType.exist(client, report_type);
         if(reporterExist && reportTypeExist) {
