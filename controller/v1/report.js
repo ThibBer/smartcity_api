@@ -47,17 +47,18 @@ module.exports.all = async(req, res) => {
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
     let {description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
+
     try {
-        if(typeof(report_type) === "object") {
-            report_type = report_type.id;
-        }
         const reporterExist = await User.exist(client, reporter);
-        const reportTypeExist = await ReportType.exist(client, report_type);
-        if(reporterExist && reportTypeExist) {
-            const result = await Report.post(client, description, state, city, street, zip_code, house_number, reporter, report_type);
-            res.status(200).json({id: result.rows[0].id});
+        const reportTypeExist = await ReportType.exist(client, report_type.id);
+
+        if(!reporterExist){
+            res.status(404).json({error: "Incorrect reporter id"});
+        }else if(!reportTypeExist) {
+            res.status(404).json({error: "Incorrect report type id"});
         } else {
-            res.status(404).json({error: "Incorrect id"});
+            const result = await Report.post(client, description, state, city, street, zip_code, house_number, reporter, report_type.id);
+            res.status(200).json({id: result.rows[0].id});
         }
     } catch (error) {
         console.error(error);
@@ -74,9 +75,9 @@ module.exports.patch = async(req, res) => {
     try{
         const reportExist = await Report.exist(client, id);
         const reporterExist = await User.exist(client, reporter);
-        const reportTypeExist = await ReportType.exist(client, report_type);
+        const reportTypeExist = await ReportType.exist(client, report_type.id);
         if(reportExist && reporterExist && reportTypeExist) {
-            await Report.patch(client, id, description, state, city, street, zip_code, house_number, reporter, report_type);
+            await Report.patch(client, id, description, state, city, street, zip_code, house_number, reporter, report_type.id);
             res.sendStatus(204);
         } else {
             res.status(404).json({error: "Incorrect id"});
