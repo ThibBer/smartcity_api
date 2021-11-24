@@ -6,7 +6,7 @@ module.exports.exist = async (client, id) => {
 }
 
 module.exports.all = async (client) => {
-    return await client.query(`SELECT * FROM ReportType`, []);
+    return await client.query(`SELECT * FROM ReportType ORDER BY id`, []);
 }
 
 module.exports.post = async (client, label) => {

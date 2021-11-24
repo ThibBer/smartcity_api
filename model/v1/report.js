@@ -6,7 +6,7 @@ module.exports.exist = async (client, id) => {
 }
 
 module.exports.all = async (client) => {
-    return await client.query('SELECT R.*, row_to_json(rt) as report_type FROM report r JOIN reportType rt ON r.report_type = rt.id');
+    return await client.query('SELECT R.*, row_to_json(rt) as report_type FROM report r JOIN reportType rt ON r.report_type = rt.id ORDER BY r.id');
 }
 
 module.exports.post = async (client, description, state, city, street, zip_code, house_number, reporter, report_type) => {

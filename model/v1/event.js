@@ -6,7 +6,7 @@ module.exports.exist = async (client, id) => {
 }
 
 module.exports.all = async (client) => {
-    return await client.query(`SELECT * FROM event`);
+    return await client.query(`SELECT * FROM event ORDER BY id`);
 }
 
 module.exports.post = async (client, date_hour, duration, created_at, description, report, creator) => {
