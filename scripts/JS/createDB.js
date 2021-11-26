@@ -20,7 +20,7 @@ async function initDB(){
 initDB()
     .then(() => console.log("Database created !"))
     .catch(error => {
-        console.error("Database cration :");
+        console.error("Database creation :");
         console.error(error)
     }
 );
