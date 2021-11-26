@@ -3,6 +3,34 @@ const Participation = require("../../model/v1/participation");
 const User = require("../../model/v1/user");
 const Event = require("../../model/v1/event");
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Participation:
+ *          type: object
+ *          properties:
+ *              participant:
+ *                  type: integer
+ *                  description: id du participant
+ *              event:
+ *                  type: integer
+ *                  description: id de l'événement
+ *
+ */
+
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      ParticipationFound:
+ *           description: renvoie une participation
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#/components/schemas/Participation'
+ */
+
 module.exports.get = async(req, res) => {
     const client = await pool.connect();
     const participant = parseInt(req.params.participant);
@@ -27,24 +55,61 @@ module.exports.get = async(req, res) => {
     }
 }
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      ParticipationsFound:
+ *           description: renvoie la liste des participations
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#/components/schemas/Participation'
+ */
 module.exports.all = async(req, res) => {
     const client = await pool.connect();
 
     try {
         const {rows: participations} = await Participation.all(client);
 
-        if(participations !== undefined) {
-            res.status(200).json(participations);
-        } else {
-            res.sendStatus(404);
-        }
+        res.status(200).json(participations);
     } catch(error) {
         console.error(error);
+        res.sendStatus(500);
     } finally {
         client.release();
     }
 }
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      ParticipationAdded:
+ *          description: La participation a été ajoutée
+ *      InvalidParticipationId:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          error:
+ *                              type: string
+ *                              description: Message erreur
+ *  requestBodies:
+ *      ParticipationToAdd:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          participant:
+ *                              type: number
+ *                              format: int
+ *                          event:
+ *                              type: number
+ *                              format: int
+ */
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
     const {participant, event} = req.body;
@@ -53,11 +118,13 @@ module.exports.post = async(req, res) => {
         const userExist = await User.exist(client, participant);
         const eventExist = await Event.exist(client, event);
 
-        if(userExist && eventExist) {
+        if(!userExist){
+            res.status(404).json({error: "Id de l'utilisateur invalide"});
+        }else if(!eventExist){
+            res.status(404).json({error: "Id de l'événement invalide"});
+        }else{
             await Participation.post(client, participant, event);
             res.sendStatus(201);
-        } else {
-            res.sendStatus(404);
         }
     } catch (error) {
         console.error(error);
@@ -67,6 +134,14 @@ module.exports.post = async(req, res) => {
     }
 }
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      ParticipationDeleted:
+ *          description: La participation a été supprimée
+ *
+ */
 module.exports.delete = async(req, res) => {
     const client = await pool.connect();
     const {participant, event} = req.body;

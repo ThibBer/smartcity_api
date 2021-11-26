@@ -5,9 +5,74 @@ const Report = require("../../model/v1/report");
 const Participation = require("../../model/v1/participation");
 const {getHash} = require("../../utils/jwtUtils");
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      User:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *                  description: id de l'utilisateur
+ *              email:
+ *                  type: string
+ *                  description: adresse email
+ *              password:
+ *                  type: string
+ *                  description: mot de passe
+ *              first_name:
+ *                  type: string
+ *                  description: prénom
+ *              last_name:
+ *                  type: string
+ *                  description: nom
+ *              birth_date:
+ *                  type: string
+ *                  description: date de naissance
+ *              role:
+ *                  type: string
+ *                  description: role
+ *              city:
+ *                  type: string
+ *                  description: ville
+ *              street:
+ *                  type: string
+ *                  description: rue
+ *              zip_code:
+ *                  type: string
+ *                  description: code postal
+ *              house_number:
+ *                  type: string
+ *                  description: numéro d'habitation
+ *
+ */
+
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      UserFound:
+ *           description: renvoie un utilisateur
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#/components/schemas/User'
+ *      InvalidUserId:
+ *          description: Id utilisateur invalide
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          error:
+ *                              type: string
+ *                              description: Message erreur
+ */
 module.exports.get = async(req, res) => {
     const client = await pool.connect();
     const id = parseInt(req.params.id);
+
     try {
         if (isNaN(id)) {
             res.sendStatus(400);
@@ -17,7 +82,7 @@ module.exports.get = async(req, res) => {
             if(user !== undefined){
                 res.status(200).json(user);
             }else{
-                res.status(404).json({error: "Invalid user id"});
+                res.status(404).json({error: "Id utilisateur invalide"});
             }
         }
     } catch (error) {
@@ -28,6 +93,17 @@ module.exports.get = async(req, res) => {
     }
 }
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      UsersFound:
+ *           description: renvoie la liste des utilisateurs
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#/components/schemas/User'
+ */
 module.exports.all = async(req, res) => {
     const client = await pool.connect();
 
@@ -47,6 +123,50 @@ module.exports.all = async(req, res) => {
     }
 }
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      UserAdded:
+ *          description: l'utilisateur a été enregistré
+ *  requestBodies:
+ *      UserToAdd:
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                      type: object
+ *                      properties:
+ *                          email:
+ *                              type: string
+ *                              description: adresse email
+ *                          password:
+ *                              type: string
+ *                              description: mot de passe
+ *                          first_name:
+ *                              type: string
+ *                              description: prénom
+ *                          last_name:
+ *                              type: string
+ *                              description: nom
+ *                          birth_date:
+ *                              type: string
+ *                              description: date de naissance
+ *                          role:
+ *                              type: string
+ *                              description: role
+ *                          city:
+ *                              type: string
+ *                              description: ville
+ *                          street:
+ *                              type: string
+ *                              description: rue
+ *                          zip_code:
+ *                              type: string
+ *                              description: code postal
+ *                          house_number:
+ *                              type: string
+ *                              description: numéro d'habitation
+ */
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
     const {email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;
@@ -63,6 +183,19 @@ module.exports.post = async(req, res) => {
     }
 }
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      UserUpdated:
+ *          description: l'utilisateur a été mis à jour
+ *  requestBodies:
+ *      UserToUpdate:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                       $ref: '#/components/schemas/User'
+ */
 module.exports.patch = async(req, res) => {
     const client = await pool.connect();
     const {id, email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;
@@ -89,26 +222,37 @@ module.exports.patch = async(req, res) => {
     }
 }
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      UserDeleted:
+ *          description: l'utilisateur a été supprimé
+ */
 module.exports.delete = async(req, res) => {
     const client = await pool.connect();
     const {id} = req.body;
 
     try {
         const userExist = await User.exist(client, id);
+
         if(userExist){
             await client.query("BEGIN;");
+
             await Event.patchEventsWhenUserDelete(client, id);
             await Report.patchReportsWhenUserDelete(client, id);
             await Participation.deleteRelatedToUser(client, id);
             await User.delete(client, id);
+
             await client.query("COMMIT;");
+
             res.sendStatus(204);
         }else{
-            await client.query("ROLLBACK;");
             res.sendStatus(404);
         }
     } catch (error) {
         await client.query("ROLLBACK;");
+
         console.error(error);
         res.sendStatus(500);
     } finally {
