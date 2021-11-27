@@ -38,7 +38,7 @@ module.exports.get = async(req, res) => {
 
                 res.status(200).json(event);
             }else{
-                res.status(404).json({error: "Incorrect id"});;
+                res.status(404).json({error: "Incorrect id"});
             }
         }
     } catch (error) {
