@@ -7,7 +7,6 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant", disabled: true
   config.vm.define "PostgreSQL"
 
-
    config.vm.provider "virtualbox" do |vb|
      vb.gui = false
      vb.memory = 512

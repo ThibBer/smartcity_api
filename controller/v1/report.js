@@ -3,7 +3,6 @@ const Report = require("../../model/v1/report");
 const User = require("../../model/v1/user");
 const ReportType = require("../../model/v1/reportType");
 const Event = require("../../model/v1/event");
-const Console = require("console");
 
 module.exports.get = async(req, res) => {
     const client = await pool.connect();
