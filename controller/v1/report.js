@@ -43,6 +43,30 @@ module.exports.all = async(req, res) => {
     }
 }
 
+module.exports.getWithUserId = async(req, res) => {
+    const client = await pool.connect();
+    const userId = parseInt(req.params.userId);
+
+    try {
+        if(isNaN(userId)) {
+            res.sendStatus(400);
+        } else {
+            const reporterExist = await User.exist(client, userId);
+            if(!reporterExist) {
+                res.status(404).json({error: "Incorrect reported id"});
+            } else {
+                const {rows: reports} = await Report.getWithUserId(client, userId);
+                res.status(200).json(reports);
+            }
+        }
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
+}
+
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
     let {description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
