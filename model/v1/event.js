@@ -45,6 +45,10 @@ module.exports.deleteLinkedToReport = async (client, reportId) => {
     return await client.query('DELETE FROM Event WHERE report = $1', [reportId]);
 }
 
+module.exports.getWithReportId = async (client, reportId) => {
+    return await client.query('SELECT * FROM event WHERE report = $1', [reportId]);
+}
+
 module.exports.patchEventsWhenUserDelete = async (client, userId) => {
     return await client.query('UPDATE Event SET creator = null where creator = $1', [userId]);
 }

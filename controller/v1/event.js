@@ -96,6 +96,30 @@ module.exports.filter = async(req, res) => {
     }
 }
 
+module.exports.getWithReportId = async(req, res) => {
+    const client = await pool.connect();
+    const reportId = parseInt(req.params.reportId);
+
+    try {
+        if(isNaN(reportId)) {
+            res.sendStatus(400);
+        } else {
+            const reportExist = await Report.exist(client, reportId);
+            if(!reportExist) {
+                res.status(404).json({error: "Incorrect report id"});
+            } else {
+                const {rows: events} = await Event.getWithReportId(client, reportId);
+                res.status(200).json(events);
+            }
+        }
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
+}
+
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
     const {date_hour, duration, description, report, creator} = req.body;
