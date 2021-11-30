@@ -206,12 +206,12 @@ module.exports.post = async(req, res) => {
     try {
         const {rows} = await User.getWithEmail(client, email);
         const emailExists = rows[0] !== undefined;
-        if(!emailExists) {
+
+        if(emailExists) {
+            res.status(400).json({error: "L'adresse email existe déjà"});
+        } else {
             const result = await User.post(client, email, await getHash(password), first_name, last_name, birth_date, role, city, street, zip_code, house_number);
             res.status(200).json(result.rows[0]);
-            console.log(result.rows[0]);
-        } else {
-            res.sendStatus(404);
         }
     } catch (error) {
         console.error(error);
