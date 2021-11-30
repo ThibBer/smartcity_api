@@ -9,6 +9,22 @@ module.exports.all = async (client) => {
     return await client.query(`SELECT * FROM BackOfficeUser ORDER BY id`, []);
 }
 
+module.exports.filter = async (client, filter, offset, limit) => {
+    if(filter !== undefined){
+        return await client.query("SELECT * FROM BackOfficeUser WHERE id::varchar(11) ~ $1 OR email ~ $1 OR first_name ~ $1 OR last_name ~ $1 OR birth_date::varchar(50) ~ $1 OR role ~ $1 OR city ~ $1 OR street ~ $1 OR zip_code::varchar(11) ~ $1 OR house_number::varchar(11) ~ $1 ORDER BY id OFFSET $2 LIMIT $3", [filter, offset, limit])
+    }
+
+    return await client.query("SELECT * FROM BackOfficeUser ORDER BY id OFFSET $1 LIMIT $2", [offset, limit]);
+}
+
+module.exports.countWithFilter = async (client, filter) => {
+    if(filter !== undefined){
+        return await client.query("SELECT COUNT(*) as count FROM BackOfficeUser WHERE id::varchar(11) ~ $1 OR email ~ $1 OR first_name ~ $1 OR last_name ~ $1 OR birth_date::varchar(50) ~ $1 OR role ~ $1 OR city ~ $1 OR street ~ $1 OR zip_code::varchar(11) ~ $1 OR house_number::varchar(11) ~ $1", [filter])
+    }
+
+    return await client.query("SELECT COUNT(*) as count FROM BackOfficeUser", []);
+}
+
 module.exports.post = async (client, email, password, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber) => {
     return await client.query(`INSERT INTO BackOfficeUser (email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number) VALUES 
 ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,

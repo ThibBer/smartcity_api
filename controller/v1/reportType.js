@@ -45,6 +45,38 @@ module.exports.all = async(req, res) => {
     }
 }
 
+module.exports.filter = async(req, res) => {
+    const filter = req.params.filter;
+    const offset = req.params.offset;
+    const limit = req.params.limit;
+
+    if(isNaN(offset)){
+        res.status(400).json({error: "Offset invalide"});
+    } else if(isNaN(limit)){
+        res.status(400).json({error: "Limite invalide"});
+    }else{
+        const client = await pool.connect();
+
+        try {
+            await client.query("BEGIN;");
+
+            const {rows: reportTypes} = await ReportType.filter(client, filter, offset, limit);
+            const {rows} = await ReportType.countWithFilter(client, filter);
+            await client.query("COMMIT;");
+
+            const counts = rows[0].count;
+
+            res.status(200).json({countWithoutLimit: counts, data: reportTypes});
+        } catch (error) {
+            await client.query("ROLLBACK;");
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
+        }
+    }
+}
+
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
     const {label} = req.body;
@@ -98,11 +130,11 @@ module.exports.delete = async(req, res) => {
             await client.query("COMMIT;");
             res.sendStatus(204);
         } else {
-            await client.query("ROLLBACK");
+            await client.query("ROLLBACK;");
             res.status(404).json({error: "Incorrect id"});
         }
     } catch (error) {
-        await client.query("ROLLBACK");
+        await client.query("ROLLBACK;");
         console.error(error);
         res.sendStatus(500);
     } finally {

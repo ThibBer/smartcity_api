@@ -123,6 +123,38 @@ module.exports.all = async(req, res) => {
     }
 }
 
+module.exports.filter = async(req, res) => {
+    const filter = req.params.filter;
+    const offset = req.params.offset;
+    const limit = req.params.limit;
+
+    if(isNaN(offset)){
+        res.status(400).json({error: "Offset invalide"});
+    } else if(isNaN(limit)){
+        res.status(400).json({error: "Limite invalide"});
+    }else{
+        const client = await pool.connect();
+
+        try {
+            await client.query("BEGIN;");
+
+            const {rows: users} = await User.filter(client, filter, offset, limit);
+            const {rows} = await User.countWithFilter(client, filter);
+            await client.query("COMMIT;");
+
+            const counts = rows[0].count;
+
+            res.status(200).json({countWithoutLimit: counts, data: users});
+        } catch (error) {
+            await client.query("ROLLBACK;");
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
+        }
+    }
+}
+
 /**
  *@swagger
  *components:
@@ -172,9 +204,15 @@ module.exports.post = async(req, res) => {
     const {email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;
 
     try {
-        const result = await User.post(client, email, await getHash(password), first_name, last_name, birth_date, role, city, street, zip_code, house_number);
-
-        res.status(200).json({id: result.rows[0].id});
+        const {rows} = await User.getWithEmail(client, email);
+        const emailExists = rows[0] !== undefined;
+        if(!emailExists) {
+            const result = await User.post(client, email, await getHash(password), first_name, last_name, birth_date, role, city, street, zip_code, house_number);
+            res.status(200).json(result.rows[0]);
+            console.log(result.rows[0]);
+        } else {
+            res.sendStatus(404);
+        }
     } catch (error) {
         console.error(error);
         res.sendStatus(500);

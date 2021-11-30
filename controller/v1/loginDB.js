@@ -17,8 +17,7 @@ module.exports.login = async(req, res) => {
             if(user === null) {
                 res.sendStatus(404);
             } else {
-                const payload = {id: user.id, email, first_name: user.first_name, last_name: user.last_name, role: user.role};
-                const token = jwt.sign(payload, process.env.SECRET_TOKEN, {expiresIn: '1d'});
+                const token = jwt.sign({user:user}, process.env.SECRET_TOKEN, {expiresIn: '1d'});
 
                 res.status(200).json(token);
             }
