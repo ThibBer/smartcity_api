@@ -6,15 +6,15 @@ module.exports.exist = async (client, id) => {
 }
 
 module.exports.all = async (client) => {
-    return await client.query('SELECT R.*, row_to_json(rt) as report_type FROM report r JOIN reportType rt ON r.report_type = rt.id ORDER BY r.id');
+    return await client.query('SELECT r.*, row_to_json(rt) as report_type FROM report r JOIN reportType rt ON r.report_type = rt.id ORDER BY r.id');
 }
 
 module.exports.filter = async (client, filter, offset, limit) => {
     if(filter !== undefined){
-        return await client.query("SELECT * FROM report WHERE id::varchar(11) ~ $1 OR description ~ $1 OR state ~ $1 OR city ~ $1 OR street ~ $1 OR zip_code::varchar(11) ~ $1 OR house_number::varchar(11) ~ $1 OR reporter::varchar(11) ~ $1 OR report_type::varchar(11) ~ $1 ORDER BY id OFFSET $2 LIMIT $3", [filter, offset, limit])
+        return await client.query("SELECT r.*, row_to_json(rt) as report_type FROM report r JOIN reportType rt ON r.report_type = rt.id WHERE r.id::varchar(11) ~ $1 OR r.description ~ $1 OR r.state ~ $1 OR r.city ~ $1 OR r.street ~ $1 OR r.zip_code::varchar(11) ~ $1 OR r.house_number::varchar(11) ~ $1 OR r.reporter::varchar(11) ~ $1 OR r.report_type::varchar(11) ~ $1 ORDER BY r.id OFFSET $2 LIMIT $3", [filter, offset, limit])
     }
 
-    return await client.query("SELECT * FROM report ORDER BY id OFFSET $1 LIMIT $2", [offset, limit]);
+    return await client.query("SELECT r.*, row_to_json(rt) as report_type FROM report r JOIN reportType rt ON r.report_type = rt.id ORDER BY id OFFSET $1 LIMIT $2", [offset, limit]);
 }
 
 module.exports.countWithFilter = async (client, filter) => {
