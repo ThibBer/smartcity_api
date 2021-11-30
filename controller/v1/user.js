@@ -242,11 +242,12 @@ module.exports.patch = async(req, res) => {
         const userExist = await User.exist(client, id);
 
         if(userExist){
-            let formatedPassword = null;
+            let formattedPassword = null;
             if(password !== undefined && password !== null && password.trim() !== "") {
-                formatedPassword = getHash(password);
+                formattedPassword = getHash(password);
             }
-            await User.patch(client, id, email, formatedPassword, first_name, last_name, birth_date, role, city, street, zip_code, house_number);
+
+            await User.patch(client, id, email, formattedPassword, first_name, last_name, birth_date, role, city, street, zip_code, house_number);
             res.sendStatus(204);
         }else{
             res.sendStatus(404);

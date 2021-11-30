@@ -4,6 +4,11 @@ INSERT INTO BackOfficeUser (email, password, first_name, last_name, birth_date, 
 INSERT INTO ReportType (label) VALUES ('Dépôt clandestin');
 INSERT INTO ReportType (label) VALUES ('Lampadaire cassé');
 INSERT INTO ReportType (label) VALUES ('Trottoire dégradé');
+INSERT INTO ReportType (label) VALUES ('Pollution');
+INSERT INTO ReportType (label) VALUES ('Vandalisme');
+INSERT INTO ReportType (label) VALUES ('Espace public dégradé');
+INSERT INTO ReportType (label) VALUES ('Déchets ménagers encombrants');
+INSERT INTO ReportType (label) VALUES ('Graffitis');
 
 INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est un très beau report', 'pending', 'Marche-en-Famenne', 'Rue des peupliers', 6900, 53, 1, 2);
 INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est un très beau report', 'pending', 'Namur', 'Place d''ange', 5000, 53, 1, 1);
