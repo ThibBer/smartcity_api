@@ -81,7 +81,6 @@ module.exports.filter = async(req, res) => {
 
     try {
         const {rows: reports} = await Report.filter(client, filter);
-        console.log(reports)
 
         res.status(200).json(reports);
     } catch (error) {

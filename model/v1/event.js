@@ -11,10 +11,10 @@ module.exports.all = async (client) => {
 
 module.exports.filter = async (client, filter, offset, limit) => {
     if(filter !== undefined){
-        return await client.query("SELECT * FROM Event WHERE id::varchar(11) ~ $1 OR duration::varchar(11) ~ $1 OR description ~ $1 OR report::varchar(11) ~ $1 OR duration::varchar(11) ~ $1 OR creator::varchar(11) ~ $1 ORDER BY id OFFSET $2 LIMIT $3", [filter, offset, limit])
+        return await client.query("SELECT *, row_to_json(b) as creator, row_to_json(r) as report FROM Event JOIN backofficeuser b on event.creator = b.id JOIN report r on r.id = event.report WHERE r.id::varchar(11) ~ $1 OR duration::varchar(11) ~ $1 OR r.description ~ $1 OR report::varchar(11) ~ $1 OR duration::varchar(11) ~ $1 OR creator::varchar(11) ~ $1 ORDER BY r.id OFFSET $2 LIMIT $3", [filter, offset, limit])
     }
 
-    return await client.query("SELECT * FROM Event ORDER BY id OFFSET $1 LIMIT $2", [offset, limit]);
+    return await client.query("SELECT *, row_to_json(b) as creator, row_to_json(r) as report FROM Event JOIN backofficeuser b on event.creator = b.id JOIN report r on r.id = event.report ORDER BY r.id OFFSET $1 LIMIT $2", [offset, limit]);
 }
 
 module.exports.countWithFilter = async (client, filter) => {
