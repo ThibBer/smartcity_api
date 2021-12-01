@@ -104,7 +104,7 @@ module.exports.post = async(req, res) => {
     let {description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
 
     try {
-        const reporterExist = await User.exist(client, reporter);
+        const reporterExist = await User.exist(client, reporter.id);
         const reportTypeExist = await ReportType.exist(client, report_type.id);
 
         if(!reporterExist){
@@ -112,7 +112,7 @@ module.exports.post = async(req, res) => {
         }else if(!reportTypeExist) {
             res.status(404).json({error: "Incorrect report type id"});
         } else {
-            const result = await Report.post(client, description, state, city, street, zip_code, house_number, reporter, report_type.id);
+            const result = await Report.post(client, description, state, city, street, zip_code, house_number, reporter.id, report_type.id);
             res.status(200).json({id: result.rows[0].id});
         }
     } catch (error) {
@@ -129,10 +129,10 @@ module.exports.patch = async(req, res) => {
 
     try{
         const reportExist = await Report.exist(client, id);
-        const reporterExist = await User.exist(client, reporter);
+        const reporterExist = await User.exist(client, reporter.id);
         const reportTypeExist = await ReportType.exist(client, report_type.id);
         if(reportExist && reporterExist && reportTypeExist) {
-            await Report.patch(client, id, description, state, city, street, zip_code, house_number, reporter, report_type.id);
+            await Report.patch(client, id, description, state, city, street, zip_code, house_number, reporter.id, report_type.id);
             res.sendStatus(204);
         } else {
             res.status(404).json({error: "Incorrect id"});
