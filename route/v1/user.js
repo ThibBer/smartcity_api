@@ -25,8 +25,9 @@ const router = require("express").Router();
  */
 router.get('/:id', UserController.get);
 
-router.get("/filter/:offset&:limit&:filter", UserController.filter);
-router.get("/filter/:offset&:limit", UserController.filter);
+router.get("/filter/:offset&:limit&:filter", UserController.filterWithOffsetLimit);
+router.get("/filter/:offset&:limit", UserController.filterWithOffsetLimit);
+router.get("/filter/:filter", UserController.filter);
 
 /**
  * @swagger

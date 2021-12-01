@@ -123,7 +123,7 @@ module.exports.all = async(req, res) => {
     }
 }
 
-module.exports.filter = async(req, res) => {
+module.exports.filterWithOffsetLimit = async(req, res) => {
     const filter = req.params.filter;
     const offset = req.params.offset;
     const limit = req.params.limit;
@@ -138,7 +138,7 @@ module.exports.filter = async(req, res) => {
         try {
             await client.query("BEGIN;");
 
-            const {rows: users} = await User.filter(client, filter, offset, limit);
+            const {rows: users} = await User.filterWithOffsetLimit(client, filter, offset, limit);
             const {rows} = await User.countWithFilter(client, filter);
             await client.query("COMMIT;");
 
@@ -152,6 +152,23 @@ module.exports.filter = async(req, res) => {
         } finally {
             client.release();
         }
+    }
+}
+
+module.exports.filter = async(req, res) => {
+    const filter = req.params.filter;
+
+    const client = await pool.connect();
+
+    try {
+        const {rows: users} = await User.filter(client, filter);
+
+        res.status(200).json(users);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
     }
 }
 
