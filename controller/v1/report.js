@@ -5,13 +5,14 @@ const ReportType = require("../../model/v1/reportType");
 const Event = require("../../model/v1/event");
 
 module.exports.get = async(req, res) => {
-    const client = await pool.connect();
     const id = parseInt(req.params.id);
 
-    try {
-        if (isNaN(id)) {
-            res.sendStatus(400);
-        } else {
+    if (isNaN(id)) {
+        res.sendStatus(400);
+    } else {
+        const client = await pool.connect();
+
+        try {
             const {rows: reports} = await Report.get(client, id);
             const report = reports[0];
 
@@ -20,12 +21,12 @@ module.exports.get = async(req, res) => {
             }else{
                 res.status(200).json(report);
             }
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
         }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
     }
 }
 
@@ -83,10 +84,8 @@ module.exports.filter = async(req, res) => {
 
     try {
         const {rows: reports} = await Report.filter(client, filter);
-
         res.status(200).json(reports);
     } catch (error) {
-        await client.query("ROLLBACK;");
         console.error(error);
         res.sendStatus(500);
     } finally {
@@ -95,37 +94,40 @@ module.exports.filter = async(req, res) => {
 }
 
 module.exports.getWithUserId = async(req, res) => {
-    const client = await pool.connect();
     const userId = parseInt(req.params.userId);
 
-    try {
-        if(isNaN(userId)) {
-            res.sendStatus(400);
-        } else {
+    if(isNaN(userId)) {
+        res.sendStatus(400);
+    } else {
+        const client = await pool.connect();
+
+        try {
             const reporterExist = await User.exist(client, userId);
+
             if(!reporterExist) {
-                res.status(404).json({error: "Incorrect reported id"});
+                res.status(404);
             } else {
                 const {rows: reports} = await Report.getWithUserId(client, userId);
                 res.status(200).json(reports);
             }
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
         }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
     }
 }
 
 module.exports.post = async(req, res) => {
-    const client = await pool.connect();
     let {description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
 
-    try {
-        if(state === undefined || city === undefined || street === undefined || zip_code === undefined || house_number === undefined || reporter === undefined || report_type === undefined){
-            res.sendStatus(400);
-        }else{
+    if(state === undefined || city === undefined || street === undefined || zip_code === undefined || house_number === undefined || reporter === undefined || report_type === undefined){
+        res.sendStatus(400);
+    }else{
+        const client = await pool.connect();
+
+        try {
             const reporterId = reporter.id ?? reporter;
             const reportTypeId = report_type.id ?? report_type;
 
@@ -133,65 +135,82 @@ module.exports.post = async(req, res) => {
             const reportTypeExist = await ReportType.exist(client, reportTypeId);
 
             if(!reporterExist){
-                res.status(404).json({error: "Incorrect reporter id"});
+                res.status(404).json({error: "Utilisateur inconnu"});
             }else if(!reportTypeExist) {
-                res.status(404).json({error: "Incorrect report type id"});
+                res.status(404).json({error: "Type de report inconnu"});
             } else {
                 const result = await Report.post(client, description, state, city, street, zip_code, house_number, reporterId, reportTypeId);
                 res.status(200).json({id: result.rows[0].id});
             }
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
         }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
     }
 }
 
 module.exports.patch = async(req, res) => {
-    const client = await pool.connect();
     const {id, description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
 
-    try{
-        const reportExist = await Report.exist(client, id);
-        const reporterExist = await User.exist(client, reporter.id);
-        const reportTypeExist = await ReportType.exist(client, report_type.id);
-        if(reportExist && reporterExist && reportTypeExist) {
-            await Report.patch(client, id, description, state, city, street, zip_code, house_number, reporter.id, report_type.id);
-            res.sendStatus(204);
-        } else {
-            res.status(404).json({error: "Incorrect id"});
+    if(isNaN(id) || state === undefined || city === undefined || street === undefined || zip_code === undefined || house_number === undefined || reporter === undefined || report_type === undefined){
+        res.sendStatus(400);
+    }else{
+        const client = await pool.connect();
+
+        try{
+            const reporterId = reporter.id ?? reporter;
+            const reportTypeId = report_type.id ?? report_type;
+
+            const reportExist = await Report.exist(client, id);
+            const reporterExist = await User.exist(client, reporterId);
+            const reportTypeExist = await ReportType.exist(client, reportTypeId);
+
+            if(!reportExist || !reporterExist || !reportTypeExist) {
+                res.sendStatus(404);
+            } else {
+                await Report.patch(client, id, description, state, city, street, zip_code, house_number, reporterId, reportTypeId);
+                res.sendStatus(204);
+            }
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
         }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
     }
 }
 
 module.exports.delete = async(req, res) => {
-    const {id} = req.body;
-    const client = await pool.connect();
+    const id = parseInt(req.body.id);
 
-    try{
-        await client.query("BEGIN;");
-        const reportExist = await Report.exist(client, id);
-        if(reportExist) {
-            await Event.deleteLinkedToReport(client, id);
-            await Report.delete(client, id);
-            await client.query("COMMIT;");
-            res.sendStatus(204);
-        } else {
+    if(isNaN(id)){
+        res.sendStatus(400);
+    }else{
+        const client = await pool.connect();
+
+        try{
+            const reportExist = await Report.exist(client, id);
+
+            if(!reportExist) {
+                res.sendStatus(404);
+            } else {
+                await client.query("BEGIN;");
+
+                await Event.deleteLinkedToReport(client, id);
+                await Report.delete(client, id);
+
+                await client.query("COMMIT;");
+
+                res.sendStatus(204);
+            }
+        } catch (error) {
             await client.query("ROLLBACK;");
-            res.status(404).json({error: "Incorrect id"});
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
         }
-    } catch (error) {
-        await client.query("ROLLBACK;");
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
     }
 }

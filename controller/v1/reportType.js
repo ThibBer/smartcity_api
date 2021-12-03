@@ -3,27 +3,28 @@ const ReportType = require("../../model/v1/reportType");
 const Report = require("../../model/v1/report");
 
 module.exports.get = async(req, res) => {
-    const client = await pool.connect();
     const id = parseInt(req.params.id);
 
-    try {
-        if (isNaN(id)) {
-            res.status(400).json({error: "Id du type de signalement invalide"});
-        } else {
+    if (isNaN(id)) {
+        res.status(400).json({error: "Id du type de signalement invalide"});
+    } else {
+        const client = await pool.connect();
+
+        try {
             const {rows: users} = await ReportType.get(client, id);
 
             const user = users[0];
-            if(user !== undefined){
-                res.status(200).json(user);
-            }else{
+            if(user === undefined){
                 res.sendStatus(404);
+            }else{
+                res.status(200).json(user);
             }
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
         }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
     }
 }
 
@@ -74,35 +75,36 @@ module.exports.filter = async(req, res) => {
 }
 
 module.exports.post = async(req, res) => {
-    const client = await pool.connect();
     const {label} = req.body;
 
-    try {
-        if(label === undefined || label.trim() === ""){
-            res.status(400).json({error: "Label invalide"});
-        }else{
-            const result = await ReportType.post(client, label);
+    if(label === undefined || label.trim() === ""){
+        res.status(400).json({error: "Label invalide"});
+    }else{
+        const client = await pool.connect();
 
+        try {
+            const result = await ReportType.post(client, label);
             res.status(200).json({id: result.rows[0].id});
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
         }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
     }
 }
 
 module.exports.patch = async(req, res) => {
-    const client = await pool.connect();
     const {id, label} = req.body;
 
-    try {
-        if (isNaN(id)) {
-            res.status(400).json({error: "Id invalide"});
-        } if (label === undefined || label.trim() === "") {
-            res.status(400).json({error: "Label invalide"});
-        }else {
+    if (isNaN(id)) {
+        res.status(400).json({error: "Id invalide"});
+    } if (label === undefined || label.trim() === "") {
+        res.status(400).json({error: "Label invalide"});
+    }else {
+        const client = await pool.connect();
+
+        try {
             const reportTypeExist = await ReportType.exist(client, id);
 
             if(!reportTypeExist){
@@ -111,37 +113,42 @@ module.exports.patch = async(req, res) => {
                 await ReportType.patch(client, id, label);
                 res.sendStatus(204);
             }
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
         }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
     }
 }
 
 module.exports.delete = async(req, res) => {
-    const {id} = req.body;
-    const client = await pool.connect();
+    const id = parseInt(req.body.id);
 
-    try {
-        await client.query("BEGIN;");
-        const typeExist = ReportType.exist(client, id);
+    if(isNaN(id)){
+        res.sendStatus(400);
+    }else{
+        const client = await pool.connect();
 
-        if(typeExist) {
-            await Report.patchReportsWhenTypeDelete(client, id);
-            await ReportType.delete(client, id);
-            await client.query("COMMIT;");
-            res.sendStatus(204);
-        } else {
+        try {
+            await client.query("BEGIN;");
+            const typeExist = ReportType.exist(client, id);
+
+            if(typeExist) {
+                await Report.patchReportsWhenTypeDelete(client, id);
+                await ReportType.delete(client, id);
+                await client.query("COMMIT;");
+                res.sendStatus(204);
+            } else {
+                await client.query("ROLLBACK;");
+                res.status(404).json({error: "Incorrect id"});
+            }
+        } catch (error) {
             await client.query("ROLLBACK;");
-            res.status(404).json({error: "Incorrect id"});
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
         }
-    } catch (error) {
-        await client.query("ROLLBACK;");
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
     }
 }

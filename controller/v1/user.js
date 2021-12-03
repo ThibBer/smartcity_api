@@ -70,13 +70,14 @@ const {getHash} = require("../../utils/jwtUtils");
  *                              description: Message erreur
  */
 module.exports.get = async(req, res) => {
-    const client = await pool.connect();
     const id = parseInt(req.params.id);
 
-    try {
-        if (isNaN(id)) {
-            res.sendStatus(400);
-        } else {
+    if (isNaN(id)) {
+        res.sendStatus(400);
+    } else {
+        const client = await pool.connect();
+
+        try {
             const {rows: users} = await User.get(client, id);
             const user = users[0];
             if(user !== undefined){
@@ -84,49 +85,19 @@ module.exports.get = async(req, res) => {
             }else{
                 res.status(404).json({error: "Id utilisateur invalide"});
             }
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
         }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
-
-/**
- * @swagger
- * components:
- *  responses:
- *      UsersFound:
- *           description: renvoie la liste des utilisateurs
- *           content:
- *               application/json:
- *                   schema:
- *                       $ref: '#/components/schemas/User'
- */
-module.exports.all = async(req, res) => {
-    const client = await pool.connect();
-
-    try {
-        const {rows: users} = await User.all(client);
-
-        if(users !== undefined){
-            res.status(200).json(users);
-        }else{
-            res.sendStatus(404);
-        }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
     }
 }
 
 module.exports.filterWithOffsetLimit = async(req, res) => {
     const filter = req.params.filter;
-    const offset = req.params.offset;
-    const limit = req.params.limit;
+    const offset = parseInt(req.params.offset);
+    const limit = parseInt(req.params.limit);
 
     if(isNaN(offset)){
         res.status(400).json({error: "Offset invalide"});
@@ -157,7 +128,6 @@ module.exports.filterWithOffsetLimit = async(req, res) => {
 
 module.exports.filter = async(req, res) => {
     const filter = req.params.filter;
-
     const client = await pool.connect();
 
     try {
@@ -217,24 +187,29 @@ module.exports.filter = async(req, res) => {
  *                              description: numéro d'habitation
  */
 module.exports.post = async(req, res) => {
-    const client = await pool.connect();
     const {email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;
 
-    try {
-        const {rows} = await User.getWithEmail(client, email);
-        const emailExists = rows[0] !== undefined;
+    if(email === undefined || first_name === undefined || last_name === undefined || birth_date === undefined || role === undefined || city === undefined  || street === undefined || zip_code === undefined || house_number === undefined){
+        res.sendStatus(400);
+    }else{
+        const client = await pool.connect();
 
-        if(emailExists) {
-            res.status(400).json({error: "L'adresse email existe déjà"});
-        } else {
-            const result = await User.post(client, email, await getHash(password), first_name, last_name, birth_date, role, city, street, zip_code, house_number);
-            res.status(200).json(result.rows[0]);
+        try {
+            const {rows} = await User.getWithEmail(client, email);
+            const emailExists = rows[0] !== undefined;
+
+            if(emailExists) {
+                res.status(400).json({error: "L'adresse email existe déjà"});
+            } else {
+                const result = await User.post(client, email, await getHash(password), first_name, last_name, birth_date, role, city, street, zip_code, house_number);
+                res.status(200).json(result.rows[0]);
+            }
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
         }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
     }
 }
 
@@ -252,29 +227,34 @@ module.exports.post = async(req, res) => {
  *                       $ref: '#/components/schemas/User'
  */
 module.exports.patch = async(req, res) => {
-    const client = await pool.connect();
     const {id, email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;
 
-    try {
-        const userExist = await User.exist(client, id);
+    if (email === undefined || first_name === undefined || last_name === undefined || birth_date === undefined || role === undefined || city === undefined || street === undefined || zip_code === undefined || house_number === undefined) {
+        res.sendStatus(400);
+    } else {
+        const client = await pool.connect();
 
-        if(userExist){
-            let formattedPassword = null;
-            if(password !== undefined && password !== null && password.trim() !== "") {
-                formattedPassword = getHash(password);
+        try {
+            const userExist = await User.exist(client, id);
+
+            if(!userExist){
+                res.sendStatus(404);
+            }else{
+                let hashedPassword = undefined;
+                if(password !== undefined && password !== null && password.trim() !== "") {
+                    hashedPassword = getHash(password);
+                }
+
+                await User.patch(client, id, email, hashedPassword, first_name, last_name, birth_date, role, city, street, zip_code, house_number);
+                res.sendStatus(204);
             }
 
-            await User.patch(client, id, email, formattedPassword, first_name, last_name, birth_date, role, city, street, zip_code, house_number);
-            res.sendStatus(204);
-        }else{
-            res.sendStatus(404);
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
         }
-
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
     }
 }
 
@@ -286,32 +266,37 @@ module.exports.patch = async(req, res) => {
  *          description: l'utilisateur a été supprimé
  */
 module.exports.delete = async(req, res) => {
-    const client = await pool.connect();
-    const {id} = req.body;
+    const id = parseInt(req.body.id);
 
-    try {
-        const userExist = await User.exist(client, id);
+    if(isNaN(id)){
+        res.sendStatus(400);
+    }else{
+        const client = await pool.connect();
 
-        if(userExist){
-            await client.query("BEGIN;");
+        try {
+            const userExist = await User.exist(client, id);
 
-            await Event.patchEventsWhenUserDelete(client, id);
-            await Report.patchReportsWhenUserDelete(client, id);
-            await Participation.deleteRelatedToUser(client, id);
-            await User.delete(client, id);
+            if(!userExist){
+                res.sendStatus(404);
+            }else{
+                await client.query("BEGIN;");
 
-            await client.query("COMMIT;");
+                await Event.patchEventsWhenUserDelete(client, id);
+                await Report.patchReportsWhenUserDelete(client, id);
+                await Participation.deleteRelatedToUser(client, id);
+                await User.delete(client, id);
 
-            res.sendStatus(204);
-        }else{
-            res.sendStatus(404);
+                await client.query("COMMIT;");
+
+                res.sendStatus(204);
+            }
+        } catch (error) {
+            await client.query("ROLLBACK;");
+
+            console.error(error);
+            res.sendStatus(500);
+        } finally {
+            client.release();
         }
-    } catch (error) {
-        await client.query("ROLLBACK;");
-
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
     }
 }
