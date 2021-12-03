@@ -1,3 +1,7 @@
+async function get(client, id) {
+    return await client.query(`SELECT R.*, row_to_json(rt) as report_type FROM report r JOIN reportType rt ON r.report_type = rt.id WHERE r.id = $1`, [id]);
+}
+
 module.exports.get = get;
 
 module.exports.exist = async (client, id) => {
@@ -43,10 +47,6 @@ module.exports.patch = async (client, id, description, state, city, street, zip_
 
 module.exports.delete = async (client, id) => {
     return await client.query('DELETE FROM report WHERE id = $1', [id]);
-}
-
-async function get(client, id) {
-    return await client.query(`SELECT R.*, row_to_json(rt) as report_type FROM report r JOIN reportType rt ON r.report_type = rt.id WHERE r.id = $1`, [id]);
 }
 
 module.exports.getWithUserId = async (client, reporterId) => {

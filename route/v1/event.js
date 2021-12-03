@@ -1,9 +1,6 @@
 const EventController = require("../../controller/v1/event");
-const ReportController = require("../../controller/v1/report");
-const router = require("express").Router();
-
-router.get('/:id', EventController.get);
-router.get('/', EventController.all);
+const Router = require("express-promise-router");
+const router = new Router;
 
 router.get("/filter/:offset&:limit&:filter", EventController.filter);
 router.get("/filter/:offset&:limit", EventController.filter);

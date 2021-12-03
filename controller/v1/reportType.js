@@ -8,34 +8,16 @@ module.exports.get = async(req, res) => {
 
     try {
         if (isNaN(id)) {
-            res.sendStatus(400);
+            res.status(400).json({error: "Id du type de signalement invalide"});
         } else {
             const {rows: users} = await ReportType.get(client, id);
+
             const user = users[0];
             if(user !== undefined){
                 res.status(200).json(user);
             }else{
                 res.sendStatus(404);
             }
-        }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
-
-module.exports.all = async(req, res) => {
-    const client = await pool.connect();
-
-    try {
-        const {rows: reportTypes} = await ReportType.all(client);
-
-        if(reportTypes !== undefined){
-            res.status(200).json(reportTypes);
-        }else{
-            res.sendStatus(404);
         }
     } catch (error) {
         console.error(error);
@@ -82,9 +64,13 @@ module.exports.post = async(req, res) => {
     const {label} = req.body;
 
     try {
-        const result = await ReportType.post(client, label);
+        if(label === undefined || label.trim() === ""){
+            res.status(400).json({error: "Label invalide"});
+        }else{
+            const result = await ReportType.post(client, label);
 
-        res.status(200).json({id: result.rows[0].id});
+            res.status(200).json({id: result.rows[0].id});
+        }
     } catch (error) {
         console.error(error);
         res.sendStatus(500);
@@ -99,14 +85,17 @@ module.exports.patch = async(req, res) => {
 
     try {
         if (isNaN(id)) {
-            res.sendStatus(400);
-        } else {
-            const response = await ReportType.patch(client, id, label);
+            res.status(400).json({error: "Id invalide"});
+        } if (label === undefined || label.trim() === "") {
+            res.status(400).json({error: "Label invalide"});
+        }else {
+            const reportTypeExist = await ReportType.exist(client, id);
 
-            if(response !== undefined){
-                res.sendStatus(204);
-            }else{
+            if(!reportTypeExist){
                 res.sendStatus(404);
+            }else{
+                await ReportType.patch(client, id, label);
+                res.sendStatus(204);
             }
         }
     } catch (error) {
@@ -124,6 +113,7 @@ module.exports.delete = async(req, res) => {
     try {
         await client.query("BEGIN;");
         const typeExist = ReportType.exist(client, id);
+
         if(typeExist) {
             await Report.patchReportsWhenTypeDelete(client, id);
             await ReportType.delete(client, id);

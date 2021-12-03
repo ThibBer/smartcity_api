@@ -15,10 +15,10 @@ module.exports.get = async(req, res) => {
             const {rows: reports} = await Report.get(client, id);
             const report = reports[0];
 
-            if(report !== undefined){
-                res.status(200).json(report);
-            }else{
+            if(report === undefined){
                 res.status(404).json({error: "Invalid report ID"});
+            }else{
+                res.status(200).json(report);
             }
         }
     } catch (error) {
@@ -45,8 +45,8 @@ module.exports.all = async(req, res) => {
 
 module.exports.filterWithOffsetLimit = async(req, res) => {
     const filter = req.params.filter;
-    const offset = req.params.offset;
-    const limit = req.params.limit;
+    const offset = parseInt(req.params.offset);
+    const limit = parseInt(req.params.limit);
 
     if(isNaN(offset)){
         res.status(400).json({error: "Offset invalide"});
@@ -56,17 +56,19 @@ module.exports.filterWithOffsetLimit = async(req, res) => {
         const client = await pool.connect();
 
         try {
-            await client.query("BEGIN;");
+            const promises = [];
+            const promiseFilterWithOffsetLimit = Report.filterWithOffsetLimit(client, filter, offset, limit);
+            const promiseCountWithFilter = Report.countWithFilter(client, filter);
 
-            const {rows: reports} = await Report.filterWithOffsetLimit(client, filter, offset, limit);
-            const {rows} = await Report.countWithFilter(client, filter);
-            await client.query("COMMIT;");
+            promises.push(promiseFilterWithOffsetLimit, promiseCountWithFilter);
 
-            const counts = rows[0].count;
+            const values = await Promise.all(promises);
+
+            const reports = values[0].rows;
+            const counts = parseInt(values[1].rows[0].count);
 
             res.status(200).json({countWithoutLimit: counts, data: reports});
         } catch (error) {
-            await client.query("ROLLBACK;");
             console.error(error);
             res.sendStatus(500);
         } finally {
@@ -121,16 +123,23 @@ module.exports.post = async(req, res) => {
     let {description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
 
     try {
-        const reporterExist = await User.exist(client, reporter.id);
-        const reportTypeExist = await ReportType.exist(client, report_type.id);
+        if(state === undefined || city === undefined || street === undefined || zip_code === undefined || house_number === undefined || reporter === undefined || report_type === undefined){
+            res.sendStatus(400);
+        }else{
+            const reporterId = reporter.id ?? reporter;
+            const reportTypeId = report_type.id ?? report_type;
 
-        if(!reporterExist){
-            res.status(404).json({error: "Incorrect reporter id"});
-        }else if(!reportTypeExist) {
-            res.status(404).json({error: "Incorrect report type id"});
-        } else {
-            const result = await Report.post(client, description, state, city, street, zip_code, house_number, reporter.id, report_type.id);
-            res.status(200).json({id: result.rows[0].id});
+            const reporterExist = await User.exist(client, reporterId);
+            const reportTypeExist = await ReportType.exist(client, reportTypeId);
+
+            if(!reporterExist){
+                res.status(404).json({error: "Incorrect reporter id"});
+            }else if(!reportTypeExist) {
+                res.status(404).json({error: "Incorrect report type id"});
+            } else {
+                const result = await Report.post(client, description, state, city, street, zip_code, house_number, reporterId, reportTypeId);
+                res.status(200).json({id: result.rows[0].id});
+            }
         }
     } catch (error) {
         console.error(error);

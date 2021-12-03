@@ -1,23 +1,9 @@
+const Router = require("express-promise-router");
+const router = new Router;
+
 const ParticipationController = require("../../controller/v1/participation");
-const router = require("express").Router();
 
 router.get('/:participant&:event', ParticipationController.get);
-
-/**
- * @swagger
- * /participation:
- *  get:
- *      tags:
- *         - Participation
- *      parameters:
- *      responses:
- *          200:
- *              $ref: '#/components/responses/ParticipationsFound'
- *          500:
- *              description: Erreur serveur
- *
- */
-router.get('/', ParticipationController.all);
 
 /**
  * @swagger

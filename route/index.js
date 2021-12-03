@@ -1,4 +1,5 @@
-const router = require("express").Router();
+const Router = require("express-promise-router");
+const router = new Router;
 const v1Router = require("./v1");
 
 router.use(function(req, res, next) {

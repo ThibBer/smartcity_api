@@ -1,5 +1,7 @@
+const Router = require("express-promise-router");
+const router = new Router;
+
 const UserController = require("../../controller/v1/user");
-const router = require("express").Router();
 
 /**
  * @swagger
@@ -28,22 +30,6 @@ router.get('/:id', UserController.get);
 router.get("/filter/:offset&:limit&:filter", UserController.filterWithOffsetLimit);
 router.get("/filter/:offset&:limit", UserController.filterWithOffsetLimit);
 router.get("/filter/:filter", UserController.filter);
-
-/**
- * @swagger
- * /user:
- *  get:
- *      tags:
- *         - User
- *      parameters:
- *      responses:
- *          200:
- *              $ref: '#/components/responses/UsersFound'
- *          500:
- *              description: Erreur serveur
- *
- */
-router.get('/', UserController.all);
 
 /**
  * @swagger

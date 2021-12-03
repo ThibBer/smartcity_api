@@ -1,12 +1,16 @@
+async function get(client, id) {
+    return await client.query(`SELECT * FROM BackOfficeUser WHERE id = $1`, [id]);
+}
+
 module.exports.get = get;
+
+module.exports.getWithEmail = async (client, email) => {
+    return await client.query('SELECT * FROM BackOfficeUser WHERE email = $1', [email]);
+}
 
 module.exports.exist = async (client, id) => {
     const {rows} = await get(client, id);
     return rows[0] !== undefined;
-}
-
-module.exports.all = async (client) => {
-    return await client.query(`SELECT * FROM BackOfficeUser ORDER BY id`, []);
 }
 
 module.exports.filter = async (client, filter) => {
@@ -47,12 +51,4 @@ module.exports.patch = async (client, id, email, password, firstName, lastName, 
 
 module.exports.delete = async (client, id) => {
     return await client.query('DELETE FROM BackOfficeUser WHERE id = $1', [id]);
-}
-
-module.exports.getWithEmail = async (client, email) => {
-    return await client.query('SELECT * FROM BackOfficeUser WHERE email = $1', [email]);
-}
-
-async function get(client, id) {
-    return await client.query(`SELECT * FROM BackOfficeUser WHERE id = $1`, [id]);
 }

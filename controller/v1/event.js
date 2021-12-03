@@ -4,66 +4,6 @@ const Report = require("../../model/v1/report");
 const User = require("../../model/v1/user");
 const Participation = require("../../model/v1/participation");
 
-module.exports.get = async(req, res) => {
-    const client = await pool.connect();
-    const id = parseInt(req.params.id);
-    // TODO : Passer via les jointures
-    try {
-        if (isNaN(id)) {
-            res.sendStatus(400);
-        } else {
-            const {rows: events} = await Event.get(client, id);
-            const event = events[0];
-
-            if(event !== undefined){
-                const {rows: reports} = await Report.get(client, event.report);
-                const report = reports[0];
-
-                if(report !== undefined) {
-                    const {rows: users} = await User.get(client, report.reporter);
-                    const user = users[0];
-
-                    if(user !== undefined){
-                        report.reporter = user;
-                    }
-                    event.report = report;
-                }
-
-                const {rows: creators} = await User.get(client, event.creator);
-
-                const creator = creators[0];
-                if(creator !== undefined) {
-                    event.creator = creator;
-                }
-
-                res.status(200).json(event);
-            }else{
-                res.status(404).json({error: "Incorrect id"});
-            }
-        }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
-
-module.exports.all = async(req, res) => {
-    const client = await pool.connect();
-
-    try {
-        const {rows: events} = await Event.all(client);
-        res.status(200).json(events);
-
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
-
 module.exports.filter = async(req, res) => {
     const filter = req.params.filter;
     const offset = req.params.offset;
@@ -77,17 +17,19 @@ module.exports.filter = async(req, res) => {
         const client = await pool.connect();
 
         try {
-            await client.query("BEGIN;");
+            const promises = [];
+            const promiseEventsFilter = Event.filter(client, filter, offset, limit);
+            const promiseEventsCountFilter = Event.countWithFilter(client, filter);
 
-            const {rows: events} = await Event.filter(client, filter, offset, limit);
-            const {rows} = await Event.countWithFilter(client, filter);
-            await client.query("COMMIT;");
+            promises.push(promiseEventsFilter, promiseEventsCountFilter);
 
-            const counts = rows[0].count;
+            const values = await Promise.all(promises);
+
+            const events = values[0].rows;
+            const counts = parseInt(values[1].rows[0].count);
 
             res.status(200).json({countWithoutLimit: counts, data: events});
         } catch (error) {
-            await client.query("ROLLBACK;");
             console.error(error);
             res.sendStatus(500);
         } finally {
@@ -105,8 +47,9 @@ module.exports.getWithReportId = async(req, res) => {
             res.sendStatus(400);
         } else {
             const reportExist = await Report.exist(client, reportId);
+
             if(!reportExist) {
-                res.status(404).json({error: "Incorrect report id"});
+                res.sendStatus(404);
             } else {
                 const {rows: events} = await Event.getWithReportId(client, reportId);
                 res.status(200).json(events);
@@ -122,21 +65,25 @@ module.exports.getWithReportId = async(req, res) => {
 
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
-    let {date_hour, duration, description, report, creator} = req.body;
+    const {date_hour, duration, description, report, creator} = req.body;
+
     try {
-        if(typeof report === "object")
-            report = report.id;
+        // description is optional
+        if(date_hour === undefined || duration === undefined || report === undefined || creator === undefined){
+            res.sendStatus(400);
+        }else{
+            const reportId = report?.id || report;
+            const creatorId = creator?.id || creator;
 
-        if(typeof creator === "object")
-            creator = creator.id;
-        const reportExist = await Report.exist(client, report);
-        const creatorExist = await User.exist(client, creator);
+            const reportExist = await Report.exist(client, reportId);
+            const creatorExist = await User.exist(client, creatorId);
 
-        if(reportExist && creatorExist) {
-            const result = await Event.post(client, date_hour, duration, description, report, creator);
-            res.status(200).json({id: result.rows[0].id});
-        } else {
-            res.status(404).json({error: "Incorrect id"});
+            if(!reportExist || !creatorExist){
+                res.sendStatus(404);
+            }else{
+                const result = await Event.post(client, date_hour, duration, description, reportId, creatorId);
+                res.status(200).json({id: result.rows[0].id});
+            }
         }
     } catch(error) {
         console.error(error);
@@ -151,15 +98,19 @@ module.exports.patch = async(req, res) => {
     const {id, date_hour, duration, description, report, creator} = req.body;
 
     try {
-        const eventExist = await Event.exist(client, id);
-
-        if(eventExist){
-            await Event.patch(client, id, date_hour, duration, description, report.id, creator.id);
-            res.sendStatus(204);
+        // description is optional
+        if(isNaN(id) || date_hour === undefined || duration === undefined || report === undefined || creator === undefined){
+            res.sendStatus(400);
         }else{
-            res.status(404).json({error: "Incorrect id"});
-        }
+            const eventExist = await Event.exist(client, id);
 
+            if(!eventExist){
+                res.sendStatus(404);
+            }else{
+                await Event.patch(client, id, date_hour, duration, description, report?.id || report, creator.id || creator);
+                res.sendStatus(204);
+            }
+        }
     } catch (error) {
         console.error(error);
         res.sendStatus(500);
@@ -171,19 +122,26 @@ module.exports.patch = async(req, res) => {
 // Must delete related Participations
 module.exports.delete = async(req, res) => {
     const client = await pool.connect();
-    const {id} = req.body;
+    const id = parseInt(req.body?.id);
 
     try{
-        const eventExist = Event.exist(client, id);
-        if(eventExist) {
-            await client.query("BEGIN;");
-            await Participation.deleteRelatedToEvent(client, id);
-            await Event.delete(client, id);
-            await client.query("COMMIT;");
-            res.sendStatus(204);
-        } else {
-            await client.query("ROLLBACK;");
-            res.status(404).json({error: "Incorrect id"});
+        if(isNaN(id)){
+            res.sendStatus(400);
+        }else{
+            const eventExist = await Event.exist(client, id);
+
+            if(!eventExist) {
+                res.sendStatus(404);
+            } else {
+                await client.query("BEGIN;");
+
+                await Participation.deleteRelatedToEvent(client, id);
+                await Event.delete(client, id);
+
+                await client.query("COMMIT;");
+
+                res.sendStatus(204);
+            }
         }
     } catch (error) {
         await client.query("ROLLBACK;");
