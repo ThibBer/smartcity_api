@@ -122,13 +122,18 @@ module.exports.getWithReportId = async(req, res) => {
 
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
-    const {date_hour, duration, description, report, creator} = req.body;
-
+    let {date_hour, duration, description, report, creator} = req.body;
     try {
-        const reportExist = await Report.exist(client, report.id);
-        const creatorExist = await User.exist(client, creator.id);
+        if(typeof report === "object")
+            report = report.id;
+
+        if(typeof creator === "object")
+            creator = creator.id;
+        const reportExist = await Report.exist(client, report);
+        const creatorExist = await User.exist(client, creator);
+
         if(reportExist && creatorExist) {
-            const result = await Event.post(client, date_hour, duration, description, report.id, creator.id);
+            const result = await Event.post(client, date_hour, duration, description, report, creator);
             res.status(200).json({id: result.rows[0].id});
         } else {
             res.status(404).json({error: "Incorrect id"});
