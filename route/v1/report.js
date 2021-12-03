@@ -3,6 +3,7 @@ const router = new Router;
 const ReportController = require("../../controller/v1/report");
 
 router.get('/:id', ReportController.get);
+router.get("/", ReportController.all);
 
 router.get("/filter/:offset&:limit&:filter", ReportController.filterWithOffsetLimit);
 router.get("/filter/:offset&:limit", ReportController.filterWithOffsetLimit);

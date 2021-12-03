@@ -27,6 +27,20 @@ module.exports.get = async(req, res) => {
     }
 }
 
+module.exports.all = async(req, res) => {
+    const client = await pool.connect();
+
+    try {
+        const {rows: users} = await ReportType.all(client);
+        res.status(200).json(users);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
+}
+
 module.exports.filter = async(req, res) => {
     const filter = req.params.filter;
     const offset = req.params.offset;
