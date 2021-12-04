@@ -58,9 +58,6 @@ SECRET_TOKEN=
     - Delete Links For an Event ✅
 
 ## Questions
-- Gestion des clefs étrangères dans les vues en back office ?
-- Charger seulement de X à X données (pour pas tout charger d'un coup)
-- Comment gérer les delete ? (clef étrangères)
+
 
 ## Remarques
-- Changer name par id -> ReportType

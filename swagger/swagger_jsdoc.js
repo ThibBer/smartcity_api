@@ -11,9 +11,9 @@ const options = {
     },
     // Path to the API docs
     apis: [
-        './controller/v1/*',
-        './.model/v1/*',
-        './route/v1/*',
+        './controller/routes/*',
+        './.model/routes/*',
+        './route/routes/*',
     ],
 };
 

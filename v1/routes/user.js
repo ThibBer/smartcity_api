@@ -1,7 +1,9 @@
 const Router = require("express-promise-router");
 const router = new Router;
 
-const UserController = require("../../controller/v1/user");
+const UserController = require("../controller/user");
+const JWTMiddleware = require("../middleware/JWTIdentification");
+const Authorization = require("../middleware/Authorization");
 
 /**
  * @swagger
@@ -25,11 +27,11 @@ const UserController = require("../../controller/v1/user");
  *              description: Erreur serveur
  *
  */
-router.get('/:id', UserController.get);
+router.get('/:id', JWTMiddleware.identification, UserController.get);
 
-router.get("/filter/:offset&:limit&:filter", UserController.filterWithOffsetLimit);
-router.get("/filter/:offset&:limit", UserController.filterWithOffsetLimit);
-router.get("/filter/:filter", UserController.filter);
+router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, UserController.filterWithOffsetLimit);
+router.get("/filter/:offset&:limit", JWTMiddleware.identification, UserController.filterWithOffsetLimit);
+router.get("/filter/:filter", JWTMiddleware.identification, UserController.filter);
 
 /**
  * @swagger
@@ -67,7 +69,7 @@ router.post('/', UserController.post);
  *              description: Erreur serveur
  *
  */
-router.patch('/', UserController.patch);
-router.delete('/', UserController.delete);
+router.patch('/', JWTMiddleware.identification, Authorization.canDoActionOnUser, UserController.patch);
+router.delete('/', JWTMiddleware.identification, Authorization.canDoActionOnUser, UserController.delete);
 
 module.exports = router;

@@ -2,8 +2,8 @@ require("dotenv").config();
 const process = require('process');
 const jwt = require('jsonwebtoken');
 
-const pool = require("../../model/v1/database");
-const login = require("../../model/v1/login");
+const pool = require("../model/database");
+const login = require("../model/login");
 
 module.exports.login = async(req, res) => {
     const client = await pool.connect();
@@ -20,7 +20,8 @@ module.exports.login = async(req, res) => {
             if(user === undefined) {
                 res.sendStatus(404);
             } else {
-                const token = jwt.sign({user:user}, process.env.SECRET_TOKEN, {expiresIn: '1d'});
+                delete user.password;
+                const token = jwt.sign({user: user}, process.env.SECRET_TOKEN, {expiresIn: '1d'});
 
                 res.status(200).json(token);
             }

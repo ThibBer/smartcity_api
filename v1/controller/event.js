@@ -1,8 +1,8 @@
-const pool = require('../../model/v1/database');
-const Event = require("../../model/v1/event");
-const Report = require("../../model/v1/report");
-const User = require("../../model/v1/user");
-const Participation = require("../../model/v1/participation");
+const pool = require('../model/database');
+const Event = require("../model/event");
+const Report = require("../model/report");
+const User = require("../model/user");
+const Participation = require("../model/participation");
 
 module.exports.filter = async(req, res) => {
     const filter = req.params.filter;

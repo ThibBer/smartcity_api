@@ -1,5 +1,4 @@
 require("dotenv").config();
-const process = require('process');
 const jwt = require('jsonwebtoken');
 
 module.exports.identification = async (req, res, next) => {
@@ -10,8 +9,7 @@ module.exports.identification = async (req, res, next) => {
 
         try{
             const decodedJwtToken = jwt.verify(jwtToken, process.env.SECRET_TOKEN);
-            req.session = decodedJwtToken;
-            req.session.authLevel = decodedJwtToken.role;
+            req.session = decodedJwtToken.user;
 
             next();
         }

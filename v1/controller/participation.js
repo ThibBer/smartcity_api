@@ -1,7 +1,7 @@
-const pool = require('../../model/v1/database');
-const Participation = require("../../model/v1/participation");
-const User = require("../../model/v1/user");
-const Event = require("../../model/v1/event");
+const pool = require('../model/database');
+const Participation = require("../model/participation");
+const User = require("../model/user");
+const Event = require("../model/event");
 
 /**
  * @swagger

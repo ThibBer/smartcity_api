@@ -1,8 +1,8 @@
-const pool = require('../../model/v1/database');
-const User = require("../../model/v1/user");
-const Event = require("../../model/v1/event");
-const Report = require("../../model/v1/report");
-const Participation = require("../../model/v1/participation");
+const pool = require('../model/database');
+const User = require("../model/user");
+const Event = require("../model/event");
+const Report = require("../model/report");
+const Participation = require("../model/participation");
 const {getHash} = require("../../utils/jwtUtils");
 
 /**

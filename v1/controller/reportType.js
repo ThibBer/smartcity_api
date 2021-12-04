@@ -1,6 +1,6 @@
-const pool = require('../../model/v1/database');
-const ReportType = require("../../model/v1/reportType");
-const Report = require("../../model/v1/report");
+const pool = require('../model/database');
+const ReportType = require("../model/reportType");
+const Report = require("../model/report");
 
 module.exports.get = async(req, res) => {
     const id = parseInt(req.params.id);

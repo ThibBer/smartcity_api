@@ -1,7 +1,8 @@
 const Router = require("express-promise-router");
 const router = new Router;
 
-const ParticipationController = require("../../controller/v1/participation");
+const ParticipationController = require("../controller/participation");
+const Authorization = require("../middleware/Authorization");
 
 router.get('/:participant&:event', ParticipationController.get);
 
@@ -43,6 +44,6 @@ router.post('/', ParticipationController.post);
  *              description: Erreur serveur
  *
  */
-router.delete('/', ParticipationController.delete);
+router.delete('/', Authorization.canDoActionOnParticipation, ParticipationController.delete);
 
 module.exports = router;
