@@ -9,11 +9,11 @@ const JWTMiddleware = require("../middleware/JWTIdentification");
 
 const router = require("express").Router();
 
-router.use("/event", JWTMiddleware.identification, EventRouter);
+router.use("/event", EventRouter);
 router.use("/login", LoginRouter);
 router.use("/participation", JWTMiddleware.identification, ParticipationRouter);
 router.use("/report", ReportRouter);
-router.use("/reportType", JWTMiddleware.identification, ReportTypeRouter);
+router.use("/reportType", ReportTypeRouter);
 router.use("/user", UserRouter);
 
 module.exports = router;
