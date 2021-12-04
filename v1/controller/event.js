@@ -4,6 +4,65 @@ const Report = require("../model/report");
 const User = require("../model/user");
 const Participation = require("../model/participation");
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Event:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: number
+ *                  format: integer
+ *              date_hour:
+ *                  type: string
+ *                  description: Date / heure de l'événement
+ *              duration:
+ *                  type: number
+ *                  format: integer
+ *                  description: Durée de l'événement
+ *              description:
+ *                  type: string
+ *                  description: Description de l'événement
+ *              created_at:
+ *                  type: string
+ *                  description: Tiemstamp de la création de l'événement
+ *              report:
+ *                  $ref: '#/components/schemas/Report'
+ *              creator:
+ *                  $ref: '#/components/schemas/User'
+ *
+ */
+
+/**
+ * @swagger
+ *  components:
+ *      responses:
+ *          InvalidOffset:
+ *              description: L'offset est invalide
+ *          InvalidLimit:
+ *              description: La limite est invalide
+ *      requestBodies:
+ *          ClientAAjoute:
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          properties:
+ *                              adresse:
+ *                                  type: string
+ *                              nom:
+ *                                  type: string
+ *                              prenom:
+ *                                  type: string
+ *                              password:
+ *                                  type: string
+ *                                  format: password
+ *                          required:
+ *                              - nom
+ *                              - prenom
+ *                              - adresse
+ *                              - password
+ */
 module.exports.filter = async(req, res) => {
     const filter = req.params.filter;
     const offset = req.params.offset;

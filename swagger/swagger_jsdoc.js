@@ -14,6 +14,7 @@ const options = {
         './v1/controller/*',
         './v1/model/*',
         './v1/routes/*',
+        './v1/middleware/*',
     ],
 };
 

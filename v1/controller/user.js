@@ -45,6 +45,39 @@ const {getHash} = require("../../utils/jwtUtils");
  *              house_number:
  *                  type: string
  *                  description: numéro d'habitation
+ *      UserWithoutPassword:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *                  description: id de l'utilisateur
+ *              email:
+ *                  type: string
+ *                  description: adresse email
+ *              first_name:
+ *                  type: string
+ *                  description: prénom
+ *              last_name:
+ *                  type: string
+ *                  description: nom
+ *              birth_date:
+ *                  type: string
+ *                  description: date de naissance
+ *              role:
+ *                  type: string
+ *                  description: role
+ *              city:
+ *                  type: string
+ *                  description: ville
+ *              street:
+ *                  type: string
+ *                  description: rue
+ *              zip_code:
+ *                  type: string
+ *                  description: code postal
+ *              house_number:
+ *                  type: string
+ *                  description: numéro d'habitation
  *
  */
 
@@ -52,14 +85,10 @@ const {getHash} = require("../../utils/jwtUtils");
  * @swagger
  * components:
  *  responses:
- *      UserFound:
- *           description: renvoie un utilisateur
- *           content:
- *               application/json:
- *                   schema:
- *                       $ref: '#/components/schemas/User'
  *      InvalidUserId:
  *          description: Id utilisateur invalide
+ *      UnknowUser:
+ *          description: Utilisateur inconnu
  *          content:
  *              application/json:
  *                  schema:
@@ -83,7 +112,7 @@ module.exports.get = async(req, res) => {
             if(user !== undefined){
                 res.status(200).json(user);
             }else{
-                res.status(404).json({error: "Id utilisateur invalide"});
+                res.status(404).json({error: "Id utilisateur inconnu"});
             }
         } catch (error) {
             console.error(error);
@@ -146,45 +175,18 @@ module.exports.filter = async(req, res) => {
  *@swagger
  *components:
  *  responses:
+ *      EmailAlreadyExist:
+ *          description: L'adresse email existe déjà
  *      UserAdded:
- *          description: l'utilisateur a été enregistré
+ *          description: L'utilisateur a été enregistré
+ *      InvalidUserBody:
+ *          description: Donnée manquante dans le body
  *  requestBodies:
  *      UserToAdd:
  *           content:
  *               application/json:
  *                   schema:
- *                      type: object
- *                      properties:
- *                          email:
- *                              type: string
- *                              description: adresse email
- *                          password:
- *                              type: string
- *                              description: mot de passe
- *                          first_name:
- *                              type: string
- *                              description: prénom
- *                          last_name:
- *                              type: string
- *                              description: nom
- *                          birth_date:
- *                              type: string
- *                              description: date de naissance
- *                          role:
- *                              type: string
- *                              description: role
- *                          city:
- *                              type: string
- *                              description: ville
- *                          street:
- *                              type: string
- *                              description: rue
- *                          zip_code:
- *                              type: string
- *                              description: code postal
- *                          house_number:
- *                              type: string
- *                              description: numéro d'habitation
+ *                       $ref: '#/components/schemas/User'
  */
 module.exports.post = async(req, res) => {
     const {email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;

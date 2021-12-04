@@ -2,6 +2,22 @@ const pool = require('../model/database');
 const ReportType = require("../model/reportType");
 const Report = require("../model/report");
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      ReportType:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: number
+ *                  format: integer
+ *              label:
+ *                  type: string
+ *                  description: Libellé du type de signalement
+ *
+ */
+
 module.exports.get = async(req, res) => {
     const id = parseInt(req.params.id);
 

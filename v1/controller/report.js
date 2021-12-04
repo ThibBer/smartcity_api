@@ -4,6 +4,46 @@ const User = require("../model/user");
 const ReportType = require("../model/reportType");
 const Event = require("../model/event");
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Report:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: number
+ *                  format: integer
+ *              description:
+ *                  type: string
+ *                  description: Description de l'événement
+ *              state:
+ *                  type: string
+ *                  description: État du report
+ *              city:
+ *                  type: string
+ *                  description: Ville du report
+ *              street:
+ *                  type: string
+ *                  description: Rue du report
+ *              zip_code:
+ *                  type: number
+ *                  format: integer
+ *                  description: Code postal du report
+ *              house_number:
+ *                  type: number
+ *                  format: integer
+ *                  description: Numéro d'habitation du report
+ *              created_at:
+ *                  type: string
+ *                  description: Tiemstamp de la création de l'événement
+ *              reporter:
+ *                  $ref: '#/components/schemas/User'
+ *              report_type:
+ *                  $ref: '#/components/schemas/ReportType'
+ *
+ */
+
 module.exports.get = async(req, res) => {
     const id = parseInt(req.params.id);
 

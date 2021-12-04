@@ -11,8 +11,10 @@ const Authorization = require("../middleware/Authorization");
  *  get:
  *      tags:
  *         - User
+ *      security:
+ *          - bearerAuth: []
  *      parameters:
- *          - name: id
+ *          - name: Id
  *            description: Id d'un utilisateur
  *            in: path
  *            required: true
@@ -20,9 +22,16 @@ const Authorization = require("../middleware/Authorization");
  *              type: integer
  *      responses:
  *          200:
- *              $ref: '#/components/responses/UserFound'
- *          404:
- *              $ref: '#/components/responses/InvalidUserId'
+ *              $ref: '#/components/schemas/UserWithoutPassword'
+ *          400:
+ *              description: JWT not valid or JSON body not correct
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          oneOf:
+ *                              - $ref: '#/components/responses/ErrorJWT'
+ *                              - $ref: '#/components/responses/InvalidUserBody'
+ *                              - $ref: '#/components/responses/EmailAlreadyExist'
  *          500:
  *              description: Erreur serveur
  *
@@ -40,11 +49,14 @@ router.get("/filter/:filter", JWTMiddleware.identification, UserController.filte
  *      tags:
  *          - User
  *      security:
+ *          - bearerAuth: []
  *      requestBody:
  *          $ref: '#/components/requestBodies/UserToAdd'
  *      responses:
  *          200:
  *              $ref: '#/components/responses/UserAdded'
+ *          400:
+ *              $ref: '#/components/responses/InvalidUserBody'
  *          500:
  *              description: Erreur serveur
  *
