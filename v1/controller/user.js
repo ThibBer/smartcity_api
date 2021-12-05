@@ -123,6 +123,38 @@ module.exports.get = async(req, res) => {
     }
 }
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      InvalidUserId:
+ *          description: Id utilisateur invalide
+ *      InvalidUserFilterData:
+ *          description: Utilisateur inconnu
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          error:
+ *                              type: string
+ *                              description: Message erreur
+ *      ValidUserFilter:
+ *          description: Utilisateurs correspondants au filtre, décalage et limite
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          countWithoutLimit:
+ *                              type: integer
+ *                              description: Nombre de données correspond au filtre sans limite
+ *                          data:
+ *                              type: array
+ *                              items:
+ *                                  $ref: '#/components/schemas/UserWithoutPassword'
+ *                              description: Utilisateurs correspondants au filter, avec limite et décalage
+ */
 module.exports.filterWithOffsetLimit = async(req, res) => {
     const filter = req.params.filter;
     const offset = parseInt(req.params.offset);
@@ -155,6 +187,19 @@ module.exports.filterWithOffsetLimit = async(req, res) => {
     }
 }
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      UsersFilter:
+ *          description: Utilisateurs correspondants au filtre
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: array
+ *                      items:
+ *                          $ref: '#/components/schemas/UserWithoutPassword'
+ */
 module.exports.filter = async(req, res) => {
     const filter = req.params.filter;
     const client = await pool.connect();
@@ -177,10 +222,15 @@ module.exports.filter = async(req, res) => {
  *  responses:
  *      EmailAlreadyExist:
  *          description: L'adresse email existe déjà
- *      UserAdded:
- *          description: L'utilisateur a été enregistré
- *      InvalidUserBody:
+ *      MissingUserBodyData:
  *          description: Donnée manquante dans le body
+ *      UserAdded:
+ *          description: L'utilsiateur a été ajouté
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: integer
+ *                      description: Id auto généré
  *  requestBodies:
  *      UserToAdd:
  *           content:

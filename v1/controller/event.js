@@ -42,26 +42,6 @@ const Participation = require("../model/participation");
  *              description: L'offset est invalide
  *          InvalidLimit:
  *              description: La limite est invalide
- *      requestBodies:
- *          ClientAAjoute:
- *              content:
- *                  application/json:
- *                      schema:
- *                          properties:
- *                              adresse:
- *                                  type: string
- *                              nom:
- *                                  type: string
- *                              prenom:
- *                                  type: string
- *                              password:
- *                                  type: string
- *                                  format: password
- *                          required:
- *                              - nom
- *                              - prenom
- *                              - adresse
- *                              - password
  */
 module.exports.filter = async(req, res) => {
     const filter = req.params.filter;
