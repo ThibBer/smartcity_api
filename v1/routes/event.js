@@ -10,7 +10,7 @@ router.get("/filter/:offset&:limit", JWTMiddleware.identification, EventControll
 
 router.get('/forreport/:reportId', EventController.getWithReportId);
 
-router.post('/', JWTMiddleware.identification, EventController.post);
+router.post('/', JWTMiddleware.identification, Authorization.canDoActionOnEvent, EventController.post);
 router.patch('/', JWTMiddleware.identification, Authorization.canDoActionOnEvent, EventController.patch);
 router.delete('/', JWTMiddleware.identification, Authorization.canDoActionOnEvent, EventController.delete);
 

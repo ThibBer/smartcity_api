@@ -13,7 +13,7 @@ router.get("/filter/:offset&:limit", JWTMiddleware.identification, ReportControl
 
 router.get("/filter/:filter", JWTMiddleware.identification, ReportController.filter);
 
-router.get('/foruser/:userId', JWTMiddleware.identification, ReportController.getWithUserId);
+router.get('/foruser/:userId', JWTMiddleware.identification, Authorization.canGetReportsForUser, ReportController.getWithUserId);
 
 router.post('/', JWTMiddleware.identification, ReportController.post);
 router.patch('/', JWTMiddleware.identification, Authorization.canDoActionOnReport, ReportController.patch);

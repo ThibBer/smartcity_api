@@ -19,19 +19,20 @@ module.exports.identification = async (req, res, next) => {
     const headerAuth = req.get('authorization');
 
     if(headerAuth !== undefined && headerAuth.includes("Bearer")){
-        const jwtToken =  headerAuth.split(' ')[1];
+        const [_, jwtToken] =  headerAuth.split(' ');
 
         try{
             const decodedJwtToken = jwt.verify(jwtToken, process.env.SECRET_TOKEN);
+            console.log(decodedJwtToken.user)
             req.session = decodedJwtToken.user;
 
             next();
         }
         catch (e) {
             console.error(e);
-            res.sendStatus(400);
+            res.sendStatus(401);
         }
     } else {
-        res.sendStatus(401);
+        res.sendStatus(400);
     }
 };

@@ -1,6 +1,7 @@
 const pool = require('../model/database');
 const ReportType = require("../model/reportType");
 const Report = require("../model/report");
+const Event = require("../model/event");
 
 /**
  * @swagger
@@ -71,13 +72,16 @@ module.exports.filter = async(req, res) => {
         const client = await pool.connect();
 
         try {
-            await client.query("BEGIN;");
+            const promises = [];
+            const promiseReportTypesFilter = ReportType.filter(client, filter, offset, limit);
+            const promiseReportTypesCountFilter = ReportType.countWithFilter(client, filter);
 
-            const {rows: reportTypes} = await ReportType.filter(client, filter, offset, limit);
-            const {rows} = await ReportType.countWithFilter(client, filter);
-            await client.query("COMMIT;");
+            promises.push(promiseReportTypesFilter, promiseReportTypesCountFilter);
 
-            const counts = rows[0].count;
+            const values = await Promise.all(promises);
+
+            const reportTypes = values[0].rows;
+            const counts = parseInt(values[1].rows[0].count);
 
             res.status(200).json({countWithoutLimit: counts, data: reportTypes});
         } catch (error) {

@@ -6,7 +6,7 @@ API for SmartCity project at Henallux IG3
 - BERG Thibaut (etu43163@henallux.be)
 
 ## .env file
-Add a .env file for database connection 
+Add a .env file for database connection at the root of the project
 
 ```
 API_PORT=
@@ -58,6 +58,9 @@ SECRET_TOKEN=
     - Delete Links For an Event ✅
 
 ## Questions
+Comment ça se passe quand le middleware à besoin d'une info dans le body/url et qu'il ne la trouvé pas ? Il doit aussi renvoyer 400 ? Ou juste 403 ?
+Comment faire quand un middleware doit faire des vérifications qui nécéssitent des requêtes SQL
+Séparer les Authorization dans des fichiers != en fonction du type (user, report, etc ...) ?
 
 
 ## Remarques

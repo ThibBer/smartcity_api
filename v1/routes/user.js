@@ -38,7 +38,7 @@ const Authorization = require("../middleware/Authorization");
  *              description: Erreur serveur
  *
  */
-router.get('/:id', JWTMiddleware.identification, UserController.get);
+router.get('/:id', JWTMiddleware.identification, Authorization.canGetUser, UserController.get);
 
 /**
  * @swagger
@@ -84,7 +84,7 @@ router.get('/:id', JWTMiddleware.identification, UserController.get);
  *              description: Erreur serveur
  *
  */
-router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, UserController.filterWithOffsetLimit);
+router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Authorization.mustBeAdmin, UserController.filterWithOffsetLimit);
 
 /**
  * @swagger
@@ -121,7 +121,7 @@ router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, UserC
  *              description: Erreur serveur
  *
  */
-router.get("/filter/:offset&:limit", JWTMiddleware.identification, UserController.filterWithOffsetLimit);
+router.get("/filter/:offset&:limit", JWTMiddleware.identification, Authorization.mustBeAdmin, UserController.filterWithOffsetLimit);
 
 /**
  * @swagger
@@ -148,7 +148,7 @@ router.get("/filter/:offset&:limit", JWTMiddleware.identification, UserControlle
  *              description: Erreur serveur
  *
  */
-router.get("/filter/:filter", JWTMiddleware.identification, UserController.filter);
+router.get("/filter/:filter", JWTMiddleware.identification, Authorization.mustBeAdmin, UserController.filter);
 
 /**
  * @swagger
@@ -169,7 +169,7 @@ router.get("/filter/:filter", JWTMiddleware.identification, UserController.filte
  *              description: Erreur serveur
  *
  */
-router.post('/', UserController.post);
+router.post('/', Authorization.canPostUser, UserController.post);
 
 /**
  * @swagger
@@ -190,7 +190,7 @@ router.post('/', UserController.post);
  *              description: Erreur serveur
  *
  */
-router.patch('/', JWTMiddleware.identification, Authorization.canDoActionOnUser, UserController.patch);
+router.patch('/', JWTMiddleware.identification, Authorization.canPatchUser, UserController.patch);
 
 /**
  * @swagger
@@ -218,6 +218,6 @@ router.patch('/', JWTMiddleware.identification, Authorization.canDoActionOnUser,
  *              description: Erreur serveur
  *
  */
-router.delete('/', JWTMiddleware.identification, Authorization.canDoActionOnUser, UserController.delete);
+router.delete('/', JWTMiddleware.identification, Authorization.canDeleteUser, UserController.delete);
 
 module.exports = router;

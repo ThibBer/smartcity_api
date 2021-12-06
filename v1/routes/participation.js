@@ -3,6 +3,7 @@ const router = new Router;
 
 const ParticipationController = require("../controller/participation");
 const Authorization = require("../middleware/Authorization");
+const JWTMiddleware = require("../middleware/JWTIdentification");
 
 router.get('/:participant&:event', ParticipationController.get);
 
@@ -25,7 +26,7 @@ router.get('/:participant&:event', ParticipationController.get);
  *              description: Erreur serveur
  *
  */
-router.post('/', ParticipationController.post);
+router.post('/', JWTMiddleware.identification, ParticipationController.post);
 
 /**
  * @swagger

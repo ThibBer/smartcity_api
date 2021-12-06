@@ -11,7 +11,7 @@ router.get("/", ReportTypeController.all);
 router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, ReportTypeController.filter);
 router.get("/filter/:offset&:limit", JWTMiddleware.identification, ReportTypeController.filter);
 
-router.post('/', JWTMiddleware.identification, ReportTypeController.post);
+router.post('/', JWTMiddleware.identification, Authorization.mustBeAdmin, ReportTypeController.post);
 router.patch('/', JWTMiddleware.identification, Authorization.mustBeAdmin, ReportTypeController.patch);
 router.delete('/', JWTMiddleware.identification, Authorization.mustBeAdmin, ReportTypeController.delete);
 

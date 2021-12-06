@@ -170,11 +170,16 @@ module.exports.filterWithOffsetLimit = async(req, res) => {
         try {
             await client.query("BEGIN;");
 
-            const {rows: users} = await User.filterWithOffsetLimit(client, filter, offset, limit);
-            const {rows} = await User.countWithFilter(client, filter);
-            await client.query("COMMIT;");
+            const promises = [];
+            const promiseFilterWithOffsetLimit = User.filterWithOffsetLimit(client, filter, offset, limit);
+            const promiseCountWithFilter = User.countWithFilter(client, filter);
 
-            const counts = rows[0].count;
+            promises.push(promiseFilterWithOffsetLimit, promiseCountWithFilter);
+
+            const values = await Promise.all(promises);
+
+            const users = values[0].rows;
+            const counts = parseInt(values[1].rows[0].count);
 
             res.status(200).json({countWithoutLimit: counts, data: users});
         } catch (error) {
@@ -241,7 +246,7 @@ module.exports.filter = async(req, res) => {
 module.exports.post = async(req, res) => {
     const {email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;
 
-    if(email === undefined || first_name === undefined || last_name === undefined || birth_date === undefined || role === undefined || city === undefined  || street === undefined || zip_code === undefined || house_number === undefined){
+    if(email === undefined || password === undefined || first_name === undefined || last_name === undefined || birth_date === undefined || role === undefined || city === undefined  || street === undefined || zip_code === undefined || house_number === undefined){
         res.sendStatus(400);
     }else{
         const client = await pool.connect();
@@ -279,6 +284,7 @@ module.exports.post = async(req, res) => {
  *                       $ref: '#/components/schemas/User'
  */
 module.exports.patch = async(req, res) => {
+    console.log("PATCH USER")
     const {id, email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;
 
     if (email === undefined || first_name === undefined || last_name === undefined || birth_date === undefined || role === undefined || city === undefined || street === undefined || zip_code === undefined || house_number === undefined) {
@@ -287,10 +293,16 @@ module.exports.patch = async(req, res) => {
         const client = await pool.connect();
 
         try {
-            const userExist = await User.exist(client, id);
+            const {rows: users} = await User.get(client, id);
+            const user = users[0];
 
-            if(!userExist){
+            const {rows} = await User.getWithEmail(client, email);
+            const emailExists = rows[0] !== undefined;
+
+            if(user === undefined) {
                 res.sendStatus(404);
+            }else if(emailExists && user.email !== email){
+                res.status(400).json({error: "L'adresse email existe déjà"});
             }else{
                 let hashedPassword = undefined;
                 if(password !== undefined && password !== null && password.trim() !== "") {
