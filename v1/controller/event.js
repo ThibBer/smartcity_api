@@ -108,14 +108,14 @@ module.exports.post = async(req, res) => {
 
     try {
         // description is optional
-        if(date_hour === undefined || duration === undefined || report === undefined || creator === undefined){
+        if(date_hour === undefined || duration === undefined || report === undefined){
             res.sendStatus(400);
         }else{
             const reportId = report?.id || report;
             const creatorId = creator?.id || creator;
 
             const reportExist = await Report.exist(client, reportId);
-            const creatorExist = await User.exist(client, creatorId);
+            const creatorExist = creatorId === undefined || await User.exist(client, creatorId);
 
             if(!reportExist || !creatorExist){
                 res.sendStatus(404);
@@ -137,16 +137,17 @@ module.exports.patch = async(req, res) => {
     const {id, date_hour, duration, description, report, creator} = req.body;
 
     try {
-        // description is optional
-        if(isNaN(id) || date_hour === undefined || duration === undefined || report === undefined || creator === undefined){
+        if(isNaN(id) || (date_hour === undefined && duration === undefined && description === undefined && report === undefined && creator === undefined)){
             res.sendStatus(400);
         }else{
             const eventExist = await Event.exist(client, id);
+            const creatorId = creator?.id || creator;
+            const creatorExist = creatorId === undefined || await User.exist(client, creatorId);
 
-            if(!eventExist){
+            if(!eventExist || !creatorExist){
                 res.sendStatus(404);
             }else{
-                await Event.patch(client, id, date_hour, duration, description, report?.id || report, creator.id || creator);
+                await Event.patch(client, id, date_hour, duration, description, report?.id || report, creatorId);
                 res.sendStatus(204);
             }
         }

@@ -194,18 +194,18 @@ module.exports.post = async(req, res) => {
 module.exports.patch = async(req, res) => {
     const {id, description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
 
-    if(isNaN(id) || state === undefined || city === undefined || street === undefined || zip_code === undefined || house_number === undefined || reporter === undefined || report_type === undefined){
+    if(isNaN(id) || (state === undefined && city === undefined && street === undefined && zip_code === undefined && house_number === undefined && reporter === undefined && report_type === undefined)){
         res.sendStatus(400);
     }else{
         const client = await pool.connect();
 
         try{
-            const reporterId = reporter.id ?? reporter;
-            const reportTypeId = report_type.id ?? report_type;
+            const reporterId = reporter?.id ?? reporter;
+            const reportTypeId = report_type?.id ?? report_type;
 
             const reportExist = await Report.exist(client, id);
-            const reporterExist = await User.exist(client, reporterId);
-            const reportTypeExist = await ReportType.exist(client, reportTypeId);
+            const reporterExist = reporterId === undefined || await User.exist(client, reporterId);
+            const reportTypeExist = reportTypeId === undefined || await ReportType.exist(client, reportTypeId);
 
             if(!reportExist || !reporterExist || !reportTypeExist) {
                 res.sendStatus(404);

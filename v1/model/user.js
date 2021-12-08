@@ -40,13 +40,65 @@ module.exports.post = async (client, email, password, firstName, lastName, birth
 }
 
 module.exports.patch = async (client, id, email, password, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber) => {
-    if(password !== undefined) {
-        return await client.query(`UPDATE BackOfficeUser SET email = $1, password = $2, first_name = $3, last_name = $4, birth_date = $5, role = $6, city = $7, street = $8, zip_code = $9, house_number = $10 WHERE id = $11`,
-            [email, password, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber, id]);
-    } else {
-        return await client.query(`UPDATE BackOfficeUser SET email = $1, first_name = $2, last_name = $3, birth_date = $4, role = $5, city = $6, street = $7, zip_code = $8, house_number = $9 WHERE id = $10`,
-            [email, firstName, lastName, birthDate, role, city, street, zipCode, houseNumber, id]);
+    const params = [id];
+    const querySet = [];
+    let query = "UPDATE BackOfficeUser SET ";
+
+    if(email !== undefined){
+        params.push(email);
+        querySet.push(`email = $${params.length}`);
     }
+
+    if(password !== undefined){
+        params.push(password);
+        querySet.push(`password = $${params.length}`);
+    }
+
+    if(firstName !== undefined){
+        params.push(firstName);
+        querySet.push(`first_name = $${params.length}`);
+    }
+
+    if(lastName !== undefined){
+        params.push(lastName);
+        querySet.push(`last_name = $${params.length}`);
+    }
+
+    if(birthDate !== undefined){
+        params.push(birthDate);
+        querySet.push(`birth_date = $${params.length}`);
+    }
+
+    if(role !== undefined){
+        params.push(role);
+        querySet.push(`role = $${params.length}`);
+    }
+
+    if(city !== undefined){
+        params.push(city);
+        querySet.push(`city = $${params.length}`);
+    }
+
+    if(street !== undefined){
+        params.push(street);
+        querySet.push(`street = $${params.length}`);
+    }
+
+    if(zipCode !== undefined){
+        params.push(zipCode);
+        querySet.push(`zip_code = $${params.length}`);
+    }
+
+    if(houseNumber !== undefined){
+        params.push(houseNumber);
+        querySet.push(`house_number = $${params.length}`);
+    }
+
+    query += querySet.join(', ');
+
+    query += " WHERE id = $1";
+
+    return await client.query(query, params);
 }
 
 module.exports.delete = async (client, id) => {

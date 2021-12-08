@@ -30,7 +30,40 @@ module.exports.post = async (client, date_hour, duration, description, report, c
 }
 
 module.exports.patch = async (client, id, date_hour, duration, description, report, creator) => {
-    return await client.query('UPDATE Event SET date_hour = $1, duration = $2, description = $3, report = $4, creator = $5 WHERE id = $6', [date_hour, duration, description, report, creator, id]);
+    const params = [id];
+    const querySet = [];
+    let query = "UPDATE Event SET ";
+
+    if(date_hour !== undefined){
+        params.push(date_hour);
+        querySet.push(`date_hour = $${params.length} `);
+    }
+
+    if(duration !== undefined){
+        params.push(duration);
+        querySet.push(`duration = $${params.length} `);
+    }
+
+    if(description !== undefined){
+        params.push(description);
+        querySet.push(`description = $${params.length} `);
+    }
+
+    if(report !== undefined){
+        params.push(report);
+        querySet.push(`report = $${params.length} `);
+    }
+
+    if(creator !== undefined){
+        params.push(creator);
+        querySet.push(`creator = $${params.length} `);
+    }
+
+    query += querySet.join(', ');
+
+    query += "WHERE id = $1";
+
+    return await client.query(query, params);
 }
 
 module.exports.delete = async (client, id) => {

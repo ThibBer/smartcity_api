@@ -42,7 +42,54 @@ module.exports.post = async (client, description, state, city, street, zip_code,
 }
 
 module.exports.patch = async (client, id, description, state, city, street, zip_code, house_number, reporter, report_type) => {
-    return await client.query('UPDATE report SET description = $1, state = $2, city = $3, street = $4, zip_code = $5, house_number = $6, reporter = $7, report_type = $8 WHERE id = $9', [description, state, city, street, zip_code, house_number, reporter, report_type, id])
+    const params = [id];
+    const querySet = [];
+    let query = "UPDATE Report SET ";
+
+    if(description !== undefined){
+        params.push(description);
+        querySet.push(`description = $${params.length} `);
+    }
+
+    if(state !== undefined){
+        params.push(state);
+        querySet.push(`state = $${params.length} `);
+    }
+
+    if(city !== undefined){
+        params.push(city);
+        querySet.push(`city = $${params.length} `);
+    }
+
+    if(street !== undefined){
+        params.push(street);
+        querySet.push(`street = $${params.length} `);
+    }
+
+    if(zip_code !== undefined){
+        params.push(zip_code);
+        querySet.push(`zip_code = $${params.length} `);
+    }
+
+    if(house_number !== undefined){
+        params.push(house_number);
+        querySet.push(`house_number = $${params.length} `);
+    }
+
+    if(reporter !== undefined){
+        params.push(reporter);
+        querySet.push(`reporter = $${params.length} `);
+    }
+
+    if(report_type !== undefined){
+        params.push(report_type);
+        querySet.push(`report_type = $${params.length} `);
+    }
+    query += querySet.join(', ');
+
+    query += "WHERE id = $1";
+
+    return await client.query(query, params);
 }
 
 module.exports.delete = async (client, id) => {

@@ -246,7 +246,7 @@ module.exports.filter = async(req, res) => {
 module.exports.post = async(req, res) => {
     const {email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;
 
-    if(email === undefined || password === undefined || first_name === undefined || last_name === undefined || birth_date === undefined || role === undefined || city === undefined  || street === undefined || zip_code === undefined || house_number === undefined){
+    if(email === undefined || password === undefined || password.trim() === "" || first_name === undefined || last_name === undefined || birth_date === undefined || role === undefined || city === undefined  || street === undefined || zip_code === undefined || house_number === undefined){
         res.sendStatus(400);
     }else{
         const client = await pool.connect();
@@ -284,10 +284,9 @@ module.exports.post = async(req, res) => {
  *                       $ref: '#/components/schemas/User'
  */
 module.exports.patch = async(req, res) => {
-    console.log("PATCH USER")
     const {id, email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;
 
-    if (email === undefined || first_name === undefined || last_name === undefined || birth_date === undefined || role === undefined || city === undefined || street === undefined || zip_code === undefined || house_number === undefined) {
+    if (isNaN(id) || (email === undefined && first_name === undefined && last_name === undefined && birth_date === undefined && role === undefined && city === undefined && street === undefined && zip_code === undefined && house_number === undefined)) {
         res.sendStatus(400);
     } else {
         const client = await pool.connect();
@@ -296,21 +295,23 @@ module.exports.patch = async(req, res) => {
             const {rows: users} = await User.get(client, id);
             const user = users[0];
 
-            const {rows} = await User.getWithEmail(client, email);
-            const emailExists = rows[0] !== undefined;
-
             if(user === undefined) {
                 res.sendStatus(404);
-            }else if(emailExists && user.email !== email){
-                res.status(400).json({error: "L'adresse email existe déjà"});
             }else{
-                let hashedPassword = undefined;
-                if(password !== undefined && password !== null && password.trim() !== "") {
-                    hashedPassword = getHash(password);
-                }
+                const {rows} = await User.getWithEmail(client, email);
+                const emailExists = rows[0] !== undefined;
 
-                await User.patch(client, id, email, hashedPassword, first_name, last_name, birth_date, role, city, street, zip_code, house_number);
-                res.sendStatus(204);
+                if(email !== undefined && emailExists && user.email !== email){
+                    res.status(400).json({error: "L'adresse email existe déjà"});
+                }else{
+                    let updatedPassword = undefined;
+                    if(password !== undefined && password !== null && password.trim() !== "") {
+                        updatedPassword = getHash(password);
+                    }
+
+                    await User.patch(client, id, email, updatedPassword, first_name, last_name, birth_date, role, city, street, zip_code, house_number);
+                    res.sendStatus(204);
+                }
             }
 
         } catch (error) {
