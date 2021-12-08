@@ -1,5 +1,5 @@
 async function get(client, id) {
-    return await client.query(`SELECT R.*, row_to_json(rt) as report_type FROM report r JOIN reportType rt ON r.report_type = rt.id WHERE r.id = $1`, [id]);
+    return await client.query(`SELECT R.*, row_to_json(rt) as report_type FROM report r LEFT JOIN reportType rt ON r.report_type = rt.id WHERE r.id = $1 ORDER BY created_at DESC, id`, [id]);
 }
 
 module.exports.get = get;
@@ -10,23 +10,23 @@ module.exports.exist = async (client, id) => {
 }
 
 module.exports.all = async (client) => {
-    return await client.query('SELECT r.*, row_to_json(rt) as report_type FROM report r JOIN reportType rt ON r.report_type = rt.id ORDER BY r.id');
+    return await client.query('SELECT r.*, row_to_json(rt) as report_type FROM report r LEFT JOIN reportType rt ON r.report_type = rt.id ORDER BY r.created_at DESC, r.id');
 }
 
 module.exports.filter = async (client, filter) => {
     if(filter !== undefined){
-        return await client.query("SELECT r.*, row_to_json(rt) as report_type, row_to_json(b) as reporter FROM report r JOIN reportType rt ON r.report_type = rt.id JOIN backofficeuser b on r.reporter = b.id WHERE r.id::varchar(11) ~ $1 OR r.description ~ $1 OR r.state ~ $1 OR r.city ~ $1 OR r.street ~ $1 OR r.zip_code::varchar(11) ~ $1 OR r.house_number::varchar(11) ~ $1 OR r.reporter::varchar(11) ~ $1 OR r.report_type::varchar(11) ~ $1", [filter])
+        return await client.query("SELECT r.*, row_to_json(rt) as report_type, row_to_json(b) as reporter FROM report r LEFT JOIN reportType rt ON r.report_type = rt.id LEFT JOIN backofficeuser b on r.reporter = b.id WHERE r.id::varchar(11) ~ $1 OR r.description ~ $1 OR r.state ~ $1 OR r.city ~ $1 OR r.street ~ $1 OR r.zip_code::varchar(11) ~ $1 OR r.house_number::varchar(11) ~ $1 OR r.reporter::varchar(11) ~ $1 OR r.report_type::varchar(11) ~ $1 ORDER BY r.created_at DESC, r.id", [filter])
     }
 
-    return await client.query("SELECT r.*, row_to_json(rt) as report_type, row_to_json(b) as reporter FROM report r JOIN reportType rt ON r.report_type = rt.id JOIN backofficeuser b on b.id = r.reporter ORDER BY id", []);
+    return await client.query("SELECT r.*, row_to_json(rt) as report_type, row_to_json(b) as reporter FROM report r LEFT JOIN reportType rt ON r.report_type = rt.id LEFT JOIN backofficeuser b on b.id = r.reporter ORDER BY r.created_at DESC, r.id", []);
 }
 
 module.exports.filterWithOffsetLimit = async (client, filter, offset, limit) => {
     if(filter !== undefined){
-        return await client.query("SELECT r.*, row_to_json(rt) as report_type, row_to_json(b) as reporter FROM report r JOIN reportType rt ON r.report_type = rt.id JOIN backofficeuser b on r.reporter = b.id WHERE r.id::varchar(11) ~ $1 OR r.description ~ $1 OR r.state ~ $1 OR r.city ~ $1 OR r.street ~ $1 OR r.zip_code::varchar(11) ~ $1 OR r.house_number::varchar(11) ~ $1 OR r.reporter::varchar(11) ~ $1 OR r.report_type::varchar(11) ~ $1 ORDER BY r.id OFFSET $2 LIMIT $3", [filter, offset, limit])
+        return await client.query("SELECT r.*, row_to_json(rt) as report_type, row_to_json(b) as reporter FROM report r LEFT JOIN reportType rt ON r.report_type = rt.id LEFT JOIN backofficeuser b on r.reporter = b.id WHERE r.id::varchar(11) ~ $1 OR r.description ~ $1 OR r.state ~ $1 OR r.city ~ $1 OR r.street ~ $1 OR r.zip_code::varchar(11) ~ $1 OR r.house_number::varchar(11) ~ $1 OR r.reporter::varchar(11) ~ $1 OR r.report_type::varchar(11) ~ $1 ORDER BY r.created_at DESC, r.id OFFSET $2 LIMIT $3", [filter, offset, limit])
     }
 
-    return await client.query("SELECT r.*, row_to_json(rt) as report_type, row_to_json(b) as reporter FROM report r JOIN reportType rt ON r.report_type = rt.id JOIN backofficeuser b on b.id = r.reporter ORDER BY id OFFSET $1 LIMIT $2", [offset, limit]);
+    return await client.query("SELECT r.*, row_to_json(rt) as report_type, row_to_json(b) as reporter FROM report r LEFT JOIN reportType rt ON r.report_type = rt.id LEFT JOIN backofficeuser b on b.id = r.reporter ORDER BY r.created_at DESC, r.id OFFSET $1 LIMIT $2", [offset, limit]);
 }
 
 module.exports.countWithFilter = async (client, filter) => {
@@ -50,7 +50,7 @@ module.exports.delete = async (client, id) => {
 }
 
 module.exports.getWithUserId = async (client, reporterId) => {
-    return await client.query('SELECT R.*, row_to_json(rt) as report_type FROM report r JOIN reportType rt ON r.report_type = rt.id WHERE r.reporter = $1 ORDER BY r.id', [reporterId]);
+    return await client.query('SELECT R.*, row_to_json(rt) as report_type FROM report r LEFT JOIN reportType rt ON r.report_type = rt.id WHERE r.reporter = $1 ORDER BY r.id', [reporterId]);
 }
 
 module.exports.patchReportsWhenUserDelete = async (client, userId) => {
