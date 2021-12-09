@@ -3,6 +3,7 @@ const Report = require("../model/report");
 const User = require("../model/user");
 const ReportType = require("../model/reportType");
 const Event = require("../model/event");
+const Participation = require("../model/participation");
 
 /**
  * @swagger
@@ -224,7 +225,6 @@ module.exports.patch = async(req, res) => {
 
 module.exports.delete = async(req, res) => {
     const id = parseInt(req.body.id);
-
     if(isNaN(id)){
         res.sendStatus(400);
     }else{
@@ -237,6 +237,11 @@ module.exports.delete = async(req, res) => {
                 res.sendStatus(404);
             } else {
                 await client.query("BEGIN;");
+
+                const {rows: events} = await Event.getWithReportId(client, id);
+                for (const event of events) {
+                    await Participation.deleteRelatedToEvent(client, event.id);
+                }
 
                 await Event.deleteLinkedToReport(client, id);
                 await Report.delete(client, id);

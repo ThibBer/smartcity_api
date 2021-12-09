@@ -224,7 +224,7 @@ module.exports.delete = async(req, res) => {
                 res.sendStatus(404);
             } else {
                 await client.query("BEGIN;");
-
+                console.log("passe ici");
                 await Participation.deleteRelatedToEvent(client, id);
                 await Event.delete(client, id);
 
