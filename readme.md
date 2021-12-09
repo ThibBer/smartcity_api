@@ -64,3 +64,4 @@ Séparer les Authorization dans des fichiers != en fonction du type (user, repor
 
 
 ## Remarques
+Controleur peut vérifier si ce qu'on demande est bien a nous

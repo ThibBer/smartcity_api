@@ -29,9 +29,9 @@ module.exports.identification = async (req, res, next) => {
         }
         catch (e) {
             console.error(e);
-            res.sendStatus(401);
+            res.status(400).json({error: "Votre session a expirée"});
         }
     } else {
-        res.sendStatus(400);
+        res.sendStatus(401);
     }
 };
