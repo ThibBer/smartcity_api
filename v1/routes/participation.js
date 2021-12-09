@@ -5,7 +5,7 @@ const ParticipationController = require("../controller/participation");
 const Authorization = require("../middleware/Authorization");
 const JWTMiddleware = require("../middleware/JWTIdentification");
 
-router.get('/:participant&:event', ParticipationController.get);
+router.get('/:participant&:event', JWTMiddleware.identification, ParticipationController.get);
 
 /**
  * @swagger
@@ -26,7 +26,7 @@ router.get('/:participant&:event', ParticipationController.get);
  *              description: Erreur serveur
  *
  */
-router.post('/', JWTMiddleware.identification, ParticipationController.post);
+router.post('/', JWTMiddleware.identification, Authorization.canDoActionOnParticipation, ParticipationController.post);
 
 /**
  * @swagger
@@ -45,6 +45,6 @@ router.post('/', JWTMiddleware.identification, ParticipationController.post);
  *              description: Erreur serveur
  *
  */
-router.delete('/', Authorization.canDoActionOnParticipation, ParticipationController.delete);
+router.delete('/', JWTMiddleware.identification, Authorization.canDoActionOnParticipation, ParticipationController.delete);
 
 module.exports = router;

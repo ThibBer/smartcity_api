@@ -5,13 +5,13 @@ const ReportController = require("../controller/report");
 const JWTMiddleware = require("../middleware/JWTIdentification");
 const Authorization = require("../middleware/Authorization");
 
-router.get('/:id', JWTMiddleware.identification, ReportController.get);
+router.get('/:id', ReportController.get);
 router.get("/", ReportController.all);
 
-router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, ReportController.filterWithOffsetLimit);
-router.get("/filter/:offset&:limit", JWTMiddleware.identification, ReportController.filterWithOffsetLimit);
+router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Authorization.mustBeAdmin, ReportController.filterWithOffsetLimit);
+router.get("/filter/:offset&:limit", JWTMiddleware.identification, Authorization.mustBeAdmin,ReportController.filterWithOffsetLimit);
 
-router.get("/filter/:filter", JWTMiddleware.identification, ReportController.filter);
+router.get("/filter/:filter", ReportController.filter);
 
 router.get('/foruser/:userId', JWTMiddleware.identification, Authorization.canGetReportsForUser, ReportController.getWithUserId);
 

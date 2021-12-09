@@ -26,8 +26,7 @@ module.exports.identification = async (req, res, next) => {
             req.session = decodedJwtToken.user;
 
             next();
-        }
-        catch (e) {
+        } catch (e) {
             console.error(e);
             res.status(400).json({error: "Votre session a expirée"});
         }

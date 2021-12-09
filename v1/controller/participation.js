@@ -92,9 +92,9 @@ module.exports.post = async(req, res) => {
     const event = parseInt(req.body.event);
 
     try {
-        if(participant === undefined || isNaN(participant)){
+        if(isNaN(participant)){
             res.status(400).json({error: "Id du participant invalide"});
-        }else if(event === undefined || isNaN(event)){
+        }else if(isNaN(event)){
             res.status(400).json({error: "Id de l'événement invalide"});
         }else{
             const userExist = await User.exist(client, participant);

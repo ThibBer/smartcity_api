@@ -5,8 +5,8 @@ const router = new Router;
 const Authorization = require("../middleware/Authorization");
 const JWTMiddleware = require("../middleware/JWTIdentification");
 
-router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, EventController.filter);
-router.get("/filter/:offset&:limit", JWTMiddleware.identification, EventController.filter);
+router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, EventController.filter); /* Identification becasue user foreign key is object user */
+router.get("/filter/:offset&:limit", JWTMiddleware.identification, EventController.filter); /* Identification becasue user foreign key is object user */
 
 router.get('/forreport/:reportId', EventController.getWithReportId);
 

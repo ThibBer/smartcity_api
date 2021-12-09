@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const ADMIN_ROLE = "admin";
 
 function userIsAdmin(user){
@@ -18,10 +19,11 @@ module.exports.mustBeAdmin = (req, res, next) => {
     }
 }
 
+/*USER*/
 module.exports.canPatchUser = (req, res, next) => {
     const user = req.session;
 
-    if(userIsAdmin(user) || (req.body?.role !== ADMIN_ROLE && user.id === req.body?.id)){
+    if(userIsAdmin(user) || (req.body?.role !== ADMIN_ROLE && user.id === parseInt(req.body?.id))){
         next();
     } else {
         res.sendStatus(403);
@@ -29,12 +31,33 @@ module.exports.canPatchUser = (req, res, next) => {
 }
 
 module.exports.canPostUser = (req, res, next) => {
-    const user = req.session;
+    const role = req.body?.role;
 
-    if(userIsAdmin(user) || req.body?.role !== ADMIN_ROLE){
+    if(role === undefined){
+        res.sendStatus(400);
+    }else if(req.body?.role !== ADMIN_ROLE){
         next();
     } else {
-        res.sendStatus(403);
+        const headerAuth = req.get('authorization');
+
+        if(headerAuth !== undefined && headerAuth.includes("Bearer")){
+            const [_, jwtToken] =  headerAuth.split(' ');
+
+            try{
+                const decodedJwtToken = jwt.verify(jwtToken, process.env.SECRET_TOKEN);
+
+                if(decodedJwtToken.user.role === ADMIN_ROLE){
+                    next();
+                }else{
+                    res.sendStatus(403);
+                }
+            } catch (e) {
+                console.error(e);
+                res.sendStatus(400);
+            }
+        } else {
+            res.sendStatus(401);
+        }
     }
 }
 
@@ -59,17 +82,7 @@ module.exports.canDeleteUser = (req, res, next) => {
     }
 }
 
-module.exports.canDoActionOnEvent = (req, res, next) => {
-    const user = req.session;
-    const creator = req.body?.creator;
-
-    if((userIsAdmin(user) && creator === undefined) || user.id === creator?.id || user.id === parseInt(creator)){
-        next();
-    } else {
-        res.sendStatus(403);
-    }
-}
-
+/*REPORT*/
 module.exports.canDoActionOnReport = (req, res, next) => {
     const user = req.session;
     const reporter = req.body?.reporter;
@@ -96,10 +109,10 @@ module.exports.canGetReportsForUser = (req, res, next) => {
     }
 }
 
+/* PARTICIPATION */
 module.exports.canDoActionOnParticipation = (req, res, next) => {
     const user = req.session;
     const participant = req.body?.participant;
-
 
     if(participant === undefined || (typeof participant === "number" && isNaN(participant))){
         res.sendStatus(400);
@@ -109,5 +122,17 @@ module.exports.canDoActionOnParticipation = (req, res, next) => {
         } else {
             res.sendStatus(403);
         }
+    }
+}
+
+/* EVENT */
+module.exports.canDoActionOnEvent = (req, res, next) => {
+    const user = req.session;
+    const creator = req.body?.creator;
+
+    if((userIsAdmin(user) && creator === undefined) || user.id === creator?.id || user.id === parseInt(creator)){
+        next();
+    } else {
+        res.sendStatus(403);
     }
 }
