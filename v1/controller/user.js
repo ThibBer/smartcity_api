@@ -45,39 +45,6 @@ const {getHash} = require("../../utils/jwtUtils");
  *              house_number:
  *                  type: string
  *                  description: numéro d'habitation
- *      UserWithoutPassword:
- *          type: object
- *          properties:
- *              id:
- *                  type: integer
- *                  description: id de l'utilisateur
- *              email:
- *                  type: string
- *                  description: adresse email
- *              first_name:
- *                  type: string
- *                  description: prénom
- *              last_name:
- *                  type: string
- *                  description: nom
- *              birth_date:
- *                  type: string
- *                  description: date de naissance
- *              role:
- *                  type: string
- *                  description: role
- *              city:
- *                  type: string
- *                  description: ville
- *              street:
- *                  type: string
- *                  description: rue
- *              zip_code:
- *                  type: string
- *                  description: code postal
- *              house_number:
- *                  type: string
- *                  description: numéro d'habitation
  *
  */
 
@@ -152,7 +119,7 @@ module.exports.get = async(req, res) => {
  *                          data:
  *                              type: array
  *                              items:
- *                                  $ref: '#/components/schemas/UserWithoutPassword'
+ *                                  $ref: '#/components/schemas/User'
  *                              description: Utilisateurs correspondants au filter, avec limite et décalage
  */
 module.exports.filterWithOffsetLimit = async(req, res) => {
@@ -203,7 +170,7 @@ module.exports.filterWithOffsetLimit = async(req, res) => {
  *                  schema:
  *                      type: array
  *                      items:
- *                          $ref: '#/components/schemas/UserWithoutPassword'
+ *                          $ref: '#/components/schemas/User'
  */
 module.exports.filter = async(req, res) => {
     const filter = req.params.filter;
@@ -230,7 +197,7 @@ module.exports.filter = async(req, res) => {
  *      MissingUserBodyData:
  *          description: Donnée manquante dans le body
  *      UserAdded:
- *          description: L'utilsiateur a été ajouté
+ *          description: L'utilisateur a été ajouté
  *          content:
  *              application/json:
  *                  schema:
@@ -328,7 +295,7 @@ module.exports.patch = async(req, res) => {
  *components:
  *  responses:
  *      UserDeleted:
- *          description: l'utilisateur a été supprimé
+ *          description: L'utilisateur a été supprimé
  */
 module.exports.delete = async(req, res) => {
     const id = parseInt(req.body.id);

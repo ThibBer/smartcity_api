@@ -64,6 +64,7 @@ module.exports.get = async(req, res) => {
  *      ParticipationAdded:
  *          description: La participation a été ajoutée
  *      InvalidParticipationId:
+ *          description: Id de la participation invalide
  *          content:
  *              application/json:
  *                  schema:

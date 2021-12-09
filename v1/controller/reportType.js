@@ -94,6 +94,34 @@ module.exports.filter = async(req, res) => {
     }
 }
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      ReportTypeAdded:
+ *          description: Le type de signalement a été ajouté
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: integer
+ *                      description: Id du type de signalement créé
+ *      InvalidReportTypeLabel:
+ *          description: Libellé invalide
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          error:
+ *                              type: string
+ *                              description: Message erreur
+ *  requestBodies:
+ *      ReportTypeToAdd:
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#/components/schemas/ReportType'
+ */
 module.exports.post = async(req, res) => {
     const {label} = req.body;
 
@@ -114,6 +142,39 @@ module.exports.post = async(req, res) => {
     }
 }
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      ReportTypePatched:
+ *          description: Le type de signalement a été modifié
+ *      InvalidReportTypeIdOrLabel:
+ *          description: Id ou libellé invalide
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          error:
+ *                              type: string
+ *                              description: Message erreur
+ *      UnknowReportType:
+ *          description: Type de signalement inconnu
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          error:
+ *                              type: string
+ *                              description: Message erreur
+ *  requestBodies:
+ *      ReportTypeToPatch:
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#/components/schemas/ReportType'
+ */
 module.exports.patch = async(req, res) => {
     const {id, label} = req.body;
 
@@ -142,6 +203,16 @@ module.exports.patch = async(req, res) => {
     }
 }
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      ReportTypeDeleted:
+ *          description: Le type de signalement a été supprimée
+ *      InvalidReportTypeId:
+ *          description: Id du type de signalement invalide
+ *
+ */
 module.exports.delete = async(req, res) => {
     const id = parseInt(req.body.id);
 
@@ -161,7 +232,7 @@ module.exports.delete = async(req, res) => {
                 res.sendStatus(204);
             } else {
                 await client.query("ROLLBACK;");
-                res.status(404).json({error: "Incorrect id"});
+                res.status(404).json({error: "Le signalement n'existe pas"});
             }
         } catch (error) {
             await client.query("ROLLBACK;");

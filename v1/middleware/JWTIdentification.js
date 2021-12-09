@@ -11,9 +11,9 @@ const jwt = require('jsonwebtoken');
  *          bearerFormat: JWT
  *  responses:
  *      MissingJWT:
- *          description: le JWT n'est pas présent
+ *          description: Le JWT n'est pas présent
  *      ErrorJWT:
- *          description: le JWT n'est pas valide
+ *          description: Le JWT n'est pas valide
  */
 module.exports.identification = async (req, res, next) => {
     const headerAuth = req.get('authorization');

@@ -102,6 +102,28 @@ module.exports.getWithReportId = async(req, res) => {
     }
 }
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      EventAdded:
+ *          description: L'événement a été ajouté
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: integer
+ *                      description: Id de l'évenement créé
+ *      MissingEventBodyData:
+ *          description: Donnée manquante dans le body
+ *      UnknowEventReportOrCreator:
+ *          description: Signalement ou utilisateur inconnu
+ *  requestBodies:
+ *      EventToAdd:
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#/components/schemas/Event'
+ */
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
     const {date_hour, duration, description, report, creator} = req.body;
@@ -132,6 +154,21 @@ module.exports.post = async(req, res) => {
     }
 }
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      EventPatched:
+ *          description: L'événement a été modifié
+ *      UnknowEventReportOrCreatorOrEvent:
+ *          description: Signalement, événement ou utilisateur inconnu
+ *  requestBodies:
+ *      EventToPatch:
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#/components/schemas/Event'
+ */
 module.exports.patch = async(req, res) => {
     const client = await pool.connect();
     const {id, date_hour, duration, description, report, creator} = req.body;
@@ -140,14 +177,17 @@ module.exports.patch = async(req, res) => {
         if(isNaN(id) || (date_hour === undefined && duration === undefined && description === undefined && report === undefined && creator === undefined)){
             res.sendStatus(400);
         }else{
-            const eventExist = await Event.exist(client, id);
             const creatorId = creator?.id || creator;
-            const creatorExist = creatorId === undefined || await User.exist(client, creatorId);
+            const reportId = report?.id || report;
 
-            if(!eventExist || !creatorExist){
+            const eventExist = await Event.exist(client, id);
+            const creatorExist = creatorId === undefined || await User.exist(client, creatorId);
+            const reportExist = reportId === undefined || await User.exist(client, creatorId);
+
+            if(!eventExist || !creatorExist || !reportExist){
                 res.sendStatus(404);
             }else{
-                await Event.patch(client, id, date_hour, duration, description, report?.id || report, creatorId);
+                await Event.patch(client, id, date_hour, duration, description, reportId, creatorId);
                 res.sendStatus(204);
             }
         }
@@ -159,7 +199,17 @@ module.exports.patch = async(req, res) => {
     }
 }
 
-// Must delete related Participations
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      InvalidEventId:
+ *          description: id de l'événement invalide
+ *      EventDeleted:
+ *          description: L'événement a été supprimé
+ *      UnknowEvent:
+ *          description: Événement inconnu
+ */
 module.exports.delete = async(req, res) => {
     const client = await pool.connect();
     const id = parseInt(req.body?.id);

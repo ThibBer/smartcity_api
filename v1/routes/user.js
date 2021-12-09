@@ -22,7 +22,7 @@ const Authorization = require("../middleware/Authorization");
  *              type: integer
  *      responses:
  *          200:
- *              $ref: '#/components/schemas/UserWithoutPassword'
+ *              $ref: '#/components/schemas/User'
  *          400:
  *              description: JWT, décalage ou limite manquant
  *              content:
@@ -110,6 +110,7 @@ router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Autho
  *      responses:
  *          200:
  *              $ref: '#/components/responses/ValidUserFilter'
+ *          400:
  *              description: JWT not valid or JSON body missing data or User email already exists
  *              content:
  *                  application/json:
@@ -142,7 +143,6 @@ router.get("/filter/:offset&:limit", JWTMiddleware.identification, Authorization
  *          200:
  *              $ref: '#/components/responses/ValidUserFilter'
  *          400:
- *              description: JWT not valid or JSON body missing data or User email already exists
  *              $ref: '#/components/responses/ErrorJWT'
  *          500:
  *              description: Erreur serveur
@@ -211,7 +211,7 @@ router.patch('/', JWTMiddleware.identification, Authorization.canPatchUser, User
  *                              description: Id de l'utilisateur à supprimer
  *      responses:
  *          204:
- *              $ref: '#/components/responses/UserUpdated'
+ *              $ref: '#/components/responses/UserDeleted'
  *          404:
  *              $ref: '#/components/responses/InvalidUserId'
  *          500:
