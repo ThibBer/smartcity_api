@@ -4,7 +4,7 @@ const router = new Router;
 
 /**
  * @swagger
- * /login:
+* /v1/login:
  *  post:
  *      tags:
  *          - Login

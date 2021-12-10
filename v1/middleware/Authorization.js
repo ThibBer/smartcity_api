@@ -114,7 +114,7 @@ module.exports.canDoActionOnParticipation = (req, res, next) => {
     const user = req.session;
     const participant = req.body?.participant;
 
-    if(participant === undefined || (typeof participant === "number" && isNaN(participant))){
+    if(participant === undefined || isNaN(participant)){
         res.sendStatus(400);
     }else{
         if(userIsAdmin(user) || user.id === participant?.id || user.id === parseInt(participant)){

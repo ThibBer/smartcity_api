@@ -94,8 +94,6 @@ module.exports.get = async(req, res) => {
  * @swagger
  * components:
  *  responses:
- *      InvalidUserId:
- *          description: Id utilisateur invalide
  *      InvalidUserFilterData:
  *          description: Utilisateur inconnu
  *          content:

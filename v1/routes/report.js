@@ -5,6 +5,7 @@ const ReportController = require("../controller/report");
 const JWTMiddleware = require("../middleware/JWTIdentification");
 const Authorization = require("../middleware/Authorization");
 
+
 router.get('/:id', ReportController.get);
 router.get("/", ReportController.all);
 

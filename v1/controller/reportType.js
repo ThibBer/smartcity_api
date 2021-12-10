@@ -18,6 +18,15 @@ const Report = require("../model/report");
  *
  */
 
+/**
+ * @swagger
+ *  components:
+ *      responses:
+ *          InvalidReportTypeId:
+ *              description: Id du type de signalement invalide
+ *          UnknowReportType:
+ *              description: Type de signalement inconnu
+ */
 module.exports.get = async(req, res) => {
     const id = parseInt(req.params.id);
 
@@ -57,6 +66,36 @@ module.exports.all = async(req, res) => {
     }
 }
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      InvalidReportTypeFilterData:
+ *          description: Filtre, limite ou décalage invalide
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          error:
+ *                              type: string
+ *                              description: Message erreur
+ *      ValidReportTypeFilter:
+ *          description: Types de signalements correspondants au filtre, décalage et limite
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          countWithoutLimit:
+ *                              type: integer
+ *                              description: Nombre de données correspond au filtre sans limite
+ *                          data:
+ *                              type: array
+ *                              items:
+ *                                  $ref: '#/components/schemas/User'
+ *                              description: Utilisateurs correspondants au filter, avec limite et décalage
+ */
 module.exports.filter = async(req, res) => {
     const filter = req.params.filter;
     const offset = req.params.offset;

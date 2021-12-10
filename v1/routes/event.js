@@ -5,12 +5,115 @@ const router = new Router;
 const Authorization = require("../middleware/Authorization");
 const JWTMiddleware = require("../middleware/JWTIdentification");
 
-router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, EventController.filter); /* Identification becasue user foreign key is object user */
-router.get("/filter/:offset&:limit", JWTMiddleware.identification, EventController.filter); /* Identification becasue user foreign key is object user */
+/**
+ * @swagger
+* /v1/filter/{offset}&{limit}&{filter}:
+ *  get:
+ *      tags:
+ *         - Event
+ *      parameters:
+ *          - name: Offset
+ *            description: Valeur du décalage
+ *            in: path
+ *            required: true
+ *            schema:
+ *              type: integer
+ *          - name: Limit
+ *            description: Nombre de données à retourner
+ *            in: path
+ *            required: true
+ *            schema:
+ *              type: integer
+ *          - name: Filter
+ *            description: Filter à appliquer sur les données
+ *            in: path
+ *            required: true
+ *            schema:
+ *              type: string
+ *      responses:
+ *          200:
+ *              description: Données filtrées avec limite et décalage
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              countWithoutLimit:
+ *                                  type: integer
+ *                                  description: Nombre d'éléments correspondant au filtre sans décalage ni limite
+ *                              data:
+ *                                  type: array
+ *                                  items:
+ *                                      $ref: '#/components/schemas/EventFilter'
+ *          400:
+ *              description: JWT, décalage, filtre ou limite invalide
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          oneOf:
+ *                              - $ref: '#/components/responses/ErrorJWT'
+ *                              - $ref: '#/components/responses/InvalidUserFilterData'
+ *          401:
+ *              $ref: '#/components/responses/MissingJWT'
+ *          500:
+ *              description: Erreur serveur
+ *
+ */
+router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, EventController.filter); /* Identification because user foreign key is object user */
 
 /**
  * @swagger
- * /forreport/{reportId}:
+* /v1/filter/{offset}&{limit}:
+ *  get:
+ *      tags:
+ *         - Event
+ *      parameters:
+ *          - name: Offset
+ *            description: Valeur du décalage
+ *            in: path
+ *            required: true
+ *            schema:
+ *              type: integer
+ *          - name: Limit
+ *            description: Nombre de données à retourner
+ *            in: path
+ *            required: true
+ *            schema:
+ *              type: integer
+ *      responses:
+ *          200:
+ *              description: Données avec limite et décalage
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              countWithoutLimit:
+ *                                  type: integer
+ *                                  description: Nombre d'éléments correspondant au filtre sans décalage ni limite
+ *                              data:
+ *                                  type: array
+ *                                  items:
+ *                                      $ref: '#/components/schemas/EventFilter'
+ *          400:
+ *              description: JWT, décalage, filtre ou limite invalide
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          oneOf:
+ *                              - $ref: '#/components/responses/ErrorJWT'
+ *                              - $ref: '#/components/responses/InvalidUserFilterData'
+ *          401:
+ *              $ref: '#/components/responses/MissingJWT'
+ *          500:
+ *              description: Erreur serveur
+ *
+ */
+router.get("/filter/:offset&:limit", JWTMiddleware.identification, EventController.filter); /* Identification because user foreign key is object user */
+
+/**
+ * @swagger
+* /v1/forreport/{reportId}:
  *  get:
  *      tags:
  *         - Event
@@ -23,15 +126,16 @@ router.get("/filter/:offset&:limit", JWTMiddleware.identification, EventControll
  *              type: integer
  *      responses:
  *          200:
+ *              description: Événements liés au signalement
  *              content:
  *                  application/json:
  *                      schema:
  *                          type: array
  *                          items:
- *                              $ref: '#/components/schemas/Event'
+ *                              $ref: '#/components/schemas/EventForReport'
  *          400:
  *              $ref: '#/components/responses/InvalidReportId'
- *          401:
+ *          404:
  *              $ref: '#/components/responses/UnknowReport'
  *          500:
  *              description: Erreur serveur
@@ -41,7 +145,7 @@ router.get('/forreport/:reportId', EventController.getWithReportId);
 
 /**
  * @swagger
- * /event:
+* /v1/event:
  *  post:
  *      tags:
  *          - Event
@@ -74,7 +178,7 @@ router.post('/', JWTMiddleware.identification, Authorization.canDoActionOnEvent,
 
 /**
  * @swagger
- * /event:
+* /v1/event:
  *  patch:
  *      tags:
  *          - Event
@@ -107,7 +211,7 @@ router.patch('/', JWTMiddleware.identification, Authorization.canDoActionOnEvent
 
 /**
  * @swagger
- * /event:
+* /v1/event:
  *  delete:
  *      tags:
  *          - Event

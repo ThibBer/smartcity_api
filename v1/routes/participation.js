@@ -5,11 +5,55 @@ const ParticipationController = require("../controller/participation");
 const Authorization = require("../middleware/Authorization");
 const JWTMiddleware = require("../middleware/JWTIdentification");
 
-router.get('/:participant&:event', JWTMiddleware.identification, ParticipationController.get);
+/**
+ * @swagger
+* /v1/participation/{participant}&{event}:
+ *  get:
+ *      tags:
+ *         - Participation
+ *      parameters:
+ *          - name: participant
+ *            description: Id du participant à l'événement
+ *            in: path
+ *            required: true
+ *            schema:
+ *              type: integer
+ *          - name: event
+ *            description: Id de l'événement
+ *            in: path
+ *            required: true
+ *            schema:
+ *              type: integer
+ *      security:
+ *          - bearerAuth: []
+ *      responses:
+ *          200:
+ *              description: Participation d'un utilisateur à un événement
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Participation'
+ *          400:
+ *              description: JWT, ou paramètre invalide dans l'url
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          oneOf:
+ *                              - $ref: '#/components/responses/ErrorJWT'
+ *                              - $ref: '#/components/responses/InvalidParticipationParams'
+ *          401:
+ *              $ref: '#/components/responses/MissingJWT'
+ *          403:
+ *              description: Action non autorisée
+ *          500:
+ *              description: Erreur serveur
+ *
+ */
+router.get('/:participant&:event', JWTMiddleware.identification, Authorization.canDoActionOnParticipation, ParticipationController.get);
 
 /**
  * @swagger
- * /participation:
+* /v1/participation:
  *  post:
  *      tags:
  *          - Participation
@@ -36,7 +80,7 @@ router.post('/', JWTMiddleware.identification, Authorization.canDoActionOnPartic
 
 /**
  * @swagger
- * /participation:
+* /v1/participation:
  *  delete:
  *      tags:
  *          - Participation

@@ -24,13 +24,14 @@ const Event = require("../model/event");
  * components:
  *  responses:
  *      ParticipationFound:
- *           description: renvoie une participation
- *           content:
- *               application/json:
- *                   schema:
- *                       $ref: '#/components/schemas/Participation'
+ *          description: renvoie une participation
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Participation'
+ *      InvalidParticipationParams:
+ *          description: Paramètre invalide dans l'url
  */
-
 module.exports.get = async(req, res) => {
     const client = await pool.connect();
     const participant = parseInt(req.params.participant);

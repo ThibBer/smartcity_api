@@ -7,7 +7,7 @@ const Authorization = require("../middleware/Authorization");
 
 /**
  * @swagger
- * /user/{id}:
+* /v1/user/{id}:
  *  get:
  *      tags:
  *         - User
@@ -42,7 +42,7 @@ router.get('/:id', JWTMiddleware.identification, Authorization.canGetUser, UserC
 
 /**
  * @swagger
- * /user/filter/{offset}&{limit}&{filter}:
+* /v1/user/filter/{offset}&{limit}&{filter}:
  *  get:
  *      tags:
  *         - User
@@ -69,7 +69,19 @@ router.get('/:id', JWTMiddleware.identification, Authorization.canGetUser, UserC
  *              type: string
  *      responses:
  *          200:
- *              $ref: '#/components/responses/ValidUserFilter'
+ *              description: Utilisateurs correspondant au filtre, à la limite et au décalage
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              countWithoutLimit:
+ *                                  type: integer
+ *                                  description: Nombre d'éléments correspondant au filtre, à la limite et au décalage
+ *                              data:
+ *                                  type: array
+ *                                  items:
+ *                                      $ref: '#/components/schemas/User'
  *          400:
  *              description: JWT, décalage, filtre ou limite invalide
  *              content:
@@ -88,7 +100,7 @@ router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Autho
 
 /**
  * @swagger
- * /user/filter/{offset}&{limit}:
+* /v1/user/filter/{offset}&{limit}:
  *  get:
  *      tags:
  *         - User
@@ -126,7 +138,7 @@ router.get("/filter/:offset&:limit", JWTMiddleware.identification, Authorization
 
 /**
  * @swagger
- * /user/filter/{filter}:
+* /v1/user/filter/{filter}:
  *  get:
  *      tags:
  *         - User
@@ -152,7 +164,7 @@ router.get("/filter/:filter", JWTMiddleware.identification, Authorization.mustBe
 
 /**
  * @swagger
- * /user:
+* /v1/user:
  *  post:
  *      tags:
  *          - User
@@ -173,7 +185,7 @@ router.post('/', Authorization.canPostUser, UserController.post);
 
 /**
  * @swagger
- * /user:
+* /v1/user:
  *  patch:
  *      tags:
  *          - User
@@ -194,7 +206,7 @@ router.patch('/', JWTMiddleware.identification, Authorization.canPatchUser, User
 
 /**
  * @swagger
- * /user:
+* /v1/user:
  *  delete:
  *      tags:
  *          - User
