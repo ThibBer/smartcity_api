@@ -1,8 +1,7 @@
 module.exports.get = get;
 
 module.exports.exist = async (client, id) => {
-    const {rows} = await get(client, id);
-    return rows[0] !== undefined;
+    return await get(client, id) !== undefined;
 }
 
 module.exports.all = async (client) => {
@@ -70,18 +69,20 @@ module.exports.delete = async (client, id) => {
     return await client.query('DELETE FROM Event WHERE id = $1', [id]);
 }
 
-async function get(client, id) {
-    return await client.query(`SELECT * FROM Event WHERE id = $1`, [id]);
-}
-
-module.exports.deleteLinkedToReport = async (client, reportId) => {
-    return await client.query('DELETE FROM Event WHERE report = $1', [reportId]);
+module.exports.deleteAllLinkedToReport = async (client, reportId) => {
+    /* DELETE Event linked to reports & participations linked to event */
+    return await client.query('DELETE FROM Event e USING Participation p WHERE e.report = $1 AND p.event = e.id', [reportId]);
 }
 
 module.exports.getWithReportId = async (client, reportId) => {
-    return await client.query('SELECT * FROM event WHERE report = $1', [reportId]);
+    return await client.query('SELECT * FROM Event WHERE report = $1', [reportId]);
 }
 
 module.exports.patchEventsWhenUserDelete = async (client, userId) => {
     return await client.query('UPDATE Event SET creator = null where creator = $1', [userId]);
+}
+
+async function get(client, id) {
+    const users = await client.query(`SELECT * FROM Event WHERE id = $1`, [id]);
+    return users[0];
 }

@@ -54,8 +54,7 @@ module.exports.get = async(req, res) => {
         const client = await pool.connect();
 
         try {
-            const {rows: reports} = await Report.get(client, id);
-            const report = reports[0];
+            const report = await Report.get(client, id);
 
             if(report === undefined){
                 res.status(404).json({error: "Invalid report ID"});
@@ -225,6 +224,7 @@ module.exports.patch = async(req, res) => {
 
 module.exports.delete = async(req, res) => {
     const id = parseInt(req.body.id);
+
     if(isNaN(id)){
         res.sendStatus(400);
     }else{
@@ -237,13 +237,13 @@ module.exports.delete = async(req, res) => {
                 res.sendStatus(404);
             } else {
                 await client.query("BEGIN;");
-
+/*
                 const {rows: events} = await Event.getWithReportId(client, id);
                 for (const event of events) {
                     await Participation.deleteRelatedToEvent(client, event.id);
-                }
+                }*/
 
-                await Event.deleteLinkedToReport(client, id);
+                await Event.deleteAllLinkedToReport(client, id);
                 await Report.delete(client, id);
 
                 await client.query("COMMIT;");

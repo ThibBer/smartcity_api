@@ -77,6 +77,15 @@ module.exports.filter = async(req, res) => {
     }
 }
 
+/**
+ * @swagger
+ *  components:
+ *      responses:
+ *          InvalidReportId:
+ *              description: Id su signalement invalide
+ *          UnknowReport:
+ *              description: Signalement inconnu
+ */
 module.exports.getWithReportId = async(req, res) => {
     const client = await pool.connect();
     const reportId = parseInt(req.params.reportId);
@@ -102,6 +111,7 @@ module.exports.getWithReportId = async(req, res) => {
     }
 }
 
+
 /**
  *@swagger
  *components:
@@ -119,11 +129,38 @@ module.exports.getWithReportId = async(req, res) => {
  *          description: Signalement ou utilisateur inconnu
  *  requestBodies:
  *      EventToAdd:
- *           content:
- *               application/json:
- *                   schema:
- *                       $ref: '#/components/schemas/Event'
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          id:
+ *                              type: number
+ *                              format: integer
+ *                              description: Id de l'événement
+ *                          date_hour:
+ *                              type: string
+ *                              description: Date / heure de l'événement
+ *                          duration:
+ *                              type: number
+ *                              format: integer
+ *                              description: Durée de l'événement
+ *                          description:
+ *                              type: string
+ *                              description: Description de l'événement
+ *                          created_at:
+ *                              type: string
+ *                              description: Timestamp de la création de l'événement
+ *                          report:
+ *                              type: number
+ *                              format: integer
+ *                              description: Id du signalement
+ *                          creator:
+ *                              type: number
+ *                              format: integer
+ *                              description: Id du créateur
  */
+
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
     const {date_hour, duration, description, report, creator} = req.body;
@@ -164,10 +201,36 @@ module.exports.post = async(req, res) => {
  *          description: Signalement, événement ou utilisateur inconnu
  *  requestBodies:
  *      EventToPatch:
- *           content:
- *               application/json:
- *                   schema:
- *                       $ref: '#/components/schemas/Event'
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          id:
+ *                              type: number
+ *                              format: integer
+ *                              description: Id de l'événement
+ *                          date_hour:
+ *                              type: string
+ *                              description: Date / heure de l'événement
+ *                          duration:
+ *                              type: number
+ *                              format: integer
+ *                              description: Durée de l'événement
+ *                          description:
+ *                              type: string
+ *                              description: Description de l'événement
+ *                          created_at:
+ *                              type: string
+ *                              description: Timestamp de la création de l'événement
+ *                          report:
+ *                              type: number
+ *                              format: integer
+ *                              description: Id du signalement
+ *                          creator:
+ *                              type: number
+ *                              format: integer
+ *                              description: Id du créateur
  */
 module.exports.patch = async(req, res) => {
     const client = await pool.connect();
@@ -224,7 +287,6 @@ module.exports.delete = async(req, res) => {
                 res.sendStatus(404);
             } else {
                 await client.query("BEGIN;");
-                console.log("passe ici");
                 await Participation.deleteRelatedToEvent(client, id);
                 await Event.delete(client, id);
 

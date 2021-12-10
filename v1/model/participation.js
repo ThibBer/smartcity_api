@@ -1,5 +1,6 @@
 module.exports.get = async (client, userId, eventId) => {
-    return await client.query('SELECT * FROM participation where participant = $1 AND event = $2', [userId, eventId]);
+    const {rows: participations} = await client.query('SELECT * FROM participation where participant = $1 AND event = $2', [userId, eventId]);
+    return participations[0];
 }
 
 module.exports.all = async (client) => {

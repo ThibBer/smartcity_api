@@ -1,8 +1,7 @@
 module.exports.get = get;
 
 module.exports.exist = async (client, id) => {
-    const {rows} = await get(client, id);
-    return rows[0] !== undefined;
+    return await get(client, id) !== undefined;
 }
 
 module.exports.all = async (client) => {
@@ -40,5 +39,7 @@ module.exports.delete = async (client, id) => {
 }
 
 async function get(client, id) {
-    return await client.query(`SELECT * FROM ReportType WHERE id = $1`, [id]);
+    const reportTypes = await client.query(`SELECT * FROM ReportType WHERE id = $1`, [id]);
+
+    return reportTypes[0];
 }

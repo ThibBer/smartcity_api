@@ -74,8 +74,8 @@ module.exports.get = async(req, res) => {
         const client = await pool.connect();
 
         try {
-            const {rows: users} = await User.get(client, id);
-            const user = users[0];
+            const user = await User.get(client, id);
+
             if(user !== undefined){
                 res.status(200).json(user);
             }else{
@@ -219,8 +219,8 @@ module.exports.post = async(req, res) => {
         const client = await pool.connect();
 
         try {
-            const {rows} = await User.getWithEmail(client, email);
-            const emailExists = rows[0] !== undefined;
+            const user = await User.getWithEmail(client, email);
+            const emailExists = user !== undefined;
 
             if(emailExists) {
                 res.status(400).json({error: "L'adresse email existe déjà"});
@@ -259,14 +259,13 @@ module.exports.patch = async(req, res) => {
         const client = await pool.connect();
 
         try {
-            const {rows: users} = await User.get(client, id);
-            const user = users[0];
+            const user = await User.get(client, id);
 
             if(user === undefined) {
                 res.sendStatus(404);
             }else{
-                const {rows} = await User.getWithEmail(client, email);
-                const emailExists = rows[0] !== undefined;
+                const userWithEmail = await User.getWithEmail(client, email);
+                const emailExists = userWithEmail !== undefined;
 
                 if(email !== undefined && emailExists && user.email !== email){
                     res.status(400).json({error: "L'adresse email existe déjà"});

@@ -1,16 +1,18 @@
 async function get(client, id) {
-    return await client.query(`SELECT * FROM BackOfficeUser WHERE id = $1`, [id]);
+    const {rows: users} = await client.query(`SELECT * FROM BackOfficeUser WHERE id = $1`, [id]);
+
+    return users[0];
 }
 
 module.exports.get = get;
 
 module.exports.getWithEmail = async (client, email) => {
-    return await client.query('SELECT * FROM BackOfficeUser WHERE email = $1', [email]);
+    const {rows: users} = await client.query('SELECT * FROM BackOfficeUser WHERE email = $1', [email])
+    return users[0];
 }
 
 module.exports.exist = async (client, id) => {
-    const {rows} = await get(client, id);
-    return rows[0] !== undefined;
+    return await get(client, id) !== undefined;
 }
 
 module.exports.filter = async (client, filter) => {

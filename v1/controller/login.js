@@ -14,7 +14,7 @@ const login = require("../model/login");
  *      BadCredentials:
  *          description: L'adresse email et/ou le mot de passe sont incorrect
  *      LoggedIn:
- *          description: L'utilisateur a été ajouté
+ *          description: Données de connexion valides
  *          content:
  *              application/json:
  *                  schema:

@@ -1,12 +1,14 @@
 async function get(client, id) {
-    return await client.query(`SELECT R.*, row_to_json(rt) as report_type FROM report r LEFT JOIN reportType rt ON r.report_type = rt.id WHERE r.id = $1 ORDER BY created_at DESC, id`, [id]);
+    const {rows: reports} = await client.query(`SELECT R.*, row_to_json(rt) as report_type FROM report r LEFT JOIN reportType rt ON r.report_type = rt.id WHERE r.id = $1 ORDER BY created_at DESC, id`, [id]);
+
+    return reports[0];
 }
 
 module.exports.get = get;
 
 module.exports.exist = async (client, id) => {
-    const {rows} = await get(client, id);
-    return rows[0] !== undefined;
+    const report = await get(client, id);
+    return report !== undefined;
 }
 
 module.exports.all = async (client) => {

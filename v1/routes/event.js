@@ -8,6 +8,35 @@ const JWTMiddleware = require("../middleware/JWTIdentification");
 router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, EventController.filter); /* Identification becasue user foreign key is object user */
 router.get("/filter/:offset&:limit", JWTMiddleware.identification, EventController.filter); /* Identification becasue user foreign key is object user */
 
+/**
+ * @swagger
+ * /forreport/{reportId}:
+ *  get:
+ *      tags:
+ *         - Event
+ *      parameters:
+ *          - name: Id
+ *            description: Id de l'événement
+ *            in: path
+ *            required: true
+ *            schema:
+ *              type: integer
+ *      responses:
+ *          200:
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/Event'
+ *          400:
+ *              $ref: '#/components/responses/InvalidReportId'
+ *          401:
+ *              $ref: '#/components/responses/UnknowReport'
+ *          500:
+ *              description: Erreur serveur
+ *
+ */
 router.get('/forreport/:reportId', EventController.getWithReportId);
 
 /**

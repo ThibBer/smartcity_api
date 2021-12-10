@@ -40,8 +40,7 @@ module.exports.get = async(req, res) => {
         if (isNaN(participant) || isNaN(event)) {
             res.sendStatus(400);
         } else {
-            const {rows: participations} = await Participation.get(client, participant, event);
-            const participation = participations[0];
+            const participation = await Participation.get(client, participant, event);
 
             if(participation === undefined){
                 res.sendStatus(404);

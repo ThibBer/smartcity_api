@@ -1,7 +1,6 @@
 const pool = require('../model/database');
 const ReportType = require("../model/reportType");
 const Report = require("../model/report");
-const Event = require("../model/event");
 
 /**
  * @swagger
@@ -28,13 +27,12 @@ module.exports.get = async(req, res) => {
         const client = await pool.connect();
 
         try {
-            const {rows: users} = await ReportType.get(client, id);
+            const reportType = await ReportType.get(client, id);
 
-            const user = users[0];
-            if(user === undefined){
+            if(reportType === undefined){
                 res.sendStatus(404);
             }else{
-                res.status(200).json(user);
+                res.status(200).json(reportType);
             }
         } catch (error) {
             console.error(error);
@@ -49,8 +47,8 @@ module.exports.all = async(req, res) => {
     const client = await pool.connect();
 
     try {
-        const {rows: users} = await ReportType.all(client);
-        res.status(200).json(users);
+        const {rows: reportTypes} = await ReportType.all(client);
+        res.status(200).json(reportTypes);
     } catch (error) {
         console.error(error);
         res.sendStatus(500);

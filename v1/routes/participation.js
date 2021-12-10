@@ -18,8 +18,14 @@ router.get('/:participant&:event', JWTMiddleware.identification, ParticipationCo
  *      requestBody:
  *          $ref: '#/components/requestBodies/ParticipationToAdd'
  *      responses:
- *          201:
+ *          200:
  *              $ref: '#/components/responses/ParticipationAdded'
+ *          400:
+ *              $ref: '#/components/responses/MissingJWT'
+ *          401:
+ *              $ref: '#/components/responses/ErrorJWT'
+ *          403:
+ *              description: Action non autorisée
  *          404:
  *              $ref: '#/components/responses/InvalidParticipationId'
  *          500:
@@ -37,8 +43,14 @@ router.post('/', JWTMiddleware.identification, Authorization.canDoActionOnPartic
  *      security:
  *          - bearerAuth: []
  *      responses:
- *          200:
+ *          204:
  *              $ref: '#/components/responses/ParticipationDeleted'
+ *          400:
+ *              $ref: '#/components/responses/MissingJWT'
+ *          401:
+ *              $ref: '#/components/responses/ErrorJWT'
+ *          403:
+ *              description: Action non autorisée
  *          404:
  *              description: ID invalide
  *          500:
