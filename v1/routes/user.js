@@ -10,7 +10,7 @@ const Authorization = require("../middleware/Authorization");
 * /v1/user/{id}:
  *  get:
  *      tags:
- *         - User
+ *         - Utilisateur
  *      security:
  *          - bearerAuth: []
  *      parameters:
@@ -45,7 +45,7 @@ router.get('/:id', JWTMiddleware.identification, Authorization.canGetUser, UserC
 * /v1/user/filter/{offset}&{limit}&{filter}:
  *  get:
  *      tags:
- *         - User
+ *         - Utilisateur
  *      security:
  *          - bearerAuth: []
  *      parameters:
@@ -103,7 +103,7 @@ router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Autho
 * /v1/user/filter/{offset}&{limit}:
  *  get:
  *      tags:
- *         - User
+ *         - Utilisateur
  *      security:
  *          - bearerAuth: []
  *      parameters:
@@ -141,7 +141,7 @@ router.get("/filter/:offset&:limit", JWTMiddleware.identification, Authorization
 * /v1/user/filter/{filter}:
  *  get:
  *      tags:
- *         - User
+ *         - Utilisateur
  *      security:
  *          - bearerAuth: []
  *      parameters:
@@ -167,7 +167,7 @@ router.get("/filter/:filter", JWTMiddleware.identification, Authorization.mustBe
 * /v1/user:
  *  post:
  *      tags:
- *          - User
+ *          - Utilisateur
  *      security:
  *          - bearerAuth: []
  *      requestBody:
@@ -188,7 +188,7 @@ router.post('/', Authorization.canPostUser, UserController.post);
 * /v1/user:
  *  patch:
  *      tags:
- *          - User
+ *          - Utilisateur
  *      security:
  *          - bearerAuth: []
  *      requestBody:
@@ -209,7 +209,7 @@ router.patch('/', JWTMiddleware.identification, Authorization.canPatchUser, User
 * /v1/user:
  *  delete:
  *      tags:
- *          - User
+ *          - Utilisateur
  *      security:
  *          - bearerAuth: []
  *      requestBody:

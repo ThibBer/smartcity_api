@@ -55,7 +55,7 @@ const {getHash} = require("../../utils/jwtUtils");
  *      InvalidUserId:
  *          description: Id utilisateur invalide
  *      UnknowUser:
- *          description: Utilisateur inconnu
+ *          description: Utilisateur introuvable
  *          content:
  *              application/json:
  *                  schema:
@@ -95,7 +95,7 @@ module.exports.get = async(req, res) => {
  * components:
  *  responses:
  *      InvalidUserFilterData:
- *          description: Utilisateur inconnu
+ *          description: Utilisateur introuvable
  *          content:
  *              application/json:
  *                  schema:

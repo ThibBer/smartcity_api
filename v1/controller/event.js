@@ -169,7 +169,7 @@ module.exports.filter = async(req, res) => {
  *          InvalidReportId:
  *              description: Id du signalement invalide
  *          UnknowReport:
- *              description: Signalement inconnu
+ *              description: Signalement introuvable
  */
 module.exports.getWithReportId = async(req, res) => {
     const client = await pool.connect();
@@ -211,7 +211,7 @@ module.exports.getWithReportId = async(req, res) => {
  *      MissingEventBodyData:
  *          description: Donnée manquante dans le body
  *      UnknowEventReportOrCreator:
- *          description: Signalement ou utilisateur inconnu
+ *          description: Signalement ou utilisateur introuvable
  *  requestBodies:
  *      EventToAdd:
  *          content:
@@ -279,7 +279,7 @@ module.exports.post = async(req, res) => {
  *      EventPatched:
  *          description: L'événement a été modifié
  *      UnknowEventReportOrCreatorOrEvent:
- *          description: Signalement, événement ou utilisateur inconnu
+ *          description: Signalement, événement ou utilisateur introuvable
  *  requestBodies:
  *      EventToPatch:
  *          content:
@@ -352,7 +352,7 @@ module.exports.patch = async(req, res) => {
  *      EventDeleted:
  *          description: L'événement a été supprimé
  *      UnknowEvent:
- *          description: Événement inconnu
+ *          description: Événement introuvable
  */
 module.exports.delete = async(req, res) => {
     const client = await pool.connect();

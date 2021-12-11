@@ -45,6 +45,21 @@ const Participation = require("../model/participation");
  *
  */
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      UnknowReportObject:
+ *          description: Signalement introuvable
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          error:
+ *                              type: string
+ *                              description: Message erreur
+ */
 module.exports.get = async(req, res) => {
     const id = parseInt(req.params.id);
 
@@ -57,7 +72,7 @@ module.exports.get = async(req, res) => {
             const report = await Report.get(client, id);
 
             if(report === undefined){
-                res.status(404).json({error: "Invalid report ID"});
+                res.status(404).json({error: "ID du signalement invalide"});
             }else{
                 res.status(200).json(report);
             }
@@ -84,6 +99,21 @@ module.exports.all = async(req, res) => {
     }
 }
 
+/**
+ * @swagger
+ *  components:
+ *      responses:
+ *          InvalidReportFilterData:
+ *               description: Utilisateur introuvable
+ *               content:
+ *                      application/json:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                  error:
+ *                                      type: string
+ *                                      description: Message erreur
+ */
 module.exports.filterWithOffsetLimit = async(req, res) => {
     const filter = req.params.filter;
     const offset = parseInt(req.params.offset);
@@ -133,6 +163,15 @@ module.exports.filter = async(req, res) => {
     }
 }
 
+/**
+ * @swagger
+ *  components:
+ *      responses:
+ *          InvalidReportId:
+ *              description: Id du signalement invalide
+ *          UnknowReport:
+ *              description: Signalement introuvable
+ */
 module.exports.getWithUserId = async(req, res) => {
     const userId = parseInt(req.params.userId);
 
@@ -159,6 +198,60 @@ module.exports.getWithUserId = async(req, res) => {
     }
 }
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      ReportAdded:
+ *          description: Le signalement a été ajouté
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: integer
+ *                      description: Id du signalement créé
+ *      MissingReportBodyData:
+ *          description: Donnée manquante dans le body
+ *      UnknowReportTypeOrCreator:
+ *          description: Type de signalement ou utilisateur introuvable
+ *  requestBodies:
+ *      ReportToAdd:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          description:
+ *                              type: string
+ *                              description: Description de l'événement
+ *                          state:
+ *                              type: string
+ *                              description: État du report
+ *                          city:
+ *                              type: string
+ *                              description: Ville du report
+ *                          street:
+ *                              type: string
+ *                              description: Rue du report
+ *                          zip_code:
+ *                              type: number
+ *                              format: integer
+ *                              description: Code postal du report
+ *                          house_number:
+ *                              type: number
+ *                              format: integer
+ *                              description: Numéro d'habitation du report
+ *                          created_at:
+ *                              type: string
+ *                              description: Tiemstamp de la création de l'événement
+ *                          reporter:
+ *                              type: number
+ *                              format: integer
+ *                              description: Id du créateur
+ *                          report_type:
+ *                              type: number
+ *                              format: integer
+ *                              description: Id du type de signalement
+ */
 module.exports.post = async(req, res) => {
     let {description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
 
@@ -191,6 +284,56 @@ module.exports.post = async(req, res) => {
     }
 }
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      ReportPatched:
+ *          description: Le signalement a été modifié
+ *      UnknowReportOrReportTypeOrEvent:
+ *          description: Signalement, type de signalement ou utilisateur introuvable
+ *  requestBodies:
+ *      ReportToPatch:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          id:
+ *                              type: number
+ *                              format: integer
+ *                          description:
+ *                              type: string
+ *                              description: Description de l'événement
+ *                          state:
+ *                              type: string
+ *                              description: État du report
+ *                          city:
+ *                              type: string
+ *                              description: Ville du report
+ *                          street:
+ *                              type: string
+ *                              description: Rue du report
+ *                          zip_code:
+ *                              type: number
+ *                              format: integer
+ *                              description: Code postal du report
+ *                          house_number:
+ *                              type: number
+ *                              format: integer
+ *                              description: Numéro d'habitation du report
+ *                          created_at:
+ *                              type: string
+ *                              description: Tiemstamp de la création de l'événement
+ *                          reporter:
+ *                              type: number
+ *                              format: integer
+ *                              description: Id du créateur
+ *                          report_type:
+ *                              type: number
+ *                              format: integer
+ *                              description: Id du type de signalement
+ */
 module.exports.patch = async(req, res) => {
     const {id, description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
 
@@ -222,6 +365,17 @@ module.exports.patch = async(req, res) => {
     }
 }
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      InvalidReportId:
+ *          description: id du signalement invalide
+ *      ReportDeleted:
+ *          description: Le signalement a été supprimé
+ *      UnknowReport:
+ *          description: Signalement introuvable
+ */
 module.exports.delete = async(req, res) => {
     const id = parseInt(req.body.id);
 

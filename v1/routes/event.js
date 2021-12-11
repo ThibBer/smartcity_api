@@ -7,10 +7,10 @@ const JWTMiddleware = require("../middleware/JWTIdentification");
 
 /**
  * @swagger
-* /v1/filter/{offset}&{limit}&{filter}:
+* /v1/event/filter/{offset}&{limit}&{filter}:
  *  get:
  *      tags:
- *         - Event
+ *         - Événement
  *      parameters:
  *          - name: Offset
  *            description: Valeur du décalage
@@ -63,10 +63,10 @@ router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Event
 
 /**
  * @swagger
-* /v1/filter/{offset}&{limit}:
+* /v1/event/filter/{offset}&{limit}:
  *  get:
  *      tags:
- *         - Event
+ *         - Événement
  *      parameters:
  *          - name: Offset
  *            description: Valeur du décalage
@@ -113,10 +113,10 @@ router.get("/filter/:offset&:limit", JWTMiddleware.identification, EventControll
 
 /**
  * @swagger
-* /v1/forreport/{reportId}:
+* /v1/event/forreport/{reportId}:
  *  get:
  *      tags:
- *         - Event
+ *         - Événement
  *      parameters:
  *          - name: Id
  *            description: Id de l'événement
@@ -148,7 +148,7 @@ router.get('/forreport/:reportId', EventController.getWithReportId);
 * /v1/event:
  *  post:
  *      tags:
- *          - Event
+ *          - Événement
  *      security:
  *          - bearerAuth: []
  *      requestBody:
@@ -181,7 +181,7 @@ router.post('/', JWTMiddleware.identification, Authorization.canDoActionOnEvent,
 * /v1/event:
  *  patch:
  *      tags:
- *          - Event
+ *          - Événement
  *      security:
  *          - bearerAuth: []
  *      requestBody:
@@ -214,7 +214,7 @@ router.patch('/', JWTMiddleware.identification, Authorization.canDoActionOnEvent
 * /v1/event:
  *  delete:
  *      tags:
- *          - Event
+ *          - Événement
  *      security:
  *          - bearerAuth: []
  *      requestBody:

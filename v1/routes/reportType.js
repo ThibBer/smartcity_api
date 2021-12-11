@@ -10,7 +10,7 @@ const Authorization = require("../middleware/Authorization");
 * /v1/reportType/{id}:
  *  get:
  *      tags:
- *         - ReportType
+ *         - Type de signalement
  *      parameters:
  *          - name: Id
  *            description: Id du type de signalement
@@ -40,7 +40,7 @@ router.get('/:id', ReportTypeController.get);
 * /v1/reportType:
  *  get:
  *      tags:
- *         - ReportType
+ *         - Type de signalement
  *      responses:
  *          200:
  *              description: Récupère tous les types de signalement
@@ -61,7 +61,7 @@ router.get("/", ReportTypeController.all);
 * /v1/reportType/filter/{offset}&{limit}&{filter}:
  *  get:
  *      tags:
- *         - ReportType
+ *         - Type de signalement
  *      parameters:
  *          - name: Offset
  *            description: Valeur du décalage
@@ -111,7 +111,7 @@ router.get("/filter/:offset&:limit", ReportTypeController.filter);
 * /v1/reportType:
  *  post:
  *      tags:
- *          - ReportType
+ *          - Type de signalement
  *      security:
  *          - bearerAuth: []
  *      requestBody:
@@ -142,7 +142,7 @@ router.post('/', JWTMiddleware.identification, Authorization.mustBeAdmin, Report
 * /v1/reportType:
  *  patch:
  *      tags:
- *          - ReportType
+ *          - Type de signalement
  *      security:
  *          - bearerAuth: []
  *      requestBody:
@@ -175,7 +175,7 @@ router.patch('/', JWTMiddleware.identification, Authorization.mustBeAdmin, Repor
 * /v1/reportType:
  *  delete:
  *      tags:
- *          - ReportType
+ *          - Type de signalement
  *      security:
  *          - bearerAuth: []
  *      requestBody:

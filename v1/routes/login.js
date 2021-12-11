@@ -7,7 +7,7 @@ const router = new Router;
 * /v1/login:
  *  post:
  *      tags:
- *          - Login
+ *          - Connexion
  *      requestBody:
  *          $ref: '#/components/requestBodies/UserCredentials'
  *      responses:

@@ -25,7 +25,7 @@ const Report = require("../model/report");
  *          InvalidReportTypeId:
  *              description: Id du type de signalement invalide
  *          UnknowReportType:
- *              description: Type de signalement inconnu
+ *              description: Type de signalement introuvable
  */
 module.exports.get = async(req, res) => {
     const id = parseInt(req.params.id);
@@ -196,7 +196,7 @@ module.exports.post = async(req, res) => {
  *                              type: string
  *                              description: Message erreur
  *      UnknowReportType:
- *          description: Type de signalement inconnu
+ *          description: Type de signalement introuvable
  *          content:
  *              application/json:
  *                  schema:
