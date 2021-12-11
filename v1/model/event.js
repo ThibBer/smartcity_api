@@ -83,6 +83,6 @@ module.exports.patchEventsWhenUserDelete = async (client, userId) => {
 }
 
 async function get(client, id) {
-    const users = await client.query(`SELECT * FROM Event WHERE id = $1`, [id]);
-    return users[0];
+    const event = await client.query(`SELECT * FROM Event WHERE id = $1`, [id]);
+    return event;
 }

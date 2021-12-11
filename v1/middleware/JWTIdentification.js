@@ -24,7 +24,6 @@ module.exports.identification = async (req, res, next) => {
         try{
             const decodedJwtToken = jwt.verify(jwtToken, process.env.SECRET_TOKEN);
             req.session = decodedJwtToken.user;
-
             next();
         } catch (e) {
             console.error(e);

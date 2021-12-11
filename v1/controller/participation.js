@@ -107,7 +107,7 @@ module.exports.post = async(req, res) => {
                 res.status(404).json({error: "Evénement inconnu"});
             }else{
                 await Participation.post(client, participant, event);
-                res.sendStatus(201);
+                res.status(201).json("Participation créée");
             }
         }
     } catch (error) {
@@ -134,7 +134,6 @@ module.exports.delete = async(req, res) => {
     try {
         let userExist = !isNaN(participant) && (await User.exist(client, participant));
         let eventExist = !isNaN(event) && (await Event.exist(client, event));
-
         if(userExist) {
             if(eventExist) {
                 await Participation.delete(client, participant, event); // Delete user participation at an event
