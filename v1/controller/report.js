@@ -391,13 +391,12 @@ module.exports.delete = async(req, res) => {
                 res.sendStatus(404);
             } else {
                 await client.query("BEGIN;");
-/*
                 const {rows: events} = await Event.getWithReportId(client, id);
                 for (const event of events) {
                     await Participation.deleteRelatedToEvent(client, event.id);
-                }*/
+                    await Event.delete(client, event.id);
+                }
 
-                await Event.deleteAllLinkedToReport(client, id);
                 await Report.delete(client, id);
 
                 await client.query("COMMIT;");

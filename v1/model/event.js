@@ -69,11 +69,6 @@ module.exports.delete = async (client, id) => {
     return await client.query('DELETE FROM Event WHERE id = $1', [id]);
 }
 
-module.exports.deleteAllLinkedToReport = async (client, reportId) => {
-    /* DELETE Event linked to reports & participations linked to event */
-    return await client.query('DELETE FROM Event e USING Participation p WHERE e.report = $1 AND p.event = e.id', [reportId]);
-}
-
 module.exports.getWithReportId = async (client, reportId) => {
     return await client.query('SELECT * FROM Event WHERE report = $1', [reportId]);
 }
