@@ -263,11 +263,8 @@ module.exports.post = async(req, res) => {
         try {
             const reporterId = reporter.id ?? reporter;
             const reportTypeId = report_type.id ?? report_type;
-            console.log(reporterId)
-            console.log(reportTypeId)
             const reporterExist = await User.exist(client, reporterId);
             const reportTypeExist = await ReportType.exist(client, reportTypeId);
-            console.log(reportTypeExist)
             if(!reporterExist){
                 res.status(404).json({error: "Utilisateur inconnu"});
             }else if(!reportTypeExist) {
