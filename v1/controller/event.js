@@ -196,7 +196,6 @@ module.exports.getWithReportId = async(req, res) => {
     }
 }
 
-
 /**
  *@swagger
  *components:
@@ -241,7 +240,6 @@ module.exports.getWithReportId = async(req, res) => {
  *                              format: integer
  *                              description: Id du créateur
  */
-
 module.exports.post = async(req, res) => {
     const client = await pool.connect();
     const {date_hour, duration, description, report, creator} = req.body;

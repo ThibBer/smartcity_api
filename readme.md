@@ -65,3 +65,19 @@ Séparer les Authorization dans des fichiers != en fonction du type (user, repor
 
 ## Remarques
 Controleur peut vérifier si ce qu'on demande est bien a nous
+
+## Tests postman
+Tester ce qui est return dans le body
+On peut faire + de 10 tests mais si une fausse = - de points
+Ne pas tester une route avec un fichier
+
+
+
+Changer || par ??
+Attention doc offset majuscule et minuscule (site officiel)
+POST code 201 au lieu de 200
+Utiliser drop cascade pour supprimer
+Ne pas faire de select * car si 1 000 000 lignes = petits problème
+Utilisation du on delete set null
+Vérifier les select * dans le models
+Ne pas copier la doc pour le jwt utils

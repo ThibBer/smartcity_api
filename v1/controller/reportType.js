@@ -259,16 +259,15 @@ module.exports.delete = async(req, res) => {
         const client = await pool.connect();
 
         try {
-            await client.query("BEGIN;");
             const typeExist = ReportType.exist(client, id);
 
             if(typeExist) {
+                await client.query("BEGIN;");
                 await Report.patchReportsWhenTypeDelete(client, id);
                 await ReportType.delete(client, id);
                 await client.query("COMMIT;");
                 res.sendStatus(204);
             } else {
-                await client.query("ROLLBACK;");
                 res.status(404).json({error: "Le signalement n'existe pas"});
             }
         } catch (error) {

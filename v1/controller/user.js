@@ -133,8 +133,6 @@ module.exports.filterWithOffsetLimit = async(req, res) => {
         const client = await pool.connect();
 
         try {
-            await client.query("BEGIN;");
-
             const promises = [];
             const promiseFilterWithOffsetLimit = User.filterWithOffsetLimit(client, filter, offset, limit);
             const promiseCountWithFilter = User.countWithFilter(client, filter);
@@ -148,7 +146,6 @@ module.exports.filterWithOffsetLimit = async(req, res) => {
 
             res.status(200).json({countWithoutLimit: counts, data: users});
         } catch (error) {
-            await client.query("ROLLBACK;");
             console.error(error);
             res.sendStatus(500);
         } finally {
