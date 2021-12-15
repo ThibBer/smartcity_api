@@ -274,7 +274,7 @@ module.exports.post = async(req, res) => {
                 res.status(404).json({error: "Type de report inconnu"});
             } else {
                 const result = await Report.post(client, description, state, city, street, zip_code, house_number, reporterId, reportTypeId);
-                res.status(200).json({id: result.rows[0].id});
+                res.status(201).json({id: result.rows[0].id});
             }
         } catch (error) {
             console.error(error);

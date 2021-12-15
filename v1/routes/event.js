@@ -12,19 +12,19 @@ const JWTMiddleware = require("../middleware/JWTIdentification");
  *      tags:
  *         - Événement
  *      parameters:
- *          - name: Offset
+ *          - name: offset
  *            description: Valeur du décalage
  *            in: path
  *            required: true
  *            schema:
  *              type: integer
- *          - name: Limit
+ *          - name: limit
  *            description: Nombre de données à retourner
  *            in: path
  *            required: true
  *            schema:
  *              type: integer
- *          - name: Filter
+ *          - name: filter
  *            description: Filter à appliquer sur les données
  *            in: path
  *            required: true
@@ -68,13 +68,13 @@ router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Event
  *      tags:
  *         - Événement
  *      parameters:
- *          - name: Offset
+ *          - name: offset
  *            description: Valeur du décalage
  *            in: path
  *            required: true
  *            schema:
  *              type: integer
- *          - name: Limit
+ *          - name: limit
  *            description: Nombre de données à retourner
  *            in: path
  *            required: true
@@ -118,7 +118,7 @@ router.get("/filter/:offset&:limit", JWTMiddleware.identification, EventControll
  *      tags:
  *         - Événement
  *      parameters:
- *          - name: Id
+ *          - name: reportId
  *            description: Id de l'événement
  *            in: path
  *            required: true

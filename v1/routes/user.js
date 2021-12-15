@@ -7,7 +7,7 @@ const Authorization = require("../middleware/Authorization");
 
 /**
  * @swagger
-* /v1/user/{id}:
+* /v1/user/{Id}:
  *  get:
  *      tags:
  *         - Utilisateur
@@ -42,7 +42,7 @@ router.get('/:id', JWTMiddleware.identification, Authorization.canGetUser, UserC
 
 /**
  * @swagger
-* /v1/user/filter/{offset}&{limit}&{filter}:
+* /v1/user/filter/{Offset}&{Limit}&{Filter}:
  *  get:
  *      tags:
  *         - Utilisateur
@@ -100,7 +100,7 @@ router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Autho
 
 /**
  * @swagger
-* /v1/user/filter/{offset}&{limit}:
+* /v1/user/filter/{Offset}&{Limit}:
  *  get:
  *      tags:
  *         - Utilisateur
@@ -145,7 +145,7 @@ router.get("/filter/:offset&:limit", JWTMiddleware.identification, Authorization
  *      security:
  *          - bearerAuth: []
  *      parameters:
- *          - name: Filter
+ *          - name: filter
  *            description: Filter à appliquer sur les données
  *            in: path
  *            required: true
@@ -192,7 +192,7 @@ router.post('/', Authorization.canPostUser, UserController.post);
  *      security:
  *          - bearerAuth: []
  *      requestBody:
- *          $ref: '#/components/schemas/User'
+ *          $ref: '#/components/requestBodies/UserToPatch'
  *      responses:
  *          204:
  *              $ref: '#/components/responses/UserUpdated'

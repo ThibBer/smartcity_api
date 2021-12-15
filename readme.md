@@ -57,15 +57,6 @@ SECRET_TOKEN=
     - Delete Links For an User ✅
     - Delete Links For an Event ✅
 
-## Questions
-Comment ça se passe quand le middleware à besoin d'une info dans le body/url et qu'il ne la trouvé pas ? Il doit aussi renvoyer 400 ? Ou juste 403 ?
-Comment faire quand un middleware doit faire des vérifications qui nécéssitent des requêtes SQL
-Séparer les Authorization dans des fichiers != en fonction du type (user, report, etc ...) ?
-
-
-## Remarques
-Controleur peut vérifier si ce qu'on demande est bien a nous
-
 ## Tests postman
 Tester ce qui est return dans le body
 On peut faire + de 10 tests mais si une fausse = - de points
@@ -73,9 +64,9 @@ Ne pas tester une route avec un fichier
 
 
 
-Changer || par ??
-Attention doc offset majuscule et minuscule (site officiel)
-POST code 201 au lieu de 200
+Changer || par ?? -> ok
+Attention doc offset majuscule et minuscule (site officiel) -> ok (reste erreurs d'avoir un body pour les delete)
+POST code 201 au lieu de 200 -> ok
 Utiliser drop cascade pour supprimer
 Ne pas faire de select * car si 1 000 000 lignes = petits problème
 Utilisation du on delete set null

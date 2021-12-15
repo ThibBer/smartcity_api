@@ -12,7 +12,7 @@ const Authorization = require("../middleware/Authorization");
  *      tags:
  *         - Signalement
  *      parameters:
- *          - name: Id
+ *          - name: id
  *            description: Id du signalement
  *            in: path
  *            required: true
@@ -65,19 +65,19 @@ router.get("/", ReportController.all);
  *      security:
  *          - bearerAuth: []
  *      parameters:
- *          - name: Offset
+ *          - name: offset
  *            description: Valeur du décalage
  *            in: path
  *            required: true
  *            schema:
  *              type: integer
- *          - name: Limit
+ *          - name: limit
  *            description: Nombre de données à retourner
  *            in: path
  *            required: true
  *            schema:
  *              type: integer
- *          - name: Filter
+ *          - name: filter
  *            description: Filter à appliquer sur les données
  *            in: path
  *            required: true
@@ -125,13 +125,13 @@ router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Autho
  *      security:
  *          - bearerAuth: []
  *      parameters:
- *          - name: Offset
+ *          - name: offset
  *            description: Valeur du décalage
  *            in: path
  *            required: true
  *            schema:
  *              type: integer
- *          - name: Limit
+ *          - name: limit
  *            description: Nombre de données à retourner
  *            in: path
  *            required: true
@@ -172,12 +172,12 @@ router.get("/filter/:offset&:limit", JWTMiddleware.identification, Authorization
 
 /**
  * @swagger
- * /v1/report/filter/{offset}&{limit}:
+ * /v1/report/filter/{filter}:
  *  get:
  *      tags:
  *         - Signalement
  *      parameters:
- *          - name: Filter
+ *          - name: filter
  *            description: Filtre à appliquer sur les données
  *            in: path
  *            required: true
@@ -207,7 +207,7 @@ router.get("/filter/:filter", ReportController.filter);
  *      security:
  *          - bearerAuth: []
  *      parameters:
- *          - name: UserId
+ *          - name: userId
  *            description: Id de l'utilisateur
  *            in: path
  *            required: true

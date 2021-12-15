@@ -249,8 +249,8 @@ module.exports.post = async(req, res) => {
         if(date_hour === undefined || duration === undefined || report === undefined){
             res.sendStatus(400);
         }else{
-            const reportId = report?.id || report;
-            const creatorId = creator?.id || creator;
+            const reportId = report?.id ?? report;
+            const creatorId = creator?.id ?? creator;
 
             const reportExist = await Report.exist(client, reportId);
             const creatorExist = creatorId === undefined || await User.exist(client, creatorId);
@@ -259,7 +259,7 @@ module.exports.post = async(req, res) => {
                 res.sendStatus(404);
             }else{
                 const result = await Event.post(client, date_hour, duration, description, reportId, creatorId);
-                res.status(200).json({id: result.rows[0].id});
+                res.status(201).json({id: result.rows[0].id});
             }
         }
     } catch(error) {
@@ -319,8 +319,8 @@ module.exports.patch = async(req, res) => {
         if(isNaN(id) || (date_hour === undefined && duration === undefined && description === undefined && report === undefined && creator === undefined)){
             res.sendStatus(400);
         }else{
-            const creatorId = creator?.id || creator;
-            const reportId = report?.id || report;
+            const creatorId = creator?.id ?? creator;
+            const reportId = report?.id ?? report;
 
             const eventExist = await Event.exist(client, id);
             const creatorExist = creatorId === undefined || await User.exist(client, creatorId);
