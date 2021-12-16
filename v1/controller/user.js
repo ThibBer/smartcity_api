@@ -221,7 +221,7 @@ module.exports.post = async(req, res) => {
                 res.status(400).json({error: "L'adresse email existe déjà"});
             } else {
                 const result = await User.post(client, email, await getHash(password), first_name, last_name, birth_date, role, city, street, zip_code, house_number);
-                res.status(200).json(result.rows[0]);
+                res.status(201).json(result.rows[0]);
             }
         } catch (error) {
             console.error(error);
@@ -239,7 +239,7 @@ module.exports.post = async(req, res) => {
  *      UserUpdated:
  *          description: l'utilisateur a été mis à jour
  *  requestBodies:
- *      UserToUpdate:
+ *      UserToPatch:
  *          content:
  *              application/json:
  *                  schema:

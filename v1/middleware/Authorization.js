@@ -112,7 +112,7 @@ module.exports.canGetReportsForUser = (req, res, next) => {
 /* PARTICIPATION */
 module.exports.canDoActionOnParticipation = (req, res, next) => {
     const user = req.session;
-    let participant = req.params?.participant || req.body?.participant;
+    let participant = req.params?.participant ?? req.body?.participant;
 
     if(participant === undefined || isNaN(participant)){
         res.sendStatus(400);

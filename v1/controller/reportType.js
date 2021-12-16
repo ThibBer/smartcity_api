@@ -169,7 +169,7 @@ module.exports.post = async(req, res) => {
 
         try {
             const result = await ReportType.post(client, label);
-            res.status(200).json({id: result.rows[0].id});
+            res.status(201).json({id: result.rows[0].id});
         } catch (error) {
             console.error(error);
             res.sendStatus(500);

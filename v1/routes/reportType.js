@@ -12,7 +12,7 @@ const Authorization = require("../middleware/Authorization");
  *      tags:
  *         - Type de signalement
  *      parameters:
- *          - name: Id
+ *          - name: id
  *            description: Id du type de signalement
  *            in: path
  *            required: true
@@ -58,7 +58,7 @@ router.get("/", ReportTypeController.all);
 
 /**
  * @swagger
-* /v1/reportType/filter/{offset}&{limit}&{filter}:
+* /v1/reportType/filter/{Offset}&{Limit}&{Filter}:
  *  get:
  *      tags:
  *         - Type de signalement
@@ -104,6 +104,8 @@ router.get("/", ReportTypeController.all);
  *
  */
 router.get("/filter/:offset&:limit&:filter", ReportTypeController.filter);
+
+
 router.get("/filter/:offset&:limit", ReportTypeController.filter);
 
 /**
