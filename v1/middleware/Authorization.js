@@ -130,7 +130,7 @@ module.exports.canDoActionOnEvent = (req, res, next) => {
     const user = req.session;
     const creator = req.body?.creator;
 
-    if((userIsAdmin(user) && creator === undefined) || user.id === creator?.id || user.id === parseInt(creator)){
+    if (userIsAdmin(user) || creator === undefined || user.id === creator?.id || user.id === parseInt(creator)){
         next();
     } else {
         res.sendStatus(403);
