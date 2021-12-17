@@ -37,27 +37,6 @@ router.get('/:id', ReportController.get);
 
 /**
  * @swagger
- * /v1/report:
- *  get:
- *      tags:
- *         - Signalement
- *      responses:
- *          200:
- *              description: Récupère tous les signalements
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: array
- *                          items:
- *                              $ref: '#/components/schemas/Report'
- *          500:
- *              description: Erreur serveur
- *
- */
-router.get("/", ReportController.all);
-
-/**
- * @swagger
  * /v1/report/{offset}&{limit}&{filter}:
  *  get:
  *      tags:
@@ -273,7 +252,6 @@ router.get('/foruser/:userId', JWTMiddleware.identification, Authorization.canGe
  */
 router.post('/', JWTMiddleware.identification, ReportController.post);
 
-
 /**
  * @swagger
  * /v1/report:
@@ -306,7 +284,6 @@ router.post('/', JWTMiddleware.identification, ReportController.post);
  *
  */
 router.patch('/', JWTMiddleware.identification, Authorization.canDoActionOnReport, ReportController.patch);
-
 
 /**
  * @swagger

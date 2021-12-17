@@ -86,7 +86,6 @@ module.exports.canDeleteUser = (req, res, next) => {
 module.exports.canDoActionOnReport = (req, res, next) => {
     const user = req.session;
     const reporter = req.body?.reporter;
-
     if(userIsAdmin(user) && reporter === undefined || user.id === reporter?.id || user.id === parseInt(reporter)){
         next();
     } else {

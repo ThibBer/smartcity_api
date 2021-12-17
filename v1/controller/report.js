@@ -85,20 +85,6 @@ module.exports.get = async(req, res) => {
     }
 }
 
-module.exports.all = async(req, res) => {
-    const client = await pool.connect();
-
-    try {
-        const {rows: reports} = await Report.all(client);
-        res.status(200).json(reports);
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
-
 /**
  * @swagger
  *  components:
@@ -125,7 +111,6 @@ module.exports.filterWithOffsetLimit = async(req, res) => {
         res.status(400).json({error: "Limite invalide"});
     }else{
         const client = await pool.connect();
-
         try {
             const promises = [];
             const promiseFilterWithOffsetLimit = Report.filterWithOffsetLimit(client, filter, offset, limit);

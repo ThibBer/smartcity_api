@@ -99,7 +99,7 @@ module.exports.delete = async (client, id) => {
 }
 
 module.exports.getWithUserId = async (client, reporterId) => {
-    return await client.query('SELECT R.*, row_to_json(rt) as report_type FROM report r LEFT JOIN reportType rt ON r.report_type = rt.id WHERE r.reporter = $1 ORDER BY r.id', [reporterId]);
+    return await client.query("SELECT r.*, row_to_json(rt) as report_type, row_to_json(b) as reporter FROM report r LEFT JOIN reportType rt ON r.report_type = rt.id LEFT JOIN backofficeuser b on b.id = r.reporter WHERE r.reporter = $1 ORDER BY r.created_at DESC", [reporterId]);
 }
 
 module.exports.patchReportsWhenUserDelete = async (client, userId) => {
