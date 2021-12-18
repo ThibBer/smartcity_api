@@ -41,8 +41,6 @@ router.get('/:id', ReportController.get);
  *  get:
  *      tags:
  *         - Signalement
- *      security:
- *          - bearerAuth: []
  *      parameters:
  *          - name: offset
  *            description: Valeur du décalage
@@ -78,22 +76,17 @@ router.get('/:id', ReportController.get);
  *                                  items:
  *                                      $ref: '#/components/schemas/Report'
  *          400:
- *              description: JWT, décalage, filtre ou limite invalide
+ *              description: décalage, filtre ou limite invalide
  *              content:
  *                  application/json:
  *                      schema:
  *                          oneOf:
- *                              - $ref: '#/components/responses/ErrorJWT'
  *                              - $ref: '#/components/responses/InvalidReportFilterData'
- *          401:
- *              $ref: '#/components/responses/MissingJWT'
- *          403:
- *              description: Action non autorisée
  *          500:
  *              description: Erreur serveur
  *
  */
-router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Authorization.mustBeAdmin, ReportController.filterWithOffsetLimit);
+router.get("/filter/:offset&:limit&:filter", ReportController.filterWithOffsetLimit);
 
 /**
  * @swagger
@@ -101,8 +94,6 @@ router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Autho
  *  get:
  *      tags:
  *         - Signalement
- *      security:
- *          - bearerAuth: []
  *      parameters:
  *          - name: offset
  *            description: Valeur du décalage
@@ -139,15 +130,11 @@ router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Autho
  *                          oneOf:
  *                              - $ref: '#/components/responses/ErrorJWT'
  *                              - $ref: '#/components/responses/InvalidReportFilterData'
- *          401:
- *              $ref: '#/components/responses/MissingJWT'
- *          403:
- *              description: Action non autorisée
  *          500:
  *              description: Erreur serveur
  *
  */
-router.get("/filter/:offset&:limit", JWTMiddleware.identification, Authorization.mustBeAdmin, ReportController.filterWithOffsetLimit);
+router.get("/filter/:offset&:limit", ReportController.filterWithOffsetLimit);
 
 /**
  * @swagger
