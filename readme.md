@@ -9,7 +9,7 @@ API for SmartCity project at Henallux IG3
 Add a .env file for database connection at the root of the project
 
 ```
-API_PORT=
+PORT=
 
 DATABASE_HOST=
 DATABASE_NAME=
