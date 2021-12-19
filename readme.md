@@ -61,16 +61,3 @@ SECRET_TOKEN=
 Tester ce qui est return dans le body
 On peut faire + de 10 tests mais si une fausse = - de points
 Ne pas tester une route avec un fichier
-
-
-
-Changer || par ?? -> ok
-Attention doc offset majuscule et minuscule (site officiel) -> ok (reste erreurs d'avoir un body pour les delete)
-POST code 201 au lieu de 200 -> ok
-Utiliser drop cascade pour supprimer
-Ne pas faire de select * car si 1 000 000 lignes = petits problème
-Utilisation du on delete set null
-Vérifier les select * dans le models
-Ne pas copier la doc pour le jwt utils
-
-## Améliorations:
