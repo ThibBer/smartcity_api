@@ -6,7 +6,7 @@ const Report = require("../model/report");
  * @swagger
  * components:
  *  schemas:
- *      ReportType:
+ *      TypeSignalement:
  *          type: object
  *          properties:
  *              id:
@@ -52,6 +52,7 @@ module.exports.get = async(req, res) => {
     }
 }
 
+// No Swagger doc needed
 module.exports.all = async(req, res) => {
     const client = await pool.connect();
 
@@ -71,7 +72,7 @@ module.exports.all = async(req, res) => {
  * components:
  *  responses:
  *      InvalidReportTypeFilterData:
- *          description: Filtre, limite ou décalage invalide
+ *          description: limite ou décalage invalide
  *          content:
  *              application/json:
  *                  schema:
@@ -80,21 +81,6 @@ module.exports.all = async(req, res) => {
  *                          error:
  *                              type: string
  *                              description: Message erreur
- *      ValidReportTypeFilter:
- *          description: Types de signalements correspondants au filtre, décalage et limite
- *          content:
- *              application/json:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          countWithoutLimit:
- *                              type: integer
- *                              description: Nombre de données correspond au filtre sans limite
- *                          data:
- *                              type: array
- *                              items:
- *                                  $ref: '#/components/schemas/User'
- *                              description: Utilisateurs correspondants au filter, avec limite et décalage
  */
 module.exports.filter = async(req, res) => {
     const filter = req.params.filter;
@@ -157,7 +143,7 @@ module.exports.filter = async(req, res) => {
  *           content:
  *               application/json:
  *                   schema:
- *                       $ref: '#/components/schemas/ReportType'
+ *                       $ref: '#/components/schemas/TypeSignalement'
  */
 module.exports.post = async(req, res) => {
     const {label} = req.body;
@@ -210,7 +196,7 @@ module.exports.post = async(req, res) => {
  *           content:
  *               application/json:
  *                   schema:
- *                       $ref: '#/components/schemas/ReportType'
+ *                       $ref: '#/components/schemas/TypeSignalement'
  */
 module.exports.patch = async(req, res) => {
     const {id, label} = req.body;

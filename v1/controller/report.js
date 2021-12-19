@@ -9,7 +9,7 @@ const Participation = require("../model/participation");
  * @swagger
  * components:
  *  schemas:
- *      Report:
+ *      Signalement:
  *          type: object
  *          properties:
  *              id:
@@ -39,9 +39,80 @@ const Participation = require("../model/participation");
  *                  type: string
  *                  description: Tiemstamp de la création de l'événement
  *              reporter:
- *                  $ref: '#/components/schemas/User'
+ *                  $ref: '#/components/schemas/UtilisateurSansMotDePasse'
  *              report_type:
- *                  $ref: '#/components/schemas/ReportType'
+ *                  $ref: '#/components/schemas/TypeSignalement'
+ *      SignalementSimple:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: number
+ *                  format: integer
+ *              description:
+ *                  type: string
+ *                  description: Description de l'événement
+ *              state:
+ *                  type: string
+ *                  description: État du report
+ *              city:
+ *                  type: string
+ *                  description: Ville du report
+ *              street:
+ *                  type: string
+ *                  description: Rue du report
+ *              zip_code:
+ *                  type: number
+ *                  format: integer
+ *                  description: Code postal du report
+ *              house_number:
+ *                  type: number
+ *                  format: integer
+ *                  description: Numéro d'habitation du report
+ *              created_at:
+ *                  type: string
+ *                  description: Tiemstamp de la création de l'événement
+ *              reporter:
+ *                  type: number
+ *                  format: integer
+ *                  description: Id du créateur du signalement
+ *              report_type:
+ *                  type: number
+ *                  format: integer
+ *                  description: Id du type de signalement
+ *      SignalementSimpleSansId:
+ *          type: object
+ *          properties:
+ *              description:
+ *                  type: string
+ *                  description: Description de l'événement
+ *              state:
+ *                  type: string
+ *                  description: État du report
+ *              city:
+ *                  type: string
+ *                  description: Ville du report
+ *              street:
+ *                  type: string
+ *                  description: Rue du report
+ *              zip_code:
+ *                  type: number
+ *                  format: integer
+ *                  description: Code postal du report
+ *              house_number:
+ *                  type: number
+ *                  format: integer
+ *                  description: Numéro d'habitation du report
+ *              created_at:
+ *                  type: string
+ *                  description: Tiemstamp de la création de l'événement
+ *              reporter:
+ *                  type: number
+ *                  format: integer
+ *                  description: Id du créateur du signalement
+ *              report_type:
+ *                  type: number
+ *                  format: integer
+ *                  description: Id du type de signalement
  *
  */
 
@@ -203,39 +274,7 @@ module.exports.getWithUserId = async(req, res) => {
  *          content:
  *              application/json:
  *                  schema:
- *                      type: object
- *                      properties:
- *                          description:
- *                              type: string
- *                              description: Description de l'événement
- *                          state:
- *                              type: string
- *                              description: État du report
- *                          city:
- *                              type: string
- *                              description: Ville du report
- *                          street:
- *                              type: string
- *                              description: Rue du report
- *                          zip_code:
- *                              type: number
- *                              format: integer
- *                              description: Code postal du report
- *                          house_number:
- *                              type: number
- *                              format: integer
- *                              description: Numéro d'habitation du report
- *                          created_at:
- *                              type: string
- *                              description: Tiemstamp de la création de l'événement
- *                          reporter:
- *                              type: number
- *                              format: integer
- *                              description: Id du créateur
- *                          report_type:
- *                              type: number
- *                              format: integer
- *                              description: Id du type de signalement
+ *                      $ref: '#/components/schemas/SignalementSimpleSansId'
  */
 module.exports.post = async(req, res) => {
     let {description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
@@ -280,42 +319,7 @@ module.exports.post = async(req, res) => {
  *          content:
  *              application/json:
  *                  schema:
- *                      type: object
- *                      properties:
- *                          id:
- *                              type: number
- *                              format: integer
- *                          description:
- *                              type: string
- *                              description: Description de l'événement
- *                          state:
- *                              type: string
- *                              description: État du report
- *                          city:
- *                              type: string
- *                              description: Ville du report
- *                          street:
- *                              type: string
- *                              description: Rue du report
- *                          zip_code:
- *                              type: number
- *                              format: integer
- *                              description: Code postal du report
- *                          house_number:
- *                              type: number
- *                              format: integer
- *                              description: Numéro d'habitation du report
- *                          created_at:
- *                              type: string
- *                              description: Tiemstamp de la création de l'événement
- *                          reporter:
- *                              type: number
- *                              format: integer
- *                              description: Id du créateur
- *                          report_type:
- *                              type: number
- *                              format: integer
- *                              description: Id du type de signalement
+ *                      $ref: '#/components/schemas/SignalementSimple'
  */
 module.exports.patch = async(req, res) => {
     const {id, description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;

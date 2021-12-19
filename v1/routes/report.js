@@ -24,7 +24,7 @@ const Authorization = require("../middleware/Authorization");
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/Report'
+ *                          $ref: '#/components/schemas/Signalement'
  *          400:
  *              $ref: '#/components/responses/InvalidReportId'
  *          404:
@@ -74,7 +74,7 @@ router.get('/:id', ReportController.get);
  *                              data:
  *                                  type: array
  *                                  items:
- *                                      $ref: '#/components/schemas/Report'
+ *                                      $ref: '#/components/schemas/Signalement'
  *          400:
  *              description: décalage, filtre ou limite invalide
  *              content:
@@ -121,7 +121,7 @@ router.get("/filter/:offset&:limit&:filter", ReportController.filterWithOffsetLi
  *                              data:
  *                                  type: array
  *                                  items:
- *                                      $ref: '#/components/schemas/Report'
+ *                                      $ref: '#/components/schemas/Signalement'
  *          400:
  *              description: JWT, décalage, filtre ou limite invalide
  *              content:
@@ -157,7 +157,7 @@ router.get("/filter/:offset&:limit", ReportController.filterWithOffsetLimit);
  *                      schema:
  *                          type: array
  *                          items:
- *                              $ref: '#/components/schemas/Report'
+ *                              $ref: '#/components/schemas/Signalement'
  *          500:
  *              description: Erreur serveur
  *
@@ -187,7 +187,7 @@ router.get("/filter/:filter", ReportController.filter);
  *                      schema:
  *                          type: array
  *                          items:
- *                              $ref: '#/components/schemas/Report'
+ *                              $ref: '#/components/schemas/Signalement'
  *          400:
  *              description: JWT, décalage, filtre ou limite invalide
  *              content:

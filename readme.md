@@ -72,3 +72,5 @@ Ne pas faire de select * car si 1 000 000 lignes = petits problème
 Utilisation du on delete set null
 Vérifier les select * dans le models
 Ne pas copier la doc pour le jwt utils
+
+## Améliorations:

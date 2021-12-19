@@ -44,7 +44,7 @@ const JWTMiddleware = require("../middleware/JWTIdentification");
  *                              data:
  *                                  type: array
  *                                  items:
- *                                      $ref: '#/components/schemas/EventFilter'
+ *                                      $ref: '#/components/schemas/Evenement'
  *          400:
  *              description: JWT, décalage, filtre ou limite invalide
  *              content:
@@ -52,7 +52,7 @@ const JWTMiddleware = require("../middleware/JWTIdentification");
  *                      schema:
  *                          oneOf:
  *                              - $ref: '#/components/responses/ErrorJWT'
- *                              - $ref: '#/components/responses/InvalidUserFilterData'
+ *                              - $ref: '#/components/responses/InvalidEventFilterData'
  *          401:
  *              $ref: '#/components/responses/MissingJWT'
  *          500:
@@ -94,15 +94,15 @@ router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Event
  *                              data:
  *                                  type: array
  *                                  items:
- *                                      $ref: '#/components/schemas/EventFilter'
+ *                                      $ref: '#/components/schemas/Evenement'
  *          400:
- *              description: JWT, décalage, filtre ou limite invalide
+ *              description: JWT, décalage ou limite invalide
  *              content:
  *                  application/json:
  *                      schema:
  *                          oneOf:
  *                              - $ref: '#/components/responses/ErrorJWT'
- *                              - $ref: '#/components/responses/InvalidUserFilterData'
+ *                              - $ref: '#/components/responses/InvalidEventFilterData'
  *          401:
  *              $ref: '#/components/responses/MissingJWT'
  *          500:
@@ -132,7 +132,7 @@ router.get("/filter/:offset&:limit", JWTMiddleware.identification, EventControll
  *                      schema:
  *                          type: array
  *                          items:
- *                              $ref: '#/components/schemas/EventForReport'
+ *                              $ref: '#/components/schemas/EvenementSimple'
  *          400:
  *              $ref: '#/components/responses/InvalidReportId'
  *          404:

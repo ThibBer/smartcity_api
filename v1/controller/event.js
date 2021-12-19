@@ -8,30 +8,7 @@ const Participation = require("../model/participation");
  * @swagger
  * components:
  *  schemas:
- *      Event:
- *          type: object
- *          properties:
- *              id:
- *                  type: number
- *                  format: integer
- *              date_hour:
- *                  type: string
- *                  description: Date / heure de l'événement
- *              duration:
- *                  type: number
- *                  format: integer
- *                  description: Durée de l'événement
- *              description:
- *                  type: string
- *                  description: Description de l'événement
- *              created_at:
- *                  type: string
- *                  description: Tiemstamp de la création de l'événement
- *              report:
- *                  $ref: '#/components/schemas/Report'
- *              creator:
- *                  $ref: '#/components/schemas/User'
- *      EventFilter:
+ *      Evenement:
  *          type: object
  *          properties:
  *              id:
@@ -51,45 +28,10 @@ const Participation = require("../model/participation");
  *                  type: string
  *                  description: Timestamp de la création de l'événement
  *              report:
- *                  type: object
- *                  properties:
- *                      id:
- *                          type: number
- *                          format: integer
- *                      description:
- *                          type: string
- *                          description: Description de l'événement
- *                      state:
- *                          type: string
- *                          description: État du report
- *                      city:
- *                          type: string
- *                          description: Ville du report
- *                      street:
- *                          type: string
- *                          description: Rue du report
- *                      zip_code:
- *                          type: number
- *                          format: integer
- *                          description: Code postal du report
- *                      house_number:
- *                          type: number
- *                          format: integer
- *                          description: Numéro d'habitation du report
- *                      created_at:
- *                          type: string
- *                          description: Timestamp de la création de l'événement
- *                      reporter:
- *                          type: number
- *                          format: integer
- *                          description: Id du créateur du signalement
- *                      report_type:
- *                          type: number
- *                          format: integer
- *                          description: Id du type de signalement
+ *                  $ref: '#/components/schemas/SignalementSimple'
  *              creator:
- *                  $ref: '#/components/schemas/User'
- *      EventForReport:
+ *                  $ref: '#/components/schemas/UtilisateurSansMotDePasse'
+ *      EvenementSimple:
  *          type: object
  *          properties:
  *              id:
@@ -123,10 +65,16 @@ const Participation = require("../model/participation");
  * @swagger
  *  components:
  *      responses:
- *          InvalidOffset:
- *              description: L'offset est invalide
- *          InvalidLimit:
- *              description: La limite est invalide
+ *          InvalidEventFilterData:
+ *              description: Données de filtre invalide
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              error:
+ *                                  type: string
+ *                                  description: Message erreur
  */
 module.exports.filter = async(req, res) => {
     const filter = req.params.filter;
@@ -283,33 +231,7 @@ module.exports.post = async(req, res) => {
  *          content:
  *              application/json:
  *                  schema:
- *                      type: object
- *                      properties:
- *                          id:
- *                              type: number
- *                              format: integer
- *                              description: Id de l'événement
- *                          date_hour:
- *                              type: string
- *                              description: Date / heure de l'événement
- *                          duration:
- *                              type: number
- *                              format: integer
- *                              description: Durée de l'événement
- *                          description:
- *                              type: string
- *                              description: Description de l'événement
- *                          created_at:
- *                              type: string
- *                              description: Timestamp de la création de l'événement
- *                          report:
- *                              type: number
- *                              format: integer
- *                              description: Id du signalement
- *                          creator:
- *                              type: number
- *                              format: integer
- *                              description: Id du créateur
+ *                      $ref: '#/components/schemas/EvenementSimple'
  */
 module.exports.patch = async(req, res) => {
     const client = await pool.connect();
@@ -346,7 +268,7 @@ module.exports.patch = async(req, res) => {
  *components:
  *  responses:
  *      InvalidEventId:
- *          description: id de l'événement invalide
+ *          description: Id de l'événement invalide
  *      EventDeleted:
  *          description: L'événement a été supprimé
  *      UnknowEvent:

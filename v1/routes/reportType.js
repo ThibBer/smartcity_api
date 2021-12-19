@@ -24,7 +24,7 @@ const Authorization = require("../middleware/Authorization");
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/ReportType'
+ *                          $ref: '#/components/schemas/TypeSignalement'
  *          400:
  *              $ref: '#/components/responses/InvalidReportTypeId'
  *          404:
@@ -49,7 +49,7 @@ router.get('/:id', ReportTypeController.get);
  *                      schema:
  *                          type: array
  *                          items:
- *                              $ref: '#/components/schemas/ReportType'
+ *                              $ref: '#/components/schemas/TypeSignalement'
  *          500:
  *              description: Erreur serveur
  *
@@ -96,7 +96,7 @@ router.get("/", ReportTypeController.all);
  *                                  description: Types de signalements correspondants au filter, avec limite et décalage
  *                                  type: array
  *                                  items:
- *                                      $ref: '#/components/schemas/ReportType'
+ *                                      $ref: '#/components/schemas/TypeSignalement'
  *          400:
  *              $ref: '#/components/responses/InvalidReportTypeFilterData'
  *          500:
@@ -106,6 +106,46 @@ router.get("/", ReportTypeController.all);
 router.get("/filter/:offset&:limit&:filter", ReportTypeController.filter);
 
 
+/**
+ * @swagger
+ * /v1/reportType/filter/{offset}&{limit}:
+ *  get:
+ *      tags:
+ *         - Type de signalement
+ *      parameters:
+ *          - name: offset
+ *            description: Valeur du décalage
+ *            in: path
+ *            required: true
+ *            schema:
+ *              type: integer
+ *          - name: limit
+ *            description: Nombre de données à retourner
+ *            in: path
+ *            required: true
+ *            schema:
+ *              type: integer
+ *      responses:
+ *          200:
+ *              description: Données avec limite et décalage
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              countWithoutLimit:
+ *                                  type: integer
+ *                                  description: Nombre d'éléments correspondant au filtre sans décalage ni limite
+ *                              data:
+ *                                  type: array
+ *                                  items:
+ *                                      $ref: '#/components/schemas/TypeSignalement'
+ *          400:
+ *              $ref: '#/components/responses/InvalidReportTypeFilterData'
+ *          500:
+ *              description: Erreur serveur
+ *
+ */
 router.get("/filter/:offset&:limit", ReportTypeController.filter);
 
 /**

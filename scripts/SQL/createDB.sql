@@ -10,8 +10,8 @@ CREATE TABLE BackOfficeUser
     role         varchar NOT NULL,
     city         varchar NOT NULL,
     street       varchar NOT NULL,
-    zip_code     numeric NOT NULL,
-    house_number numeric NOT NULL
+    zip_code     integer NOT NULL,
+    house_number integer NOT NULL
 );
 
 DROP TABLE IF EXISTS ReportType CASCADE;
@@ -30,8 +30,8 @@ CREATE TABLE Report
     state        varchar                                NOT NULL,
     city         varchar                                NOT NULL,
     street       varchar                                NOT NULL,
-    zip_code     numeric                                NOT NULL,
-    house_number numeric,
+    zip_code     integer                                NOT NULL,
+    house_number integer,
     created_at   timestamp                              NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     reporter     integer REFERENCES BackOfficeUser (id),

@@ -19,6 +19,7 @@ const login = require("../model/login");
  *              application/json:
  *                  schema:
  *                      type: string
+ *                      description: JWT
  *  requestBodies:
  *      UserCredentials:
  *           content:
@@ -38,9 +39,9 @@ module.exports.login = async(req, res) => {
     const {email, password} = req.body;
 
     try {
-        if(email === undefined) {
+        if(email === undefined || email.trim() === "") {
             res.status(400).json({error: "Adresse email invalide"});
-        } else if(password === undefined){
+        } else if(password === undefined || password.trim() === ""){
             res.status(400).json({error: "Mot de passe invalide"});
         } else {
             const user = await login.get(client, email, password);

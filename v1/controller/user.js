@@ -9,7 +9,7 @@ const {getHash} = require("../../utils/jwtUtils");
  * @swagger
  * components:
  *  schemas:
- *      User:
+ *      Utilisateur:
  *          type: object
  *          properties:
  *              id:
@@ -21,6 +21,39 @@ const {getHash} = require("../../utils/jwtUtils");
  *              password:
  *                  type: string
  *                  description: mot de passe
+ *              first_name:
+ *                  type: string
+ *                  description: prénom
+ *              last_name:
+ *                  type: string
+ *                  description: nom
+ *              birth_date:
+ *                  type: string
+ *                  description: date de naissance
+ *              role:
+ *                  type: string
+ *                  description: role
+ *              city:
+ *                  type: string
+ *                  description: ville
+ *              street:
+ *                  type: string
+ *                  description: rue
+ *              zip_code:
+ *                  type: string
+ *                  description: code postal
+ *              house_number:
+ *                  type: string
+ *                  description: numéro d'habitation
+ *      UtilisateurSansMotDePasse:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *                  description: id de l'utilisateur
+ *              email:
+ *                  type: string
+ *                  description: adresse email
  *              first_name:
  *                  type: string
  *                  description: prénom
@@ -117,7 +150,7 @@ module.exports.get = async(req, res) => {
  *                          data:
  *                              type: array
  *                              items:
- *                                  $ref: '#/components/schemas/User'
+ *                                  $ref: '#/components/schemas/Utilisateur'
  *                              description: Utilisateurs correspondants au filter, avec limite et décalage
  */
 module.exports.filterWithOffsetLimit = async(req, res) => {
@@ -165,7 +198,7 @@ module.exports.filterWithOffsetLimit = async(req, res) => {
  *                  schema:
  *                      type: array
  *                      items:
- *                          $ref: '#/components/schemas/User'
+ *                          $ref: '#/components/schemas/Utilisateur'
  */
 module.exports.filter = async(req, res) => {
     const filter = req.params.filter;
@@ -203,7 +236,7 @@ module.exports.filter = async(req, res) => {
  *           content:
  *               application/json:
  *                   schema:
- *                       $ref: '#/components/schemas/User'
+ *                       $ref: '#/components/schemas/Utilisateur'
  */
 module.exports.post = async(req, res) => {
     const {email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;
@@ -243,7 +276,7 @@ module.exports.post = async(req, res) => {
  *          content:
  *              application/json:
  *                  schema:
- *                       $ref: '#/components/schemas/User'
+ *                       $ref: '#/components/schemas/Utilisateur'
  */
 module.exports.patch = async(req, res) => {
     const {id, email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;

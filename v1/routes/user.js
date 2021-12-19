@@ -22,7 +22,7 @@ const Authorization = require("../middleware/Authorization");
  *              type: integer
  *      responses:
  *          200:
- *              $ref: '#/components/schemas/User'
+ *              $ref: '#/components/schemas/Utilisateur'
  *          400:
  *              description: JWT, décalage ou limite manquant
  *              content:
@@ -81,7 +81,7 @@ router.get('/:id', JWTMiddleware.identification, Authorization.canGetUser, UserC
  *                              data:
  *                                  type: array
  *                                  items:
- *                                      $ref: '#/components/schemas/User'
+ *                                      $ref: '#/components/schemas/Utilisateur'
  *          400:
  *              description: JWT, décalage, filtre ou limite invalide
  *              content:
