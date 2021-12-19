@@ -4,6 +4,7 @@
   "description": "API for SmartCity project - IG3 Henallux",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js",
     "initDB": "node scripts/JS/initDB.js",
