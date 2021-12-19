@@ -21,7 +21,7 @@ Vagrant.configure("2") do |config|
      useradd john
      echo -e -n "password\npassword" | passwd john
      sudo -u postgres psql -c "CREATE USER john WITH encrypted password 'password';"
-     sudo -u postgres psql -c "CREATE DATABASE exercices;"
+     sudo -u postgres psql -c "CREATE DATABASE walloniafixed;"
      sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE exercices TO john;"
      sudo sh -c 'echo "host    all             all             0.0.0.0/0            md5" >> /etc/postgresql/12/main/pg_hba.conf'
      sudo sh -c 'echo "host    all             all             ::0/0            md5" >> /etc/postgresql/12/main/pg_hba.conf'
