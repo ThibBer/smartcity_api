@@ -39,7 +39,7 @@ module.exports.delete = async (client, id) => {
 }
 
 async function get(client, id) {
-    const reportType = await client.query(`SELECT * FROM ReportType WHERE id = $1`, [id]);
+    const {rows: reportTypes} = await client.query(`SELECT * FROM ReportType WHERE id = $1`, [id]);
 
-    return reportType;
+    return reportTypes[0];
 }
