@@ -3,10 +3,6 @@ module.exports.get = async (client, userId, eventId) => {
     return participations[0];
 }
 
-module.exports.all = async (client) => {
-    return await client.query('SELECT * FROM participation');
-}
-
 module.exports.post = async (client, userId, eventId) => {
     return await client.query('INSERT INTO participation (participant, event) VALUES ($1, $2)', [userId, eventId]);
 }

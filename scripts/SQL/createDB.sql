@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS BackOfficeUser CASCADE;
-CREATE TABLE BackOfficeUser
+DROP TABLE IF EXISTS "User" CASCADE;
+CREATE TABLE "User"
 (
     id           integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     email        varchar NOT NULL UNIQUE,
@@ -34,7 +34,7 @@ CREATE TABLE Report
     house_number integer,
     created_at   timestamp                              NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    reporter     integer REFERENCES BackOfficeUser (id),
+    reporter     integer REFERENCES "User" (id),
     report_type  integer REFERENCES ReportType (id)
 );
 
@@ -48,12 +48,12 @@ CREATE TABLE Event
     created_at timestamp                              NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     report    integer REFERENCES report (id)          NOT NULL,
-    creator   integer REFERENCES BackOfficeUser (id)
+    creator   integer REFERENCES "User" (id)
 );
 DROP TABLE IF EXISTS Participation CASCADE;
 CREATE TABLE Participation
 (
-    participant integer REFERENCES BackOfficeUser (id),
+    participant integer REFERENCES "User" (id),
     event       integer REFERENCES Event (id),
 
     PRIMARY KEY (participant, event)

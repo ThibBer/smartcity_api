@@ -1,19 +1,14 @@
-module.exports.get = get;
-
 module.exports.exist = async (client, id) => {
-    return await get(client, id) !== undefined;
-}
-
-module.exports.all = async (client) => {
-    return await client.query(`SELECT * FROM event ORDER BY id`);
+    const {rows: events} = await client.query(`SELECT * FROM Event WHERE id = $1`, [id]);
+    return events[0] !== undefined;
 }
 
 module.exports.filter = async (client, filter, offset, limit) => {
     if(filter !== undefined){
-        return await client.query("SELECT Event.*, json_build_object('id', b.id, 'email', b.email, 'first_name', b.first_name, 'last_name', b.last_name, 'birth_date', b.birth_date, 'role', b.role, 'city', b.city, 'street', b.street, 'zip_code', b.zip_code, 'house_number', b.house_number) as creator, row_to_json(r) as report FROM Event LEFT JOIN backofficeuser b on event.creator = b.id LEFT JOIN report r on r.id = event.report WHERE r.id::varchar(11) ~ $1 OR duration::varchar(11) ~ $1 OR r.description ~ $1 OR report::varchar(11) ~ $1 OR duration::varchar(11) ~ $1 OR creator::varchar(11) ~ $1 ORDER BY r.id OFFSET $2 LIMIT $3", [filter, offset, limit])
+        return await client.query("SELECT Event.*, json_build_object('id', b.id, 'email', b.email, 'first_name', b.first_name, 'last_name', b.last_name, 'birth_date', b.birth_date, 'role', b.role, 'city', b.city, 'street', b.street, 'zip_code', b.zip_code, 'house_number', b.house_number) as creator, row_to_json(r) as report FROM Event LEFT JOIN User b on event.creator = b.id LEFT JOIN report r on r.id = event.report WHERE r.id::varchar(11) ~ $1 OR duration::varchar(11) ~ $1 OR r.description ~ $1 OR report::varchar(11) ~ $1 OR duration::varchar(11) ~ $1 OR creator::varchar(11) ~ $1 ORDER BY r.id OFFSET $2 LIMIT $3", [filter, offset, limit])
     }
 
-    return await client.query("SELECT Event.*, json_build_object('id', b.id, 'email', b.email, 'first_name', b.first_name, 'last_name', b.last_name, 'birth_date', b.birth_date, 'role', b.role, 'city', b.city, 'street', b.street, 'zip_code', b.zip_code, 'house_number', b.house_number) as creator, row_to_json(r) as report FROM Event LEFT JOIN backofficeuser b on event.creator = b.id LEFT JOIN report r on r.id = event.report ORDER BY r.id OFFSET $1 LIMIT $2", [offset, limit]);
+    return await client.query("SELECT Event.*, json_build_object('id', b.id, 'email', b.email, 'first_name', b.first_name, 'last_name', b.last_name, 'birth_date', b.birth_date, 'role', b.role, 'city', b.city, 'street', b.street, 'zip_code', b.zip_code, 'house_number', b.house_number) as creator, row_to_json(r) as report FROM Event LEFT JOIN User b on event.creator = b.id LEFT JOIN report r on r.id = event.report ORDER BY r.id OFFSET $1 LIMIT $2", [offset, limit]);
 }
 
 module.exports.countWithFilter = async (client, filter) => {
@@ -75,8 +70,4 @@ module.exports.getWithReportId = async (client, reportId) => {
 
 module.exports.patchEventsWhenUserDelete = async (client, userId) => {
     return await client.query('UPDATE Event SET creator = null where creator = $1', [userId]);
-}
-
-async function get(client, id) {
-    return await client.query(`SELECT * FROM Event WHERE id = $1`, [id]);
 }
