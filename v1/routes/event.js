@@ -59,7 +59,7 @@ const JWTMiddleware = require("../middleware/JWTIdentification");
  *              description: Erreur serveur
  *
  */
-router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, EventController.filter); /* Identification because user foreign key is object user */
+router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, EventController.filter);
 
 /**
  * @swagger
@@ -109,7 +109,7 @@ router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Event
  *              description: Erreur serveur
  *
  */
-router.get("/filter/:offset&:limit", JWTMiddleware.identification, EventController.filter); /* Identification because user foreign key is object user */
+router.get("/filter/:offset&:limit", JWTMiddleware.identification, EventController.filter);
 
 /**
  * @swagger

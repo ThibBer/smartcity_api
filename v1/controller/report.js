@@ -204,6 +204,7 @@ module.exports.filterWithOffsetLimit = async(req, res) => {
     }
 }
 
+// No Swagger doc needed
 module.exports.filter = async(req, res) => {
     const filter = req.params.filter;
     const client = await pool.connect();

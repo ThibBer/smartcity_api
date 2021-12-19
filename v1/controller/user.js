@@ -276,7 +276,7 @@ module.exports.post = async(req, res) => {
  *          content:
  *              application/json:
  *                  schema:
- *                       $ref: '#/components/schemas/Utilisateur'
+ *                       $ref: '#/components/schemas/UtilisateurSansMotDePasse'
  */
 module.exports.patch = async(req, res) => {
     const {id, email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number} = req.body;
