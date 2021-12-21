@@ -18,7 +18,8 @@ DROP TABLE IF EXISTS ReportType CASCADE;
 CREATE TABLE ReportType
 (
     id    integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    label varchar NOT NULL
+    label varchar NOT NULL,
+    image varchar NOT NULL
 );
 
 

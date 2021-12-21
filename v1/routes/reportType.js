@@ -5,6 +5,23 @@ const ReportTypeController = require("../controller/reportType");
 const JWTMiddleware = require("../middleware/JWTIdentification");
 const Authorization = require("../middleware/Authorization");
 
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({
+    limits: {
+        fileSize: 700000, // 700Ko
+    },
+    storage
+});
+
+const fileSizeLimitErrorHandler = (err, req, res, next) => {
+    if (err) {
+        res.send(413);
+    } else {
+        next();
+    }
+}
+
 /**
  * @swagger
 * /v1/reportType/{id}:
@@ -105,7 +122,6 @@ router.get("/", ReportTypeController.all);
  */
 router.get("/filter/:offset&:limit&:filter", ReportTypeController.filter);
 
-
 /**
  * @swagger
  * /v1/reportType/filter/{offset}&{limit}:
@@ -168,7 +184,7 @@ router.get("/filter/:offset&:limit", ReportTypeController.filter);
  *                      schema:
  *                          oneOf:
  *                              - $ref: '#/components/responses/MissingJWT'
- *                              - $ref: '#/components/responses/InvalidReportTypeLabel'
+ *                              - $ref: '#/components/responses/InvalidReportTypeLabelOrImage'
  *          401:
  *              $ref: '#/components/responses/ErrorJWT'
  *          403:
@@ -177,7 +193,7 @@ router.get("/filter/:offset&:limit", ReportTypeController.filter);
  *              description: Erreur serveur
  *
  */
-router.post('/', JWTMiddleware.identification, Authorization.mustBeAdmin, ReportTypeController.post);
+router.post('/', JWTMiddleware.identification, Authorization.mustBeAdmin, upload.fields([{name: "image", maxCount: 1}]),fileSizeLimitErrorHandler,  ReportTypeController.post);
 
 /**
  * @swagger
@@ -193,13 +209,13 @@ router.post('/', JWTMiddleware.identification, Authorization.mustBeAdmin, Report
  *          204:
  *              $ref: '#/components/responses/ReportTypePatched'
  *          400:
- *              description: JWT invalide, id ou libellé du type de signalement invalide
+ *              description: JWT invalide, id libellé ou image du type de signalement invalide
  *              content:
  *                  application/json:
  *                      schema:
  *                          oneOf:
  *                              - $ref: '#/components/responses/MissingJWT'
- *                              - $ref: '#/components/responses/InvalidReportTypeIdOrLabel'
+ *                              - $ref: '#/components/responses/InvalidReportTypeIdOrLabelOrImage'
  *          401:
  *              $ref: '#/components/responses/ErrorJWT'
  *          403:
@@ -210,7 +226,7 @@ router.post('/', JWTMiddleware.identification, Authorization.mustBeAdmin, Report
  *              description: Erreur serveur
  *
  */
-router.patch('/', JWTMiddleware.identification, Authorization.mustBeAdmin, ReportTypeController.patch);
+router.patch('/', JWTMiddleware.identification, Authorization.mustBeAdmin, upload.fields([{name: "image", maxCount: 1}]), fileSizeLimitErrorHandler, ReportTypeController.patch);
 
 /**
  * @swagger

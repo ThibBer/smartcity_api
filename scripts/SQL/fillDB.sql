@@ -249,15 +249,14 @@ INSERT INTO "User" (email, password, first_name, last_name, birth_date, role, ci
 INSERT INTO "User" (email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number) VALUES ('lkopta6w@last.fm', '$2b$10$OoWWML05uIJCHV4FlE7z7eLq3MRatgeiSIpBDumGM./zlRrynkaIm', 'Geneviève', 'Kopta', '2001-04-19', 'user', 'Juncalito Abajo', 'Ryan', 7032, '0');
 INSERT INTO "User" (email, password, first_name, last_name, birth_date, role, city, street, zip_code, house_number) VALUES ('lhaily6x@biglobe.ne.jp', '$2b$10$OoWWML05uIJCHV4FlE7z7eLq3MRatgeiSIpBDumGM./zlRrynkaIm', 'Lauréna', 'Haily', '1978-06-27', 'admin', 'Chochkan', 'Bowman', 8458, '1976');
 
-
-INSERT INTO ReportType (label) VALUES ('Dépôt clandestin');
-INSERT INTO ReportType (label) VALUES ('Lampadaire cassé');
-INSERT INTO ReportType (label) VALUES ('Trottoire dégradé');
-INSERT INTO ReportType (label) VALUES ('Pollution');
-INSERT INTO ReportType (label) VALUES ('Vandalisme');
-INSERT INTO ReportType (label) VALUES ('Espace public dégradé');
-INSERT INTO ReportType (label) VALUES ('Déchets ménagers encombrants');
-INSERT INTO ReportType (label) VALUES ('Graffitis');
+INSERT INTO ReportType (label, image) VALUES ('Dépôt clandestin', '1e031fb5-cd0e-4a29-839f-164bea9c4813.jpeg');
+INSERT INTO ReportType (label, image) VALUES ('Lampadaire cassé', 'ed09a04d-c88f-446d-b08b-d8229231235a.jpeg');
+INSERT INTO ReportType (label, image) VALUES ('Trottoire dégradé', 'jesaispas.jpeg');
+INSERT INTO ReportType (label, image) VALUES ('Pollution', 'jesaispas.jpeg');
+INSERT INTO ReportType (label, image) VALUES ('Vandalisme', 'jesaispas.jpeg');
+INSERT INTO ReportType (label, image) VALUES ('Espace public dégradé', 'jesaispas.jpeg');
+INSERT INTO ReportType (label, image) VALUES ('Déchets ménagers encombrants', 'jesaispas.jpeg');
+INSERT INTO ReportType (label, image) VALUES ('Graffitis', 'jesaispas.jpeg');
 
 INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('Je signale un problème en face de chez moi', 'pending', 'Chapois', 'Rue du pont', 5590, 53, 1, 2);
 INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('J''ai un petit problème', 'pending', 'Evrehailles', 'Rue de Virton', 5530, 36, 5, 1);

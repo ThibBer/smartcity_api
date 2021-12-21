@@ -24,14 +24,31 @@ module.exports.countWithFilter = async (client, filter) => {
     return await client.query("SELECT COUNT(*) as count FROM ReportType", []);
 }
 
-module.exports.post = async (client, label) => {
-    return await client.query(`INSERT INTO ReportType (label) VALUES ($1) RETURNING id`,
-        [label]);
+module.exports.post = async (client, label, image) => {
+    return await client.query(`INSERT INTO ReportType (label, image) VALUES ($1, $2) RETURNING id`,
+        [label, image]);
 }
 
-module.exports.patch = async (client, id, label) => {
-    return await client.query(`UPDATE ReportType SET label = $1 WHERE id = $2`,
-        [label, id]);
+module.exports.patch = async (client, id, label, image) => {
+    const params = [id];
+    const querySet = [];
+    let query = "UPDATE ReportType SET ";
+
+    if(label !== undefined){
+        params.push(label);
+        querySet.push(`label = $${params.length} `);
+    }
+
+    if(image !== undefined){
+        params.push(image);
+        querySet.push(`image = $${params.length} `);
+    }
+
+    query += querySet.join(', ');
+
+    query += "WHERE id = $1";
+
+    return await client.query(query, params);
 }
 
 module.exports.delete = async (client, id) => {

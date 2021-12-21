@@ -1,6 +1,9 @@
 const pool = require('../model/database');
 const ReportType = require("../model/reportType");
 const Report = require("../model/report");
+const ImageManager = require("../model/imageManager");
+const uuid = require("uuid");
+const REPORT_TYPE_OUTPUT_DIRECTORY = "./../../images/reportTypes/";
 
 /**
  * @swagger
@@ -15,6 +18,9 @@ const Report = require("../model/report");
  *              label:
  *                  type: string
  *                  description: Libellé du type de signalement
+ *              image:
+ *                  type: string
+ *                  description: Image du type de signalement
  *
  */
 
@@ -128,8 +134,8 @@ module.exports.filter = async(req, res) => {
  *                  schema:
  *                      type: integer
  *                      description: Id du type de signalement créé
- *      InvalidReportTypeLabel:
- *          description: Libellé invalide
+ *      InvalidReportTypeLabelOrImage:
+ *          description: Libellé ou image invalide
  *          content:
  *              application/json:
  *                  schema:
@@ -147,16 +153,29 @@ module.exports.filter = async(req, res) => {
  */
 module.exports.post = async(req, res) => {
     const {label} = req.body;
+    console.log(req.files)
+    const image = req.files.image[0];
 
-    if(label === undefined || label.trim() === ""){
+    if(label === undefined || label.trim() === "") {
         res.status(400).json({error: "Label invalide"});
+    }else if(image === undefined){
+        res.status(400).json({error: "Image invalide"});
     }else{
         const client = await pool.connect();
 
         try {
-            const result = await ReportType.post(client, label);
-            res.status(201).json({id: result.rows[0].id});
+            const imageName = uuid.v4() + ".jpeg";
+
+            await client.query("BEGIN;");
+            const result = await ReportType.post(client, label, imageName);
+
+            await ImageManager.save(image.buffer, imageName, REPORT_TYPE_OUTPUT_DIRECTORY);
+
+            await client.query("COMMIT;");
+
+            res.status(201).json({id: result.rows[0].id, image: imageName});
         } catch (error) {
+            await client.query("ROLLBACK;");
             console.error(error);
             res.sendStatus(500);
         } finally {
@@ -171,8 +190,8 @@ module.exports.post = async(req, res) => {
  *  responses:
  *      ReportTypePatched:
  *          description: Le type de signalement a été modifié
- *      InvalidReportTypeIdOrLabel:
- *          description: Id ou libellé invalide
+ *      InvalidReportTypeIdOrLabelOrImage:
+ *          description: Id libellé ou image invalide
  *          content:
  *              application/json:
  *                  schema:
@@ -200,21 +219,22 @@ module.exports.post = async(req, res) => {
  */
 module.exports.patch = async(req, res) => {
     const {id, label} = req.body;
+    const image = req.files.image[0];
 
-    if (isNaN(id)) {
-        res.status(400).json({error: "Id invalide"});
-    } if (label === undefined || label.trim() === "") {
-        res.status(400).json({error: "Label invalide"});
+    if (isNaN(id) || ((label === undefined || label.trim() === "") && image === undefined)) {
+        res.sendStatus(400);
     }else {
         const client = await pool.connect();
 
         try {
-            const reportTypeExist = await ReportType.exist(client, id);
+            const reportType = await ReportType.get(client, id);
 
-            if(!reportTypeExist){
+            if(reportType === undefined){
                 res.sendStatus(404);
             }else{
                 await ReportType.patch(client, id, label);
+
+                ImageManager.replace(image.buffer, reportType.image, REPORT_TYPE_OUTPUT_DIRECTORY);
                 res.sendStatus(204);
             }
         } catch (error) {
@@ -245,16 +265,19 @@ module.exports.delete = async(req, res) => {
         const client = await pool.connect();
 
         try {
-            const typeExist = ReportType.exist(client, id);
+            const reportType = ReportType.get(client, id);
 
-            if(typeExist) {
+            if(reportType === undefined) {
+                res.status(404).json({error: "Le signalement n'existe pas"});
+            } else {
                 await client.query("BEGIN;");
                 await Report.patchReportsWhenTypeDelete(client, id);
                 await ReportType.delete(client, id);
                 await client.query("COMMIT;");
+
+
+                ImageManager.delete(reportType.image, REPORT_TYPE_OUTPUT_DIRECTORY);
                 res.sendStatus(204);
-            } else {
-                res.status(404).json({error: "Le signalement n'existe pas"});
             }
         } catch (error) {
             await client.query("ROLLBACK;");
