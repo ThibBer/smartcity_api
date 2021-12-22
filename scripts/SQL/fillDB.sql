@@ -251,12 +251,11 @@ INSERT INTO "User" (email, password, first_name, last_name, birth_date, role, ci
 
 INSERT INTO ReportType (label, image) VALUES ('Dépôt clandestin', '1e031fb5-cd0e-4a29-839f-164bea9c4813.jpeg');
 INSERT INTO ReportType (label, image) VALUES ('Lampadaire cassé', 'ed09a04d-c88f-446d-b08b-d8229231235a.jpeg');
-INSERT INTO ReportType (label, image) VALUES ('Trottoire dégradé', 'jesaispas.jpeg');
-INSERT INTO ReportType (label, image) VALUES ('Pollution', 'jesaispas.jpeg');
-INSERT INTO ReportType (label, image) VALUES ('Vandalisme', 'jesaispas.jpeg');
-INSERT INTO ReportType (label, image) VALUES ('Espace public dégradé', 'jesaispas.jpeg');
-INSERT INTO ReportType (label, image) VALUES ('Déchets ménagers encombrants', 'jesaispas.jpeg');
-INSERT INTO ReportType (label, image) VALUES ('Graffitis', 'jesaispas.jpeg');
+INSERT INTO ReportType (label, image) VALUES ('Trottoire dégradé', 'ddda1704-842a-4209-ab36-3aacec523731.jpeg');
+INSERT INTO ReportType (label, image) VALUES ('Vandalisme', 'b069a7e1-2517-4f39-8703-8078bacc7934.jpeg');
+INSERT INTO ReportType (label, image) VALUES ('Espace public dégradé', 'e54e87cb-5399-4c98-b910-f9043c850843.jpeg');
+INSERT INTO ReportType (label, image) VALUES ('Déchets ménagers encombrants', '98b61b2e-14c8-4575-bc8c-51527392e064.jpeg');
+INSERT INTO ReportType (label, image) VALUES ('Graffitis', '79419374-b0ba-4cbe-8765-839c370422fb.jpeg');
 
 INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('Je signale un problème en face de chez moi', 'pending', 'Chapois', 'Rue du pont', 5590, 53, 1, 2);
 INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('J''ai un petit problème', 'pending', 'Evrehailles', 'Rue de Virton', 5530, 36, 5, 1);
