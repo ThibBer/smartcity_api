@@ -29,30 +29,12 @@ module.exports.post = async (client, label, image) => {
         [label, image]);
 }
 
-module.exports.patch = async (client, id, label, image) => {
-    const params = [id];
-    const querySet = [];
-    let query = "UPDATE ReportType SET ";
-
-    if(label !== undefined){
-        params.push(label);
-        querySet.push(`label = $${params.length} `);
-    }
-
-    if(image !== undefined){
-        params.push(image);
-        querySet.push(`image = $${params.length} `);
-    }
-
-    query += querySet.join(', ');
-
-    query += "WHERE id = $1";
-
-    return await client.query(query, params);
+module.exports.patch = async (client, id, label) => {
+    return await client.query('UPDATE ReportType SET label = $2 WHERE id = $1', [id, label]);
 }
 
 module.exports.delete = async (client, id) => {
-    return await client.query('DELETE FROM reporttype WHERE id = $1', [id]);
+    return await client.query('DELETE FROM ReportType WHERE id = $1', [id]);
 }
 
 async function get(client, id) {

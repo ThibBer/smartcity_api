@@ -164,7 +164,7 @@ module.exports.filter = async(req, res) => {
  */
 module.exports.post = async(req, res) => {
     const {label} = req.body;
-    const image = req.files.image[0];
+    const image = req.files?.image[0];
 
     if(label === undefined || label.trim() === "") {
         res.status(400).json({error: "Label invalide"});
@@ -240,9 +240,9 @@ module.exports.post = async(req, res) => {
  */
 module.exports.patch = async(req, res) => {
     const {id, label} = req.body;
-    const image = req.files.image[0];
+    const image = req.files?.image[0];
 
-    if (isNaN(id) || ((label === undefined || label.trim() === "") && image === undefined)) {
+    if (isNaN(id) || ((label === undefined || label.trim() === ""))) {
         res.sendStatus(400);
     }else {
         const client = await pool.connect();
@@ -255,7 +255,10 @@ module.exports.patch = async(req, res) => {
             }else{
                 await ReportType.patch(client, id, label);
 
-                ImageManager.replace(image.buffer, reportType.image, REPORT_TYPE_OUTPUT_DIRECTORY);
+                if(image !== undefined && image.buffer !== undefined){
+                    ImageManager.replace(image.buffer, reportType.image, REPORT_TYPE_OUTPUT_DIRECTORY);
+                }
+
                 res.sendStatus(204);
             }
         } catch (error) {
