@@ -27,7 +27,7 @@ module.exports.identification = async (req, res, next) => {
             next();
         } catch (e) {
             console.error(e);
-            res.status(400).json({error: "JWT invalide"});
+            res.status(400).json({error: "Votre session a expirée, veuillez vous reconnecter"});
         }
     } else {
         res.sendStatus(401);

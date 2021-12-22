@@ -164,7 +164,6 @@ module.exports.filter = async(req, res) => {
  */
 module.exports.post = async(req, res) => {
     const {label} = req.body;
-    console.log(req.files)
     const image = req.files.image[0];
 
     if(label === undefined || label.trim() === "") {

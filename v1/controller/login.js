@@ -50,7 +50,7 @@ module.exports.login = async(req, res) => {
                 res.sendStatus(404);
             } else {
                 delete user.password;
-                const token = jwt.sign({user: user}, process.env.SECRET_TOKEN, {expiresIn: '1d'});
+                const token = jwt.sign({user: user}, process.env.SECRET_TOKEN, {expiresIn: '5d'});
 
                 res.status(200).json(token);
             }
