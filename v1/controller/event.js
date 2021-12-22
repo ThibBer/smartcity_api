@@ -238,7 +238,7 @@ module.exports.patch = async(req, res) => {
     const {id, date_hour, duration, description, report, creator} = req.body;
 
     try {
-        if(isNaN(id) || (date_hour === undefined && duration === undefined && description === undefined && report === undefined && creator === undefined)){
+        if(isNaN(id) || creator === undefined || (date_hour === undefined && duration === undefined && description === undefined && report === undefined)){
             res.sendStatus(400);
         }else{
             const creatorId = creator?.id ?? creator;

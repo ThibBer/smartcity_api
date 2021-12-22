@@ -325,7 +325,7 @@ module.exports.post = async(req, res) => {
 module.exports.patch = async(req, res) => {
     const {id, description, state, city, street, zip_code, house_number, reporter, report_type} = req.body;
 
-    if(isNaN(id) || (state === undefined && city === undefined && street === undefined && zip_code === undefined && house_number === undefined && reporter === undefined && report_type === undefined)){
+    if(isNaN(id) || reporter === undefined || (state === undefined && city === undefined && street === undefined && zip_code === undefined && house_number === undefined && report_type === undefined)){
         res.sendStatus(400);
     }else{
         const client = await pool.connect();

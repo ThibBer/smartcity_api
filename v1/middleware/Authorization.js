@@ -86,10 +86,15 @@ module.exports.canDeleteUser = (req, res, next) => {
 module.exports.canDoActionOnReport = (req, res, next) => {
     const user = req.session;
     const reporter = req.body?.reporter;
-    if(userIsAdmin(user) && reporter === undefined || user.id === reporter?.id || user.id === parseInt(reporter)){
-        next();
-    } else {
-        res.sendStatus(403);
+
+    if(reporter === undefined){
+        res.sendStatus(400);
+    }else{
+        if(userIsAdmin(user) || user.id === reporter?.id || user.id === parseInt(reporter)){
+            next();
+        } else {
+            res.sendStatus(403);
+        }
     }
 }
 
@@ -129,9 +134,13 @@ module.exports.canDoActionOnEvent = (req, res, next) => {
     const user = req.session;
     const creator = req.body?.creator;
 
-    if (userIsAdmin(user) || creator === undefined || user.id === creator?.id || user.id === parseInt(creator)){
-        next();
-    } else {
-        res.sendStatus(403);
+    if(creator === undefined) {
+        res.sendStatus(400);
+    }else{
+        if (userIsAdmin(user) || user.id === creator?.id || user.id === parseInt(creator)){
+            next();
+        } else {
+            res.sendStatus(403);
+        }
     }
 }
