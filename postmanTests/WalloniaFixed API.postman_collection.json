@@ -824,7 +824,8 @@
 									"pm.test(\"ReportType 1 should be correctly returned\", () => {\r",
 									"    const reportType = {\r",
 									"        \"id\": 1,\r",
-									"        \"label\": \"Dépôt clandestin\"\r",
+									"        \"label\": \"Dépôt clandestin\",\r",
+									"        \"image\": \"1e031fb5-cd0e-4a29-839f-164bea9c4813.jpeg\"\r",
 									"    }\r",
 									"    const response = pm.response.json()\r",
 									"    pm.expect(response).to.be.eql(reportType);\r",
@@ -911,57 +912,6 @@
 					"response": []
 				},
 				{
-					"name": "Add ReportType as admin",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt_token_admin}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"label\": \"Ceci est le libellé du type de signalement\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}:{{port}}/v1/reportType",
-							"host": [
-								"{{base_url}}"
-							],
-							"port": "{{port}}",
-							"path": [
-								"v1",
-								"reportType"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Update ReportType",
 					"event": [
 						{
@@ -991,7 +941,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 9,\r\n    \"label\": \"Ceci est encore et toujours le libellé du type de signalement\"\r\n}",
+							"raw": "{\r\n    \"id\": 3,\r\n    \"label\": \"Ceci est encore et toujours le libellé du type de signalement\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1091,7 +1041,8 @@
 									"        \"reporter\": 1,\r",
 									"        \"report_type\": {\r",
 									"            \"id\": 2,\r",
-									"            \"label\": \"Lampadaire cassé\"\r",
+									"            \"label\": \"Lampadaire cassé\",\r",
+									"            \"image\": \"ed09a04d-c88f-446d-b08b-d8229231235a.jpeg\"\r",
 									"        }\r",
 									"    };\r",
 									"\r",
