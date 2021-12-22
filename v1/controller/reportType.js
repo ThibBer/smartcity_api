@@ -147,9 +147,20 @@ module.exports.filter = async(req, res) => {
  *  requestBodies:
  *      ReportTypeToAdd:
  *           content:
- *               application/json:
+ *               multipart/form-data:
  *                   schema:
- *                       $ref: '#/components/schemas/TypeSignalement'
+ *                      type: object
+ *                      properties:
+ *                          id:
+ *                              type: number
+ *                              format: integer
+ *                          label:
+ *                              type: string
+ *                              description: Libellé du type de signalement
+ *                          image:
+ *                              type: string
+ *                              format: byte
+ *                              description: Bytes de l'image du type de signalement
  */
 module.exports.post = async(req, res) => {
     const {label} = req.body;
@@ -213,9 +224,20 @@ module.exports.post = async(req, res) => {
  *  requestBodies:
  *      ReportTypeToPatch:
  *           content:
- *               application/json:
+ *               multipart/form-data:
  *                   schema:
- *                       $ref: '#/components/schemas/TypeSignalement'
+ *                      type: object
+ *                      properties:
+ *                          id:
+ *                              type: number
+ *                              format: integer
+ *                          label:
+ *                              type: string
+ *                              description: Libellé du type de signalement
+ *                          image:
+ *                              type: string
+ *                              format: byte
+ *                              description: Bytes de l'image du type de signalement
  */
 module.exports.patch = async(req, res) => {
     const {id, label} = req.body;

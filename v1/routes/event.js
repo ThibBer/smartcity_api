@@ -11,6 +11,8 @@ const JWTMiddleware = require("../middleware/JWTIdentification");
  *  get:
  *      tags:
  *         - Événement
+ *      security:
+ *          - bearerAuth: []
  *      parameters:
  *          - name: offset
  *            description: Valeur du décalage
@@ -67,6 +69,8 @@ router.get("/filter/:offset&:limit&:filter", JWTMiddleware.identification, Event
  *  get:
  *      tags:
  *         - Événement
+ *      security:
+ *          - bearerAuth: []
  *      parameters:
  *          - name: offset
  *            description: Valeur du décalage
