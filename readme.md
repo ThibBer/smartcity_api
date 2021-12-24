@@ -41,12 +41,11 @@ La variable PORT prends **2001** comme valeur par défaut si elle n'est pas pré
 ### API
 - **Événement**
   - GET
-  - ALL
   - POST
   - PATCH
   - DELETE
 - **Connexion**
-  - GET
+  - POST
 - **Participation**
   - GET
   - POST
@@ -58,7 +57,6 @@ La variable PORT prends **2001** comme valeur par défaut si elle n'est pas pré
   - DELETE
 - **Type de signalement**
   - GET
-  - ALL
   - POST
   - PATCH
   - DELETE
