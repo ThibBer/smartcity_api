@@ -252,7 +252,7 @@ INSERT INTO "User" (email, password, first_name, last_name, birth_date, role, ci
 
 INSERT INTO ReportType (label, image) VALUES ('Dépôt clandestin', '1e031fb5-cd0e-4a29-839f-164bea9c4813.jpeg');
 INSERT INTO ReportType (label, image) VALUES ('Lampadaire cassé', 'ed09a04d-c88f-446d-b08b-d8229231235a.jpeg');
-INSERT INTO ReportType (label, image) VALUES ('Trottoire dégradé', 'ddda1704-842a-4209-ab36-3aacec523731.jpeg');
+INSERT INTO ReportType (label, image) VALUES ('Trottoir dégradé', 'ddda1704-842a-4209-ab36-3aacec523731.jpeg');
 INSERT INTO ReportType (label, image) VALUES ('Vandalisme', 'b069a7e1-2517-4f39-8703-8078bacc7934.jpeg');
 INSERT INTO ReportType (label, image) VALUES ('Espace public dégradé', 'e54e87cb-5399-4c98-b910-f9043c850843.jpeg');
 INSERT INTO ReportType (label, image) VALUES ('Déchets ménagers encombrants', '98b61b2e-14c8-4575-bc8c-51527392e064.jpeg');
@@ -260,17 +260,17 @@ INSERT INTO ReportType (label, image) VALUES ('Graffitis', '79419374-b0ba-4cbe-8
 
 INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('Je signale un problème en face de chez moi', 'pending', 'Chapois', 'Rue du pont', 5590, 53, 1, 2);
 INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('J''ai un petit problème', 'pending', 'Evrehailles', 'Rue de Virton', 5530, 36, 5, 1);
-INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est cassé, j''ai besoin d''aide', 'pending', 'Marche-les-dames', 'Rue aux vallées', 5024, 74, 7, 2);
-INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est un très beau report', 'pending', 'Liège', 'Rue du Moulin', 4260, 384, 10, 3);
-INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est un très beau report', 'pending', 'Liège', 'Rue de la Sarthe', 4682, 58, 2, 3);
-INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est un très beau report', 'pending', 'Bailièvre', 'Rue grande', 6460, 141, 5, 3);
-INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est un très beau report', 'pending', 'Liège', 'Rue de Vonêche ', 4460, 100, 7, 1);
-INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est un très beau report', 'pending', 'Namur', 'Place d''ange', 5000, 53, 25, 1);
-INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est un très beau report', 'pending', 'Vierves-sur-viroin', 'Route de Vonèche', 5670, 33, 10, 1);
-INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est un très beau report', 'pending', 'Rocherath', 'Rue de Fontigny', 4761, 47, 1, 2);
-INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est un très beau report', 'pending', 'Olne', 'Rue du Bourgmestre Dandoy', 4877, 136, 51, 3);
-INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est un très beau report', 'pending', 'Butgenbach', 'Avenue Huart Hamoir', 4750, 168, 1, 2);
-INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('C''est un très beau report', 'pending', 'Marche-en-Famenne', 'Rue des peupliers', 6900, 53, 22, 1);
+INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('Problème', 'pending', 'Marche-les-dames', 'Rue aux vallées', 5024, 74, 7, 2);
+INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('Problème', 'pending', 'Liège', 'Rue du Moulin', 4260, 384, 10, 3);
+INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('Problème', 'pending', 'Liège', 'Rue de la Sarthe', 4682, 58, 2, 3);
+INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('Problème', 'pending', 'Bailièvre', 'Rue grande', 6460, 141, 5, 3);
+INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('Problème', 'pending', 'Liège', 'Rue de Vonêche ', 4460, 100, 7, 1);
+INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('Problème', 'pending', 'Namur', 'Place d''ange', 5000, 53, 25, 1);
+INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('Problème', 'pending', 'Vierves-sur-viroin', 'Route de Vonèche', 5670, 33, 10, 1);
+INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('Problème', 'pending', 'Rocherath', 'Rue de Fontigny', 4761, 47, 1, 2);
+INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('Problème', 'pending', 'Olne', 'Rue du Bourgmestre Dandoy', 4877, 136, 51, 3);
+INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('Problème', 'pending', 'Butgenbach', 'Avenue Huart Hamoir', 4750, 168, 1, 2);
+INSERT INTO Report (description, state, city, street, zip_code, house_number, reporter, report_type) VALUES ('Problème', 'pending', 'Marche-en-Famenne', 'Rue des peupliers', 6900, 53, 22, 1);
 
 INSERT INTO Event (date_hour, duration, description, report, creator) VALUES ('2021-12-05 10:02:52', 60, 'Ceci est une description', 1, 1);
 INSERT INTO Event (date_hour, duration, description, report, creator) VALUES ('2021-12-05 15:14:10', 100, 'Ceci est une description', 1, 1);
