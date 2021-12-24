@@ -30,10 +30,15 @@ npm run initDB
 npm start
 ```
 
+```
+npm run genDoc
+```
+
 - vagrant up : Initialise la VM contenant la base de données PostgreSQL
 - npm install : Installation des dépendances de l'API
   npm run initDB : Initialise la BDD suivant les infos fournies dans le .env
 - npm start : Lance l'application
+- npm run genDoc : Génère la documentation swagger
 
 L'application se lance sur http://localhost:PORT
 La variable PORT prends **2001** comme valeur par défaut si elle n'est pas précisée dans les variables d'environnement
