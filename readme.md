@@ -9,7 +9,6 @@ Projet disponible publiquement sur [GitHub](https://github.com/ThibBer/smartcity
 # Installation
 Ce projet requiert [NodeJS](https://nodejs.org/en/)
 
-
 ## .env file
 Créer un fichier .env à la racine du projet qui contient :<br/>
 
@@ -62,10 +61,10 @@ La variable PORT prends **2001** comme valeur par défaut si elle n'est pas pré
   - PATCH
   - DELETE
 - **Utilisateur**
-    - GET
-    - POST
-    - PATCH
-    - DELETE
+  - GET
+  - POST
+  - PATCH
+  - DELETE
   
 # Documentation Swagger
 [Documentation JSON Swagger](./swagger/spec.json) <br/>
