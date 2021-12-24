@@ -26,11 +26,13 @@ SECRET_TOKEN=
 ```
 vagrant up
 npm install
+npm run initDB
 npm start
 ```
 
 - vagrant up : Initialise la VM contenant la base de données PostgreSQL
 - npm install : Installation des dépendances de l'API
+  npm run initDB : Initialise la BDD suivant les infos fournies dans le .env
 - npm start : Lance l'application
 
 L'application se lance sur http://localhost:PORT
